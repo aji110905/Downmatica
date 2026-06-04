@@ -1,0 +1,35 @@
+pluginManagement {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        gradlePluginPortal()
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+        maven {
+            name = 'Jitpack'
+            url = "https://jitpack.io"
+        }
+        resolutionStrategy {
+            eachPlugin {
+                switch (requested.id.id) {
+                    case "com.replaymod.preprocess": {
+                        useModule("com.github.Fallen-Breath:preprocessor:${requested.version}")
+                        break
+                    }
+                }
+            }
+        }
+    }
+}
+
+file('versions').eachFile { file ->
+    if (file.isDirectory()) {
+        String name = file.getName()
+        include(":$name")
+        ProjectDescriptor proj = project(":$name")
+        proj.setProjectDir(file)
+        proj.setBuildFileName("../../common.gradle")
+    }
+}

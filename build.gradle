@@ -1,0 +1,11 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT' apply false
+    id 'net.fabricmc.fabric-loom-remap' version '1.15-SNAPSHOT' apply false
+    id "com.replaymod.preprocess" version "c5abb4fb12"
+}
+
+preprocess {
+    strictExtraMappings = false
+
+    def mc12100 = createNode("1.21", 1_21_00, "")
+}
