@@ -14,6 +14,12 @@ configurations {
 
 repositories {
     mavenLocal()
+    maven {
+        url = "https://masa.dy.fi/maven/sakura-ryoko"
+        content {
+            includeGroupAndSubgroups("fi.dy.masa")
+        }
+    }
 }
 
 loom{
@@ -31,6 +37,8 @@ dependencies {
         dep -> unobfuscated ? implementation(dep) : modImplementation(dep)
     }
     autoImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    autoImplementation "fi.dy.masa.malilib:malilib-fabric-${project.minecraft_version}:${project.malilib_version}"
+    autoImplementation "fi.dy.masa.litematica:litematica-fabric-${project.minecraft_version}:${project.litematica_version}"
 }
 
 JavaVersion JAVA_VERSION
