@@ -1,5 +1,7 @@
 package aji.downmatica.util;
 
+import aji.downmatica.DownmaticaMod;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.File;
@@ -40,14 +42,12 @@ public final class DownloadUtil {
         if (parentDir != null && !Files.exists(parentDir)) {
             Files.createDirectories(parentDir);
         }
-        try (HttpClient httpClient = HttpClient.newHttpClient()) {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(sourceUri)
-                    .build();
-            HttpResponse<InputStream> response = httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
-            try (InputStream inputStream = response.body()) {
-                Files.copy(inputStream, targetPath, StandardCopyOption.REPLACE_EXISTING);
-            }
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(sourceUri)
+                .build();
+        HttpResponse<InputStream> response = DownmaticaMod.HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofInputStream());
+        try (InputStream inputStream = response.body()) {
+            Files.copy(inputStream, targetPath, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 
