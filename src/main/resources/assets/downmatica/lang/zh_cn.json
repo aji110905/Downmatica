@@ -5,7 +5,7 @@
 
   "downmatica.gui.text.loading": "正在加载...",
   "downmatica.gui.text.unknown": "未知",
-  "downmatica.gui.text.nothing": "无",
+  "downmatica.gui.text.none": "无",
 
   "downmatica.gui.info.title": "标题：",
   "downmatica.gui.info.source": "来源：",

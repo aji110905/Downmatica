@@ -80,7 +80,7 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
         y = drawWrappedText(drawContext, !StringUtil.hasText(author) ? unknown : author, x, y, valueColor) + fieldSpacing;
         y = drawWrappedText(drawContext, StringUtils.translate("downmatica.gui.info.description"), x, y, textColor);
         String description = entry.description();
-        drawWrappedText(drawContext, !StringUtil.hasText(description) ? StringUtils.translate("downmatica.gui.text.nothing") : description, x, y, valueColor);
+        drawWrappedText(drawContext, !StringUtil.hasText(description) ? StringUtils.translate("downmatica.gui.text.none") : description, x, y, valueColor);
     }
 
     private int drawWrappedText(GuiGraphics drawContext, String text, int x, int y, int color) {
