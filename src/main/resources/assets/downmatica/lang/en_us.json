@@ -1,0 +1,24 @@
+{
+  "downmatica.source.sdk_archive": "SDK Archive",
+
+  "downmatica.gui.title": "Download Schematic",
+
+  "downmatica.gui.text.loading": "Loading...",
+  "downmatica.gui.text.unknown": "Unknown",
+  "downmatica.gui.text.none": "None",
+
+  "downmatica.gui.info.title": "Title: ",
+  "downmatica.gui.info.source": "Source: ",
+  "downmatica.gui.info.author": "Author: ",
+  "downmatica.gui.info.description": "Description: ",
+
+  "downmatica.gui.button.details.display": "Details",
+  "downmatica.gui.button.details.massage.open_web_page_failed": "Failed to open webpage. This is not your fault. You may report this issue to the mod developer.",
+
+  "downmatica.gui.button.download.display": "Download",
+  "downmatica.gui.button.download.massage.select_folder": "Please select download directory",
+  "downmatica.gui.button.download.massage.cancel": "Download cancelled",
+  "downmatica.gui.button.download.massage.success": "Download successful",
+  "downmatica.gui.button.download.massage.no_file": "Download failed. This is not your fault. You may report this issue to the mod developer, then click Details to download from the webpage.",
+  "downmatica.gui.button.download.massage.error": "Download failed. Additional info: %s"
+}
