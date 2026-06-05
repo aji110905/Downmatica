@@ -1,8 +1,8 @@
 {
 	"schemaVersion": 1,
-	"id": "dawnmatica",
+	"id": "downmatica",
 	"version": "${version}",
-	"name": "Dawnmatica",
+	"name": "Downmatica",
 	"authors": [
 		"Aji"
 	],
@@ -14,7 +14,7 @@
 	"entrypoints": {
 	},
 	"mixins": [
-      "dawnmatica.mixins.json"
+		"downmatica.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=${loader_version}",
