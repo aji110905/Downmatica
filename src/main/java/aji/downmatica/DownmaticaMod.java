@@ -1,5 +1,7 @@
 package aji.downmatica;
 
+import aji.downmatica.network.SDKArchiveSchematicAcquirer;
+import aji.downmatica.network.SchematicAcquirers;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +18,8 @@ public class DownmaticaMod implements ModInitializer {
             .version(HttpClient.Version.HTTP_1_1)
             .build();
 
-
     @Override
     public void onInitialize() {
+        SchematicAcquirers.register(new SDKArchiveSchematicAcquirer());
     }
 }
