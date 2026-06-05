@@ -12,6 +12,9 @@
 	"license": "MIT",
 	"environment": "CLIENT",
 	"entrypoints": {
+		"main": [
+			"aji.downmatica.DownmaticaMod"
+		]
 	},
 	"mixins": [
 		"downmatica.mixins.json"
