@@ -128,7 +128,7 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
 
     @Override
     protected Collection<Schematic> getAllEntries() {
-        return entries == null ? List.of() : entries;
+        return entries;
     }
 
     @Override
