@@ -124,7 +124,7 @@ public class DownloadWidgetListEntry extends WidgetListEntryBase<Schematic> {
         } else {
             RenderUtils.drawRect(x, y, width, height, 0x50FFFFFF);
         }
-        String text = StringUtils.translate("未知");
+        String text = StringUtils.translate("downmatica.gui.text.unknown");
         if (entry != null){
             String string = entry.title();
             if (StringUtil.hasText(string)) {
