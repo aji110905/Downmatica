@@ -1,8 +1,8 @@
 {
 	"schemaVersion": 1,
-	"id": "dawnmatica",
+	"id": "downmatica",
 	"version": "${version}",
-	"name": "Dawnmatica",
+	"name": "Downmatica",
 	"authors": [
 		"Aji"
 	],
@@ -12,9 +12,12 @@
 	"license": "MIT",
 	"environment": "CLIENT",
 	"entrypoints": {
+		"main": [
+			"aji.downmatica.DownmaticaMod"
+		]
 	},
 	"mixins": [
-      "dawnmatica.mixins.json"
+		"downmatica.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=${loader_version}",

@@ -1,0 +1,24 @@
+{
+  "downmatica.source.sdk_archive": "SDK档案馆",
+
+  "downmatica.gui.title": "下载原理图",
+
+  "downmatica.gui.text.loading": "正在加载...",
+  "downmatica.gui.text.unknown": "未知",
+  "downmatica.gui.text.none": "无",
+
+  "downmatica.gui.info.title": "标题：",
+  "downmatica.gui.info.source": "来源：",
+  "downmatica.gui.info.author": "作者：",
+  "downmatica.gui.info.description": "描述：",
+
+  "downmatica.gui.button.details.display": "详情",
+  "downmatica.gui.button.details.massage.open_web_page_failed": "打开网页失败，这不是你的问题，你可以选择上报该模组开发人员。",
+
+  "downmatica.gui.button.download.display": "下载",
+  "downmatica.gui.button.download.massage.select_folder": "请选择下载目录",
+  "downmatica.gui.button.download.massage.cancel": "已取消下载",
+  "downmatica.gui.button.download.massage.success": "下载成功",
+  "downmatica.gui.button.download.massage.no_file": "下载失败，这不是你的问题，你可以选择上报该模组开发人员，之后点击详情去取该网页下载。",
+  "downmatica.gui.button.download.massage.error": "下载失败，可提供信息如下：%s"
+}

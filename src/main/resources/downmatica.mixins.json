@@ -1,11 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "aji.dawnmatica.mixin",
+  "package": "aji.downmatica.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
   ],
   "client": [
+    "MixinGuiMainMenu"
   ],
   "injectors": {
     "defaultRequire": 1
