@@ -41,6 +41,6 @@ public abstract class MixinGuiMainMenu extends GuiBase {
 
     @Unique
     private String getButtonText() {
-        return StringUtils.translate("下载原理图");
+        return StringUtils.translate("downmatica.gui.title");
     }
 }
