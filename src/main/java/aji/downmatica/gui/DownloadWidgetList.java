@@ -73,16 +73,13 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
         int x = posX + totalWidth - infoWidth;
         int y = posY;
         RenderUtils.drawOutlinedBox(x, y, infoWidth, infoHeight, GuiListBase.TOOLTIP_BACKGROUND, GuiBase.COLOR_HORIZONTAL_BAR);
-        y += INFO_MARGIN;
-        x += INFO_MARGIN;
         if (entries.isEmpty()) {
             drawLoading(drawContext, x, y);
             return;
         }
-
         Schematic entry = getLastSelectedEntry();
         if (entry != null) {
-            drawInfo(drawContext, entry, x, y);
+            drawInfo(drawContext, entry, x + INFO_MARGIN, y + INFO_MARGIN);
         }
     }
 
