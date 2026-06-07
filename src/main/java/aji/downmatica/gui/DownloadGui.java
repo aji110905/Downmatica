@@ -8,9 +8,15 @@ import fi.dy.masa.malilib.util.StringUtils;
 import net.minecraft.client.gui.screens.Screen;
 
 public class DownloadGui extends GuiListBase<Schematic, DownloadWidgetListEntry, DownloadWidgetList> {
+    private static final int HORIZONTAL_MARGIN = 12;
+    private static final int TOP_MARGIN = 30;
+    private static final int BOTTOM_MARGIN = 6;
+    private static final int BUTTON_HORIZONTAL_MARGIN = 10;
+    private static final int BUTTON_HEIGHT = 20;
+    private static final int LIST_BUTTON_SPACING = 6;
 
     public DownloadGui(Screen parent) {
-        super(12, 30);
+        super(HORIZONTAL_MARGIN, TOP_MARGIN);
         title = StringUtils.translate("downmatica.gui.title");
         setParent(parent);
     }
@@ -18,13 +24,19 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadWidgetListEntry,
     @Override
     public void initGui() {
         super.initGui();
+        createMainMenuButton();
+    }
+
+    private void createMainMenuButton() {
         final GuiMainMenu.ButtonListenerChangeMenu.ButtonType type = GuiMainMenu.ButtonListenerChangeMenu.ButtonType.MAIN_MENU;
         final String label = StringUtils.translate(type.getLabelKey());
-        final int buttonWidth = getStringWidth(label) + 20;
-        final int x = width - buttonWidth - 10;
-        final int y = height - 26;
-        final ButtonGeneric button = new ButtonGeneric(x, y, buttonWidth, 20, label);
-        addButton(button, new GuiMainMenu.ButtonListenerChangeMenu(type, getParent()));
+        final int width = getStringWidth(label) + BUTTON_HORIZONTAL_MARGIN * 2;
+        final int x = this.width - width - HORIZONTAL_MARGIN;
+        final int y = height - BUTTON_HEIGHT - BOTTOM_MARGIN;
+        addButton(
+                new ButtonGeneric(x, y, width, BUTTON_HEIGHT, label),
+                new GuiMainMenu.ButtonListenerChangeMenu(type, getParent())
+        );
     }
 
     @Override
@@ -34,11 +46,11 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadWidgetListEntry,
 
     @Override
     protected int getBrowserWidth() {
-        return width - 20;
+        return width - HORIZONTAL_MARGIN * 2;
     }
 
     @Override
     protected int getBrowserHeight() {
-        return height - 68;
+        return height - BOTTOM_MARGIN - TOP_MARGIN - BUTTON_HEIGHT - LIST_BUTTON_SPACING;
     }
 }
