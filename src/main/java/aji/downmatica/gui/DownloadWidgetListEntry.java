@@ -17,7 +17,6 @@ import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
 import java.io.File;
 import java.net.URI;
-import java.util.List;
 
 public class DownloadWidgetListEntry extends WidgetListEntryBase<Schematic> {
     private static final int HORIZONTAL_MARGIN = 20;
