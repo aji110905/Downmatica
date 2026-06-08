@@ -1,7 +1,7 @@
 package aji.downmatica.gui;
 
 import aji.downmatica.DownmaticaMod;
-import aji.downmatica.entry.FileInfo;
+import aji.downmatica.entry.SchematicFileInfo;
 import aji.downmatica.entry.Schematic;
 import aji.downmatica.util.DownloadUtil;
 import aji.downmatica.util.StringUtil;
@@ -32,7 +32,7 @@ public class DownloadWidgetListEntry extends WidgetListEntryBase<Schematic> {
         this.isOdd = isOdd;
 
         String url = getUrl(entry);
-        FileInfo fileInfo = getFileInfo(entry);
+        SchematicFileInfo fileInfo = getFileInfo(entry);
 
         String saveAsDisplay = StringUtils.translate("downmatica.gui.button.download.display");
         String detailsDisplay = StringUtils.translate("downmatica.gui.button.details.display");
@@ -96,7 +96,7 @@ public class DownloadWidgetListEntry extends WidgetListEntryBase<Schematic> {
     }
 
     @Nullable
-    private FileInfo getFileInfo(Schematic entry) {
+    private SchematicFileInfo getFileInfo(Schematic entry) {
         return entry != null ? entry.fileInfo() : null;
     }
 
