@@ -28,9 +28,9 @@ public class DownloadWidgetListEntry extends WidgetListEntryBase<Schematic> {
 
     private final boolean isOdd;
 
-    public DownloadWidgetListEntry(int x, int y, int width, int height, Schematic entry, int listIndex, DownloadGui gui) {
+    public DownloadWidgetListEntry(int x, int y, int width, int height, Schematic entry, int listIndex, boolean isOdd, DownloadGui gui) {
         super(x, y, width, height, entry, listIndex);
-        this.isOdd = listIndex % 2 == 1;
+        this.isOdd = isOdd;
 
         String url = getUrl(entry);
         FileInfo fileInfo = getFileInfo(entry);

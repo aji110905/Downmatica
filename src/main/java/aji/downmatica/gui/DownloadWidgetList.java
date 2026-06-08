@@ -143,7 +143,7 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
 
     @Override
     protected DownloadWidgetListEntry createListEntryWidget(int x, int y, int listIndex, boolean isOdd, Schematic entry) {
-        return new DownloadWidgetListEntry(x, y, browserEntryWidth, browserEntryHeight, entry, listIndex, gui);
+        return new DownloadWidgetListEntry(x, y, browserEntryWidth, browserEntryHeight, entry, listIndex, isOdd, gui);
     }
 
     @Override
