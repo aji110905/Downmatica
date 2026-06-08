@@ -1,9 +1,6 @@
-package aji.downmatica.network;
+package aji.downmatica.entry;
 
 import aji.downmatica.DownmaticaMod;
-import aji.downmatica.entry.FileInfo;
-import aji.downmatica.entry.Schematic;
-import aji.downmatica.entry.SchematicSources;
 import aji.downmatica.util.URIBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -104,9 +101,9 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer{
         try {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             JsonArray file = jsonObject.get("file").getAsJsonArray();
-            FileInfo fileInfo = null;
+            SchematicFileInfo fileInfo = null;
             if (!file.isEmpty()) {
-                fileInfo = new FileInfo(
+                fileInfo = new SchematicFileInfo(
                         file.get(0).getAsJsonObject().get("name").getAsString(),
                         file.get(0).getAsJsonObject().get("url").getAsString()
                 );

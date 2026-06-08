@@ -2,10 +2,11 @@ package aji.downmatica.gui;
 
 import aji.downmatica.entry.Schematic;
 import aji.downmatica.entry.SchematicSource;
-import aji.downmatica.network.SchematicAcquirers;
+import aji.downmatica.entry.SchematicAcquirers;
 import aji.downmatica.util.StringUtil;
 import fi.dy.masa.litematica.gui.Icons;
 import fi.dy.masa.malilib.gui.GuiBase;
+import fi.dy.masa.malilib.gui.GuiListBase;
 import fi.dy.masa.malilib.gui.LeftRight;
 import fi.dy.masa.malilib.gui.widgets.WidgetListBase;
 import fi.dy.masa.malilib.gui.widgets.WidgetSearchBar;
@@ -18,6 +19,17 @@ import java.util.Collection;
 import java.util.List;
 
 public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidgetListEntry> {
+    private static final int HORIZONTAL_MARGIN = 2;
+    private static final int VERTICAL_MARGIN  = 4;
+    private static final int INFO_MARGIN = 4;
+    private static final int INFO_SPACING = 4;
+    private static final int BROWSER_HORIZONTAL_MARGIN = 2;
+    private static final int INFO_BROWSER_GAP = 4;
+    private static final int SEARCH_BAR_ENTRY_GAP = 3;
+    private static final int SEARCH_BAR_HEIGHT = 14;
+    private static final int SCROLL_BAR_WIDTH = 8;
+    private static final int STRING_HEIGHT = 8;
+
     private final DownloadGui gui;
     private final Collection<Schematic> entries = new ArrayList<>();
     private int infoHeight;
@@ -26,7 +38,15 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
     public DownloadWidgetList(int x, int y, int width, int height, DownloadGui gui) {
         super(x, y, width, height, null);
         this.gui = gui;
-        widgetSearchBar = new WidgetSearchBar(posX + 2, posY + 4, width - infoWidth - 4 - 2, 14, 0, Icons.FILE_ICON_SEARCH, LeftRight.LEFT);
+        widgetSearchBar = new WidgetSearchBar(
+                x + HORIZONTAL_MARGIN,
+                y + VERTICAL_MARGIN,
+                browserWidth - HORIZONTAL_MARGIN,
+                SEARCH_BAR_HEIGHT,
+                0,
+                Icons.FILE_ICON_SEARCH,
+                LeftRight.LEFT
+        );
         new Thread(() -> {
             entries.addAll(SchematicAcquirers.getAllSchematics());
             refreshEntries();
@@ -36,99 +56,99 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
     @Override
     public void setSize(int width, int height) {
         super.setSize(width, height);
-        infoWidth = 170;
+        infoWidth = width / 4;
         infoHeight = height;
-        browserWidth = width - infoWidth - 4;
+        browserWidth = width - infoWidth - INFO_BROWSER_GAP;
         browserEntryHeight = 22;
-        browserEntryWidth = browserWidth - 14;
-        if (widgetSearchBar != null) {
-            browserEntriesOffsetY = widgetSearchBar.getHeight() + 3;
-        }
+        browserEntryWidth = browserWidth - BROWSER_HORIZONTAL_MARGIN * 2 - SCROLL_BAR_WIDTH;
+        browserEntriesOffsetY = SEARCH_BAR_HEIGHT + SEARCH_BAR_ENTRY_GAP;
     }
 
     @Override
     public void drawContents(GuiGraphics drawContext, int mouseX, int mouseY, float partialTicks) {
-        RenderUtils.drawOutlinedBox(posX, posY, browserWidth, browserHeight, 0xB0000000, GuiBase.COLOR_HORIZONTAL_BAR);
+        RenderUtils.drawOutlinedBox(posX, posY, browserWidth, browserHeight, GuiListBase.TOOLTIP_BACKGROUND, GuiBase.COLOR_HORIZONTAL_BAR);
+
         super.drawContents(drawContext, mouseX, mouseY, partialTicks);
+
         int x = posX + totalWidth - infoWidth;
-        int y = posY + 3;
-        RenderUtils.drawOutlinedBox(x, posY, infoWidth, infoHeight, 0xA0000000, GuiBase.COLOR_HORIZONTAL_BAR);
+        int y = posY;
+        RenderUtils.drawOutlinedBox(x, y, infoWidth, infoHeight, GuiListBase.TOOLTIP_BACKGROUND, GuiBase.COLOR_HORIZONTAL_BAR);
         if (entries.isEmpty()) {
-            String string = StringUtils.translate("downmatica.gui.text.loading");
-            int centerX = x + (infoWidth - getStringWidth(string)) / 2;
-            int centerY = posY + (infoHeight - 12) / 2;
-            drawString(drawContext, string, centerX, centerY, 0xFFFFFFFF);
+            drawLoading(drawContext, x, y);
             return;
         }
         Schematic entry = getLastSelectedEntry();
+        if (entry != null) {
+            drawInfo(drawContext, entry, x + INFO_MARGIN, y + INFO_MARGIN);
+        }
+    }
+
+    private void drawLoading(GuiGraphics drawContext, int x, int y) {
+        String string = StringUtils.translate("downmatica.gui.text.loading");
+        x += (infoWidth - getStringWidth(string)) / 2;
+        y += (infoHeight - STRING_HEIGHT) / 2;
+        drawString(drawContext, string, x, y, 0xFFFFFFFF);
+    }
+
+    private void drawInfo(GuiGraphics drawContext, Schematic entry, int x, int y) {
         final int textColor = 0xC0C0C0C0;
         final int valueColor = 0xFFFFFFFF;
-        final int fieldSpacing = 4;
-        if (entry == null) {
-            return;
-        }
-        x = x + 3;
+
         String unknown = StringUtils.translate("downmatica.gui.text.unknown");
-        y = drawWrappedText(drawContext, StringUtils.translate("downmatica.gui.info.title"), x, y, textColor);
+        String none = StringUtils.translate("downmatica.gui.text.none");
+
+        y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.info.title"), x, y, textColor);
         String title = entry.title();
-        y = drawWrappedText(drawContext, !StringUtil.hasText(title) ? unknown : title, x, y, valueColor) + fieldSpacing;
-        y = drawWrappedText(drawContext, StringUtils.translate("downmatica.gui.info.source"), x, y, textColor);
+        y = drawInfoText(drawContext, !StringUtil.hasText(title) ? unknown : title, x, y, valueColor) + INFO_SPACING;
+
+        y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.info.source"), x, y, textColor);
         SchematicSource source = entry.source();
-        y = drawWrappedText(drawContext, source == null ? unknown : source.getName(), x, y, valueColor) + fieldSpacing;
-        y = drawWrappedText(drawContext, StringUtils.translate("downmatica.gui.info.author"), x, y, textColor);
+        y = drawInfoText(drawContext, source == null ? unknown : source.getName(), x, y, valueColor) + INFO_SPACING;
+
+        y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.info.author"), x, y, textColor);
         String author = entry.author();
-        y = drawWrappedText(drawContext, !StringUtil.hasText(author) ? unknown : author, x, y, valueColor) + fieldSpacing;
-        y = drawWrappedText(drawContext, StringUtils.translate("downmatica.gui.info.description"), x, y, textColor);
+        y = drawInfoText(drawContext, !StringUtil.hasText(author) ? unknown : author, x, y, valueColor) + INFO_SPACING;
+
+        y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.info.description"), x, y, textColor);
         String description = entry.description();
-        drawWrappedText(drawContext, !StringUtil.hasText(description) ? StringUtils.translate("downmatica.gui.text.none") : description, x, y, valueColor);
+        y = drawInfoText(drawContext, !StringUtil.hasText(description) ? none : description, x, y, valueColor) + INFO_SPACING;
+        //这里赋值y没用 强迫症 看着不舒服 😄
     }
 
-    private int drawWrappedText(GuiGraphics drawContext, String text, int x, int y, int color) {
-        if (text == null || text.isEmpty()) {
-            return y;
-        }
-        int currentY = y;
+    private int drawInfoText(GuiGraphics drawContext, String text, int x, int y, int color) {
+        final int infoMaxWidth = infoWidth - INFO_MARGIN;
         String[] lines = text.split("\n", -1);
         for (String line : lines) {
-            currentY = drawLineWithWrap(drawContext, line, x, currentY, color);
-        }
-        return currentY;
-    }
-
-    private int drawLineWithWrap(GuiGraphics drawContext, String text, int x, int y, int color) {
-        final int infoMaxWidth = infoWidth - 6;
-        if (text.isEmpty()) {
-            return y + 12;
-        }
-        int currentY = y;
-        String remaining = text;
-        while (!remaining.isEmpty()) {
-            if (getStringWidth(remaining) <= infoMaxWidth) {
-                drawString(drawContext, remaining, x, currentY, color);
-                currentY += 12;
-                break;
+            if (!StringUtil.hasText(line)) {
+                y += STRING_HEIGHT + INFO_SPACING;
+                continue;
             }
-            int cutPos = remaining.length();
-            while (cutPos > 0 && getStringWidth(remaining.substring(0, cutPos)) > infoMaxWidth) {
-                cutPos--;
+            while (StringUtil.hasText(line)) {
+                if (getStringWidth(line) <= infoMaxWidth) {
+                    drawString(drawContext, line, x, y, color);
+                    y += STRING_HEIGHT + INFO_SPACING;
+                    break;
+                }
+                int length = line.length();
+                while (getStringWidth(line.substring(0, length)) > infoMaxWidth) {
+                    length--;
+                }
+                drawString(drawContext, line.substring(0, length), x, y, color);
+                y += STRING_HEIGHT + INFO_SPACING;
+                line = line.substring(length);
             }
-            if (cutPos == 0) cutPos = 1;
-            String line = remaining.substring(0, cutPos);
-            drawString(drawContext, line, x, currentY, color);
-            currentY += 12;
-            remaining = remaining.substring(cutPos);
         }
-        return currentY;
+        return y;
     }
 
     @Override
     protected DownloadWidgetListEntry createListEntryWidget(int x, int y, int listIndex, boolean isOdd, Schematic entry) {
-        return new DownloadWidgetListEntry(x, y, browserEntryWidth, browserEntryHeight, entry, listIndex, gui);
+        return new DownloadWidgetListEntry(x, y, browserEntryWidth, browserEntryHeight, entry, listIndex, isOdd, gui);
     }
 
     @Override
     protected Collection<Schematic> getAllEntries() {
-        return entries == null ? List.of() : entries;
+        return entries;
     }
 
     @Override

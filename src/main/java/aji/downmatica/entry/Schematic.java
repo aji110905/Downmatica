@@ -10,7 +10,7 @@ public record Schematic(
         @Nullable String title,
         @Nullable String author,
         @Nullable String description,
-        @Nullable FileInfo fileInfo,
+        @Nullable SchematicFileInfo fileInfo,
         @Nullable String url
 ) {
 
