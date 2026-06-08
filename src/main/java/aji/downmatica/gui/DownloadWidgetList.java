@@ -2,7 +2,7 @@ package aji.downmatica.gui;
 
 import aji.downmatica.entry.Schematic;
 import aji.downmatica.entry.SchematicSource;
-import aji.downmatica.network.SchematicAcquirers;
+import aji.downmatica.entry.SchematicAcquirers;
 import aji.downmatica.util.StringUtil;
 import fi.dy.masa.litematica.gui.Icons;
 import fi.dy.masa.malilib.gui.GuiBase;

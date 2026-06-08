@@ -1,6 +1,4 @@
-package aji.downmatica.network;
-
-import aji.downmatica.entry.Schematic;
+package aji.downmatica.entry;
 
 import java.util.Collection;
 

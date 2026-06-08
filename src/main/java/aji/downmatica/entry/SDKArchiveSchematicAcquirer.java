@@ -1,9 +1,6 @@
-package aji.downmatica.network;
+package aji.downmatica.entry;
 
 import aji.downmatica.DownmaticaMod;
-import aji.downmatica.entry.SchematicFileInfo;
-import aji.downmatica.entry.Schematic;
-import aji.downmatica.entry.SchematicSources;
 import aji.downmatica.util.URIBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

@@ -1,7 +1,7 @@
 package aji.downmatica;
 
-import aji.downmatica.network.SDKArchiveSchematicAcquirer;
-import aji.downmatica.network.SchematicAcquirers;
+import aji.downmatica.entry.SDKArchiveSchematicAcquirer;
+import aji.downmatica.entry.SchematicAcquirers;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
