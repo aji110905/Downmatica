@@ -9,7 +9,6 @@ import com.google.gson.JsonParser;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
@@ -22,8 +21,6 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer{
     private static final String GET_USERS_URL = SDK_ARCHIVE_API_URL + "user/getUsers";
     private static final String GET_USER_SCHEMATICS_URL = SDK_ARCHIVE_API_URL + "schematics/geiSchematicsByPage";
     private static final String SDK_ARCHIVE_DETAIL_URL = "https://sdkarchive.com/schematics/detail/";
-
-    private final HttpClient client = HttpClient.newHttpClient();
 
     @Override
     public Collection<Schematic> getSchematics() {
@@ -42,7 +39,7 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer{
                 .build();
         HttpResponse<String> response;
         try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            response = DownmaticaMod.HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (Exception e) {
             DownmaticaMod.LOGGER.error("Failed to get all user", e);
             return new HashMap<>();
@@ -75,7 +72,7 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer{
                 .build();
         HttpResponse<String> response;
         try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            response = DownmaticaMod.HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (Exception e) {
             DownmaticaMod.LOGGER.error("Failed to get user schematics", e);
             return new ArrayList<>();
@@ -133,7 +130,7 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer{
                 .build();
         HttpResponse<String> response;
         try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            response = DownmaticaMod.HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (Exception e) {
             DownmaticaMod.LOGGER.error("Failed to get user schematics count", e);
             return -1;
