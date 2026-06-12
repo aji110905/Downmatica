@@ -1,11 +1,14 @@
-package aji.downmatica.entry;
+package aji.downmatica.internal;
 
 import aji.downmatica.DownmaticaMod;
+import aji.downmatica.api.Schematic;
+import aji.downmatica.api.SchematicAcquirer;
 import aji.downmatica.util.URIBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import fi.dy.masa.malilib.util.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
@@ -16,7 +19,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SDKArchiveSchematicAcquirer implements SchematicAcquirer{
+public class SDKArchiveSchematicAcquirer implements SchematicAcquirer {
     private static final String SDK_ARCHIVE_API_URL = "https://sdkarchive.com/api/";
     private static final String GET_USERS_URL = SDK_ARCHIVE_API_URL + "user/getUsers";
     private static final String GET_USER_SCHEMATICS_URL = SDK_ARCHIVE_API_URL + "schematics/geiSchematicsByPage";
@@ -97,22 +100,15 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer{
     private Schematic createSchematic(JsonElement jsonElement, String author) {
         try {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
-            JsonArray file = jsonObject.get("file").getAsJsonArray();
-            SchematicFileInfo fileInfo = null;
-            if (!file.isEmpty()) {
-                fileInfo = new SchematicFileInfo(
-                        file.get(0).getAsJsonObject().get("name").getAsString(),
-                        file.get(0).getAsJsonObject().get("url").getAsString()
-                );
-            }
-            return new Schematic(
-                    SchematicSources.SDK_ARCHIVE,
-                    jsonObject.get("title").getAsString(),
-                    author,
-                    jsonObject.get("description").getAsString(),
-                    fileInfo,
-                    SDK_ARCHIVE_DETAIL_URL + jsonObject.get("_id").getAsString()
-            );
+            JsonArray jsonArray = jsonObject.get("file").getAsJsonArray();
+            return Schematic.builder()
+                    .source(StringUtils.translate("downmatica.source.sdk_archive"))
+                    .title(jsonObject.get("title").getAsString())
+                    .author(author)
+                    .description(jsonObject.get("description").getAsString())
+                    .downloadURI(jsonArray.isEmpty() ? null : URI.create(jsonArray.get(0).getAsJsonObject().get("url").getAsString()))
+                    .webURI(URI.create(SDK_ARCHIVE_DETAIL_URL + jsonObject.get("_id").getAsString()))
+                    .build();
         } catch (Exception e) {
             DownmaticaMod.LOGGER.error("Failed to create schematic", e);
             return null;

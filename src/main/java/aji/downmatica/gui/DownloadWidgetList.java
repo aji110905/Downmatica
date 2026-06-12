@@ -1,8 +1,7 @@
 package aji.downmatica.gui;
 
-import aji.downmatica.entry.Schematic;
-import aji.downmatica.entry.SchematicSource;
-import aji.downmatica.entry.SchematicAcquirers;
+import aji.downmatica.internal.SchematicAcquirers;
+import aji.downmatica.api.Schematic;
 import aji.downmatica.util.StringUtil;
 import fi.dy.masa.litematica.gui.Icons;
 import fi.dy.masa.malilib.gui.GuiBase;
@@ -98,19 +97,19 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
         String none = StringUtils.translate("downmatica.gui.text.none");
 
         y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.info.title"), x, y, textColor);
-        String title = entry.title();
+        String title = entry.getTitle();
         y = drawInfoText(drawContext, !StringUtil.hasText(title) ? unknown : title, x, y, valueColor) + INFO_SPACING;
 
         y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.info.source"), x, y, textColor);
-        SchematicSource source = entry.source();
-        y = drawInfoText(drawContext, source == null ? unknown : source.getName(), x, y, valueColor) + INFO_SPACING;
+        String source = entry.getSource();
+        y = drawInfoText(drawContext, source == null ? unknown : source, x, y, valueColor) + INFO_SPACING;
 
         y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.info.author"), x, y, textColor);
-        String author = entry.author();
+        String author = entry.getAuthor();
         y = drawInfoText(drawContext, !StringUtil.hasText(author) ? unknown : author, x, y, valueColor) + INFO_SPACING;
 
         y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.info.description"), x, y, textColor);
-        String description = entry.description();
+        String description = entry.getDescription();
         y = drawInfoText(drawContext, !StringUtil.hasText(description) ? none : description, x, y, valueColor) + INFO_SPACING;
         //这里赋值y没用 强迫症 看着不舒服 😄
     }

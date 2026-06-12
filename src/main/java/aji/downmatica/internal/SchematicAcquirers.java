@@ -1,4 +1,7 @@
-package aji.downmatica.entry;
+package aji.downmatica.internal;
+
+import aji.downmatica.api.Schematic;
+import aji.downmatica.api.SchematicAcquirer;
 
 import java.util.ArrayList;
 import java.util.Collection;

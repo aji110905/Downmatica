@@ -1,6 +1,6 @@
 package aji.downmatica.gui;
 
-import aji.downmatica.entry.Schematic;
+import aji.downmatica.api.Schematic;
 import fi.dy.masa.litematica.gui.GuiMainMenu;
 import fi.dy.masa.malilib.gui.GuiListBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
