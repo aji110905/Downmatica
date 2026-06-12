@@ -17,6 +17,7 @@ import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
 import java.io.File;
 import java.net.URI;
+import java.util.UUID;
 
 public class DownloadWidgetListEntry extends WidgetListEntryBase<Schematic> {
     private static final int HORIZONTAL_MARGIN = 20;
@@ -57,11 +58,10 @@ public class DownloadWidgetListEntry extends WidgetListEntryBase<Schematic> {
                         }
                         String fileName = fileInfo.name();
                         String fileUrl = fileInfo.url();
-                        if (fileName == null) {
-                            String[] split = fileUrl.split("/");
-                            fileName = split[split.length - 1];
+                        if (!StringUtil.isValidFileName(fileName)) {
+                            fileName = UUID.randomUUID().toString();
                         }
-                        DownloadUtil.download(fileUrl, selectedFolder + File.separator + fileName);
+                        DownloadUtil.download(fileUrl, selectedFolder + File.separator + fileName + ".litematic");
                         gui.addMessage(Message.MessageType.SUCCESS, "downmatica.gui.button.download.massage.success");
                     } catch (Exception e) {
                         gui.addMessage(Message.MessageType.ERROR, "downmatica.gui.button.download.massage.error", e.getMessage());
