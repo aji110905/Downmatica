@@ -24,10 +24,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadWidgetListEntry,
     @Override
     public void initGui() {
         super.initGui();
-        createMainMenuButton();
-    }
 
-    private void createMainMenuButton() {
         final GuiMainMenu.ButtonListenerChangeMenu.ButtonType type = GuiMainMenu.ButtonListenerChangeMenu.ButtonType.MAIN_MENU;
         final String label = StringUtils.translate(type.getLabelKey());
         final int width = getStringWidth(label) + BUTTON_HORIZONTAL_MARGIN * 2;
