@@ -57,7 +57,12 @@ public class DownloadWidgetListEntry extends WidgetListEntryBase<Schematic> {
                         DownloadUtil.download(downloadURI, selectedFolder + File.separator + fileName);
                         gui.addMessage(Message.MessageType.SUCCESS, "downmatica.gui.button.download.massage.success");
                     } catch (Exception e) {
-                        gui.addMessage(Message.MessageType.ERROR, "downmatica.gui.button.download.massage.error", e.getMessage());
+                        String message = e.getMessage();
+                        gui.addMessage(
+                                Message.MessageType.ERROR,
+                                "downmatica.gui.button.download.massage.error",
+                                message == null ? StringUtils.translate("downmatica.gui.text.none") : message
+                        );
                         DownmaticaMod.LOGGER.error("Download failed", e);
                     }
                 }).start()
