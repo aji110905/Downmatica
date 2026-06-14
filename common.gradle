@@ -54,8 +54,10 @@ java {
     targetCompatibility = JAVA_VERSION
 }
 
+String fullModVersion = "v${project.mod_version}-mc${project.minecraft_version}"
+
 base {
-    archivesName.set("downmatica-v${project.mod_version}-mc${project.minecraft_version}")
+    archivesName.set("downmatica-${fullModVersion}")
 }
 
 jar {
@@ -63,10 +65,9 @@ jar {
 }
 
 processResources {
-    inputs.property "version", project.mod_version
     filesMatching("fabric.mod.json") {
         expand ([
-                "version": project.mod_version,
+                "version": fullModVersion,
                 "minecraft_version": project.minecraft_version,
                 "loader_version": project.loader_version
         ])
