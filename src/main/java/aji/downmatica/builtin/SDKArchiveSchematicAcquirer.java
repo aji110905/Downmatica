@@ -1,4 +1,4 @@
-package aji.downmatica.internal;
+package aji.downmatica.builtin;
 
 import aji.downmatica.DownmaticaMod;
 import aji.downmatica.api.Schematic;
