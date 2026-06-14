@@ -1,4 +1,4 @@
-package aji.downmatica;
+package aji.downmatica.core;
 
 import aji.downmatica.api.Schematic;
 import aji.downmatica.api.SchematicAcquirer;

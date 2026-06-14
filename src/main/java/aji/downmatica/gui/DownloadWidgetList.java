@@ -1,6 +1,6 @@
 package aji.downmatica.gui;
 
-import aji.downmatica.SchematicAcquirerManager;
+import aji.downmatica.core.SchematicAcquirerManager;
 import aji.downmatica.api.Schematic;
 import aji.downmatica.util.StringUtil;
 import fi.dy.masa.litematica.gui.Icons;
