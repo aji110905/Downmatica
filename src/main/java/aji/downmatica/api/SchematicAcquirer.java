@@ -1,6 +1,6 @@
 package aji.downmatica.api;
 
-import aji.downmatica.internal.SchematicAcquirers;
+import aji.downmatica.SchematicAcquirerManager;
 
 import java.util.Collection;
 
@@ -19,10 +19,12 @@ public interface SchematicAcquirer {
 
     /**
      * 注册一个原理图获取器。
+     * <p>
+     * 推荐在入口点调用。
      * @param acquirer 原理图获取器
      */
     static void register(SchematicAcquirer acquirer){
-        SchematicAcquirers.register(acquirer);
+        SchematicAcquirerManager.INSTANCE.register(acquirer);
     }
 }
 

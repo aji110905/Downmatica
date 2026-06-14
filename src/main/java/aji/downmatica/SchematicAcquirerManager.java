@@ -1,0 +1,37 @@
+package aji.downmatica;
+
+import aji.downmatica.api.Schematic;
+import aji.downmatica.api.SchematicAcquirer;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+public class SchematicAcquirerManager {
+    public static final SchematicAcquirerManager INSTANCE = new SchematicAcquirerManager();
+
+    private final ArrayList<SchematicAcquirer> acquirers = new ArrayList<>();
+
+    private SchematicAcquirerManager(){
+
+    }
+
+    /**
+     * 此方法功内部调用，不推荐直接使用。
+     * <p>
+     * 未来版本中，该方法的签名或行为可能会在不预先通知的情况下发生变化。
+     * <p>
+     * 建议使用{@link SchematicAcquirer#register(SchematicAcquirer)}作为替代，
+     * 该 API 会保持向下兼容性，而此方法不会。
+     */
+    public void register(SchematicAcquirer acquirer) {
+        acquirers.add(acquirer);
+    }
+
+    public Collection<Schematic> getAllSchematics(){
+        ArrayList<Schematic> schematics = new ArrayList<>();
+        for(SchematicAcquirer acquirer : acquirers){
+            schematics.addAll(acquirer.getSchematics());
+        }
+        return schematics;
+    }
+}

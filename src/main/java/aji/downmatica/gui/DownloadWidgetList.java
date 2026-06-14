@@ -1,6 +1,6 @@
 package aji.downmatica.gui;
 
-import aji.downmatica.internal.SchematicAcquirers;
+import aji.downmatica.SchematicAcquirerManager;
 import aji.downmatica.api.Schematic;
 import aji.downmatica.util.StringUtil;
 import fi.dy.masa.litematica.gui.Icons;
@@ -47,7 +47,7 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
                 LeftRight.LEFT
         );
         new Thread(() -> {
-            entries.addAll(SchematicAcquirers.getAllSchematics());
+            entries.addAll(SchematicAcquirerManager.INSTANCE.getAllSchematics());
             refreshEntries();
         }).start();
     }
