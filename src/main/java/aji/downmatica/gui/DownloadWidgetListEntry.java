@@ -50,11 +50,11 @@ public class DownloadWidgetListEntry extends WidgetListEntryBase<Schematic> {
                             gui.addMessage(Message.MessageType.ERROR, "downmatica.gui.button.download.massage.no_file");
                             return;
                         }
-                        String fileName = entry.getTitle();
+                        String fileName = entry.getTitle() + ".litematic";
                         if (!StringUtil.isValidFileName(fileName)) {
-                            fileName = UUID.randomUUID().toString();
+                            fileName = UUID.randomUUID() +".litematic";
                         }
-                        DownloadUtil.download(downloadURI, selectedFolder + File.separator + fileName + ".litematic");
+                        DownloadUtil.download(downloadURI, selectedFolder + File.separator + fileName);
                         gui.addMessage(Message.MessageType.SUCCESS, "downmatica.gui.button.download.massage.success");
                     } catch (Exception e) {
                         gui.addMessage(Message.MessageType.ERROR, "downmatica.gui.button.download.massage.error", e.getMessage());
