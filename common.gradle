@@ -23,7 +23,7 @@ repositories {
 }
 
 loom{
-    accessWidenerPath = file("carpetajiaddition.accesswidener")
+    accessWidenerPath = file("downmatica.accesswidener")
 }
 
 dependencies {
