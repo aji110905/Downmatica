@@ -13,9 +13,9 @@ import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import net.minecraft.client.gui.GuiGraphics;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidgetListEntry> {
     private static final int HORIZONTAL_MARGIN = 2;
@@ -30,7 +30,7 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
     private static final int STRING_HEIGHT = 8;
 
     private final DownloadGui gui;
-    private final Collection<Schematic> entries = new ArrayList<>();
+    private final Collection<Schematic> entries = new CopyOnWriteArrayList<>();
     private int infoHeight;
     private int infoWidth;
 
