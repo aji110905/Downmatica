@@ -7,10 +7,19 @@ import aji.downmatica.util.StringUtil;
 import fi.dy.masa.malilib.gui.Message;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.widgets.WidgetListEntryBase;
+//#if MC >= 12111
+//$$ import fi.dy.masa.malilib.render.GuiContext;
+//#endif
 import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.malilib.util.StringUtils;
+//#if MC < 260100
 import net.minecraft.Util;
+//#else
+//$$ import net.minecraft.util.Util;
+//#endif
+//#if MC < 12111
 import net.minecraft.client.gui.GuiGraphics;
+//#endif
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
 import java.io.File;
@@ -98,6 +107,7 @@ public class DownloadWidgetListEntry extends WidgetListEntryBase<Schematic> {
     }
 
     @Override
+    //#if MC < 12106
     public void render(int mouseX, int mouseY, boolean selected, GuiGraphics drawContext) {
         if (selected || isMouseOver(mouseX, mouseY)) {
             RenderUtils.drawRect(x, y, width, height, 0x70FFFFFF);
@@ -114,4 +124,40 @@ public class DownloadWidgetListEntry extends WidgetListEntryBase<Schematic> {
         drawString(x + HORIZONTAL_MARGIN, y + (height - STRING_HEIGHT) / 2 , 0xFFFFFFFF, text, drawContext);
         super.render(mouseX, mouseY, selected, drawContext);
     }
+    //#elseif MC < 12111
+    //$$ public void render(GuiGraphics drawContext, int mouseX, int mouseY, boolean selected) {
+    //$$     if (selected || isMouseOver(mouseX, mouseY)) {
+    //$$         RenderUtils.drawRect(drawContext, x, y, width, height, 0x70FFFFFF);
+    //$$     } else {
+    //$$         RenderUtils.drawRect(drawContext, x, y, width, height, isOdd ? 0x20FFFFFF : 0x50FFFFFF);
+    //$$     }
+    //$$     String text = StringUtils.translate("downmatica.gui.text.unknown");
+    //$$     if (entry != null){
+    //$$         String string = entry.getTitle();
+    //$$         if (StringUtil.hasText(string)) {
+    //$$             text = string;
+    //$$         }
+    //$$     }
+    //$$     drawString(drawContext, x + HORIZONTAL_MARGIN, y + (height - STRING_HEIGHT) / 2 , 0xFFFFFFFF, text);
+    //$$     super.render(drawContext, mouseX, mouseY, selected);
+    //$$ }
+    //#else
+    //$$ public void render(GuiContext ctx, int mouseX, int mouseY, boolean selected) {
+    //$$     if (selected || isMouseOver(mouseX, mouseY)) {
+    //$$         RenderUtils.drawRect(ctx, x, y, width, height, 0x70FFFFFF);
+    //$$     } else {
+    //$$         RenderUtils.drawRect(ctx, x, y, width, height, isOdd ? 0x20FFFFFF : 0x50FFFFFF);
+    //$$     }
+    //$$     String text = StringUtils.translate("downmatica.gui.text.unknown");
+    //$$     if (entry != null){
+    //$$         String string = entry.getTitle();
+    //$$         if (StringUtil.hasText(string)) {
+    //$$             text = string;
+    //$$         }
+    //$$     }
+    //$$     drawString(ctx, x + HORIZONTAL_MARGIN, y + (height - STRING_HEIGHT) / 2 , 0xFFFFFFFF, text);
+    //$$     super.render(ctx, mouseX, mouseY, selected);
+    //$$ }
+    //#endif
+
 }

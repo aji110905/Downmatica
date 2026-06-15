@@ -9,9 +9,9 @@ import fi.dy.masa.malilib.gui.GuiListBase;
 import fi.dy.masa.malilib.gui.LeftRight;
 import fi.dy.masa.malilib.gui.widgets.WidgetListBase;
 import fi.dy.masa.malilib.gui.widgets.WidgetSearchBar;
+import fi.dy.masa.malilib.render.GuiContext;
 import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.malilib.util.StringUtils;
-import net.minecraft.client.gui.GuiGraphics;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -64,13 +64,14 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
     }
 
     @Override
-    //#if MC < 12106
-    public void drawContents(GuiGraphics drawContext, int mouseX, int mouseY, float partialTicks) {
-        RenderUtils.drawOutlinedBox(posX, posY, browserWidth, browserHeight, GuiListBase.TOOLTIP_BACKGROUND, GuiBase.COLOR_HORIZONTAL_BAR);
+    public void drawContents(GuiContext drawContext, int mouseX, int mouseY, float partialTicks) {
+        RenderUtils.drawOutlinedBox(drawContext, posX, posY, browserWidth, browserHeight, GuiListBase.TOOLTIP_BACKGROUND, GuiBase.COLOR_HORIZONTAL_BAR);
+
         super.drawContents(drawContext, mouseX, mouseY, partialTicks);
+
         int x = posX + totalWidth - infoWidth;
         int y = posY;
-        RenderUtils.drawOutlinedBox(x, y, infoWidth, infoHeight, GuiListBase.TOOLTIP_BACKGROUND, GuiBase.COLOR_HORIZONTAL_BAR);
+        RenderUtils.drawOutlinedBox(drawContext, x, y, infoWidth, infoHeight, GuiListBase.TOOLTIP_BACKGROUND, GuiBase.COLOR_HORIZONTAL_BAR);
         if (entries.isEmpty()) {
             drawLoading(drawContext, x, y);
             return;
@@ -80,32 +81,15 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
             drawInfo(drawContext, entry, x + INFO_MARGIN, y + INFO_MARGIN);
         }
     }
-    //#else
-    //$$ public void drawContents(GuiGraphics drawContext, int mouseX, int mouseY, float partialTicks) {
-    //$$     RenderUtils.drawOutlinedBox(drawContext, posX, posY, browserWidth, browserHeight, GuiListBase.TOOLTIP_BACKGROUND, GuiBase.COLOR_HORIZONTAL_BAR);
-    //$$     super.drawContents(drawContext, mouseX, mouseY, partialTicks);
-    //$$     int x = posX + totalWidth - infoWidth;
-    //$$     int y = posY;
-    //$$     RenderUtils.drawOutlinedBox(drawContext, x, y, infoWidth, infoHeight, GuiListBase.TOOLTIP_BACKGROUND, GuiBase.COLOR_HORIZONTAL_BAR);
-    //$$     if (entries.isEmpty()) {
-    //$$         drawLoading(drawContext, x, y);
-    //$$         return;
-    //$$     }
-    //$$     Schematic entry = getLastSelectedEntry();
-    //$$     if (entry != null) {
-    //$$         drawInfo(drawContext, entry, x + INFO_MARGIN, y + INFO_MARGIN);
-    //$$     }
-    //$$ }
-    //#endif
 
-    private void drawLoading(GuiGraphics drawContext, int x, int y) {
+    private void drawLoading(GuiContext drawContext, int x, int y) {
         String string = StringUtils.translate("downmatica.gui.text.loading");
         x += (infoWidth - getStringWidth(string)) / 2;
         y += (infoHeight - STRING_HEIGHT) / 2;
         drawString(drawContext, string, x, y, 0xFFFFFFFF);
     }
 
-    private void drawInfo(GuiGraphics drawContext, Schematic entry, int x, int y) {
+    private void drawInfo(GuiContext drawContext, Schematic entry, int x, int y) {
         final int textColor = 0xC0C0C0C0;
         final int valueColor = 0xFFFFFFFF;
 
@@ -130,7 +114,7 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
         //这里赋值y没用 强迫症 看着不舒服 😄
     }
 
-    private int drawInfoText(GuiGraphics drawContext, String text, int x, int y, int color) {
+    private int drawInfoText(GuiContext drawContext, String text, int x, int y, int color) {
         final int infoMaxWidth = infoWidth - INFO_MARGIN;
         String[] lines = text.split("\n", -1);
         for (String line : lines) {

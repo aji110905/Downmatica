@@ -20,10 +20,9 @@ repositories {
             includeGroupAndSubgroups("fi.dy.masa")
         }
     }
-}
-
-loom{
-    accessWidenerPath = file("downmatica.accesswidener")
+    maven {
+        url = "https://maven.fallenbreath.me/releases"
+    }
 }
 
 dependencies {
@@ -37,8 +36,8 @@ dependencies {
         dep -> unobfuscated ? implementation(dep) : modImplementation(dep)
     }
     autoImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    autoImplementation "fi.dy.masa.malilib:malilib-fabric-${project.minecraft_version}:${project.malilib_version}"
-    autoImplementation "fi.dy.masa.litematica:litematica-fabric-${project.minecraft_version}:${project.litematica_version}"
+    autoImplementation "fi.dy.masa.malilib:malilib-fabric-${project.malilib_version}"
+    autoImplementation "fi.dy.masa.litematica:litematica-fabric-${project.litematica_version}"
 }
 
 JavaVersion JAVA_VERSION
