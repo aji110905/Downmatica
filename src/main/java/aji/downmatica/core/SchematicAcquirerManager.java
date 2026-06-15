@@ -1,5 +1,6 @@
 package aji.downmatica.core;
 
+import aji.downmatica.DownmaticaMod;
 import aji.downmatica.api.Schematic;
 import aji.downmatica.api.SchematicAcquirer;
 
@@ -30,7 +31,11 @@ public class SchematicAcquirerManager {
     public Collection<Schematic> getAllSchematics(){
         ArrayList<Schematic> schematics = new ArrayList<>();
         for(SchematicAcquirer acquirer : acquirers){
-            schematics.addAll(acquirer.getSchematics());
+            try {
+                schematics.addAll(acquirer.getSchematics());
+            } catch (Exception e) {
+                DownmaticaMod.LOGGER.error("Failed to get schematics from acquirer {}", acquirer.getClass().getName(), e);
+            }
         }
         return schematics;
     }
