@@ -18,6 +18,7 @@
   "downmatica.gui.button.download.display": "下載",
   "downmatica.gui.button.download.massage.select_folder": "請選擇下載目錄",
   "downmatica.gui.button.download.massage.cancel": "已取消下載",
+  "downmatica.gui.button.download.massage.file_exists": "檔案已存在",
   "downmatica.gui.button.download.massage.success": "下載成功",
   "downmatica.gui.button.download.massage.no_file": "下載失敗，這不是你的問題，你可以選擇回報該模組開發人員，之後點擊「詳情」前往該網頁下載。",
   "downmatica.gui.button.download.massage.error": "下載失敗，可提供資訊如下：%s"

@@ -18,6 +18,7 @@
   "downmatica.gui.button.download.display": "Download",
   "downmatica.gui.button.download.massage.select_folder": "Please select download directory",
   "downmatica.gui.button.download.massage.cancel": "Download cancelled",
+  "downmatica.gui.button.download.massage.file_exists": "File already exists",
   "downmatica.gui.button.download.massage.success": "Download successful",
   "downmatica.gui.button.download.massage.no_file": "Download failed. This is not your fault. You may report this issue to the mod developer, then click Details to download from the webpage.",
   "downmatica.gui.button.download.massage.error": "Download failed. Additional info: %s"

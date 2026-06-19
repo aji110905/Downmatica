@@ -1,9 +1,9 @@
 package aji.downmatica.api.impl;
 
 import aji.downmatica.api.Schematic;
+import aji.downmatica.api.SchematicDownloadInfo;
 import org.jetbrains.annotations.Nullable;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,16 +12,16 @@ public class SchematicImpl implements Schematic {
     private final String title;
     private final String author;
     private final String description;
-    private final URI downloadURI;
-    private final URI webURI;
+    private final SchematicDownloadInfo downloadFileInfo;
+    private final Runnable runnable;
 
-    public SchematicImpl(String source, String title, String author, String description, URI downloadURI, URI webURI) {
+    public SchematicImpl(String source, String title, String author, String description, SchematicDownloadInfo downloadFileInfo, Runnable runnable) {
         this.source = source;
         this.title = title;
         this.author = author;
         this.description = description;
-        this.downloadURI = downloadURI;
-        this.webURI = webURI;
+        this.downloadFileInfo = downloadFileInfo;
+        this.runnable = runnable;
     }
 
     @Override
@@ -45,13 +45,13 @@ public class SchematicImpl implements Schematic {
     }
 
     @Override
-    public @Nullable URI getDownloadURI() {
-        return downloadURI;
+    public @Nullable SchematicDownloadInfo getDownloadFileInfo() {
+        return downloadFileInfo;
     }
 
     @Override
-    public @Nullable URI getWebURI() {
-        return webURI;
+    public @Nullable Runnable onDetailButtonClicked() {
+        return runnable;
     }
 
     @Override

@@ -3,12 +3,18 @@ package aji.downmatica.builtin;
 import aji.downmatica.DownmaticaMod;
 import aji.downmatica.api.Schematic;
 import aji.downmatica.api.SchematicAcquirer;
+import aji.downmatica.util.StringUtil;
 import aji.downmatica.util.URIBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fi.dy.masa.malilib.util.StringUtils;
+//#if MC < 260100
+import net.minecraft.Util;
+//#else
+//$$ import net.minecraft.util.Util;
+//#endif
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
@@ -101,14 +107,20 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer {
         try {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             JsonArray jsonArray = jsonObject.get("file").getAsJsonArray();
-            return Schematic.builder()
+            Schematic.Builder builder = Schematic.builder()
                     .source(StringUtils.translate("downmatica.source.sdk_archive"))
                     .title(jsonObject.get("title").getAsString())
                     .author(author)
                     .description(jsonObject.get("description").getAsString())
-                    .downloadURI(jsonArray.isEmpty() ? null : URI.create(jsonArray.get(0).getAsJsonObject().get("url").getAsString()))
-                    .webURI(URI.create(SDK_ARCHIVE_DETAIL_URL + jsonObject.get("_id").getAsString()))
-                    .build();
+                    .onDetailButtonClicked(() -> Util.getPlatform().openUri(URI.create(SDK_ARCHIVE_DETAIL_URL + jsonObject.get("_id").getAsString())));
+            if (!jsonArray.isEmpty()) {
+                JsonObject object = jsonArray.get(0).getAsJsonObject();
+                String name = object.get("name").getAsString();
+                if (StringUtil.hasText(name)) {
+                    builder.downloadFileInfo(name, URI.create(object.get("url").getAsString()));
+                }
+            }
+            return builder.build();
         } catch (Exception e) {
             DownmaticaMod.LOGGER.error("Failed to create schematic", e);
             return null;

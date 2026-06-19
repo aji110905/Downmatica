@@ -2,6 +2,7 @@ package aji.downmatica.gui;
 
 import aji.downmatica.DownmaticaMod;
 import aji.downmatica.api.Schematic;
+import aji.downmatica.api.SchematicDownloadInfo;
 import aji.downmatica.util.DownloadUtil;
 import aji.downmatica.util.StringUtil;
 import fi.dy.masa.malilib.gui.Message;
@@ -12,19 +13,14 @@ import fi.dy.masa.malilib.gui.widgets.WidgetListEntryBase;
 //#endif
 import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.malilib.util.StringUtils;
-//#if MC < 260100
-import net.minecraft.Util;
-//#else
-//$$ import net.minecraft.util.Util;
-//#endif
 //#if MC < 12111
 import net.minecraft.client.gui.GuiGraphics;
 //#endif
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
-import java.io.File;
-import java.net.URI;
-import java.util.UUID;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class DownloadWidgetListEntry extends WidgetListEntryBase<Schematic> {
     private static final int HORIZONTAL_MARGIN = 20;
@@ -45,55 +41,63 @@ public class DownloadWidgetListEntry extends WidgetListEntryBase<Schematic> {
         y += VERTICAL_MARGIN;
         x += width - buttonWidth - BUTTON_GAP;
 
-        URI downloadURI = entry.getDownloadURI();
+        SchematicDownloadInfo downloadFileInfo = entry.getDownloadFileInfo();
         ButtonGeneric saveAsButton = addButton(
                 new ButtonGeneric(x, y, buttonWidth, buttonHeight, saveAsDisplay),
                 (button, mouseButton) -> new Thread(() -> {
+                    String selectedFolder = TinyFileDialogs.tinyfd_selectFolderDialog("downmatica.gui.button.download.massage.select_folder", "");
+                    if (selectedFolder == null) {
+                        gui.addMessage(Message.MessageType.INFO, "downmatica.gui.button.download.massage.cancel");
+                        return;
+                    }
+                    if (downloadFileInfo == null) {
+                        gui.addMessage(Message.MessageType.ERROR, "downmatica.gui.button.download.massage.no_file");
+                        return;
+                    }
+                    Path path = Paths.get(selectedFolder, downloadFileInfo.getLocalFileName());
+                    if (Files.exists(path)) {
+                        gui.addMessage(Message.MessageType.ERROR, "downmatica.gui.button.download.massage.file_exists");
+                        return;
+                    }
                     try {
-                        String selectedFolder = TinyFileDialogs.tinyfd_selectFolderDialog("downmatica.gui.button.download.massage.select_folder", "");
-                        if (selectedFolder == null) {
-                            gui.addMessage(Message.MessageType.INFO, "downmatica.gui.button.download.massage.cancel");
-                            return;
-                        }
-                        if (downloadURI == null) {
-                            gui.addMessage(Message.MessageType.ERROR, "downmatica.gui.button.download.massage.no_file");
-                            return;
-                        }
-                        String fileName = entry.getTitle() + ".litematic";
-                        if (!StringUtil.isValidFileName(fileName)) {
-                            fileName = UUID.randomUUID() +".litematic";
-                        }
-                        DownloadUtil.download(downloadURI, selectedFolder + File.separator + fileName);
-                        gui.addMessage(Message.MessageType.SUCCESS, "downmatica.gui.button.download.massage.success");
+                        DownloadUtil.download(downloadFileInfo.getRemoteFileURI(), path);
                     } catch (Exception e) {
                         String message = e.getMessage();
                         gui.addMessage(
                                 Message.MessageType.ERROR,
                                 "downmatica.gui.button.download.massage.error",
-                                message == null ? StringUtils.translate("downmatica.gui.text.none") : message
+                                StringUtil.hasText(message) ? message : StringUtils.translate("downmatica.gui.text.none")
                         );
                         DownmaticaMod.LOGGER.error("Download failed", e);
                     }
+                    gui.addMessage(Message.MessageType.SUCCESS, "downmatica.gui.button.download.massage.success");
                 }).start()
         );
-        if (downloadURI == null) {
+        if (downloadFileInfo == null) {
             saveAsButton.setEnabled(false);
+        } else if (!downloadFileInfo.isValid()) {
+            saveAsButton.setEnabled(false);
+            DownmaticaMod.LOGGER.warn(
+                    "Configuration validation failed for schematic download source \"{}\" from \"{}\". The data is invalid, so the download button has been disabled. If you can confirm which extension or core mod this source belongs to, please report this issue to that source's developer.",
+                    entry.getTitle(),
+                    entry.getSource()
+            );
         }
 
         x -= buttonWidth + BUTTON_GAP;
 
-        URI webURI = entry.getWebURI();
+        Runnable runnable = entry.onDetailButtonClicked();
         ButtonGeneric detailsButton = addButton(
                 new ButtonGeneric(x, y, buttonWidth, buttonHeight, detailsDisplay),
                 (button, mouseButton) -> {
-                    if (webURI == null) {
+                    if (runnable == null) {
                         gui.addMessage(Message.MessageType.ERROR, "downmatica.gui.button.details.massage.open_web_page_failed");
                         return;
                     }
-                    Util.getPlatform().openUri(webURI);
+                    runnable.run();
                 }
         );
-        if (webURI == null) {
+        if (runnable == null) {
             detailsButton.setEnabled(false);
         }
     }

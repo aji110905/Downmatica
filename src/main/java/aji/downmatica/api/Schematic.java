@@ -7,7 +7,7 @@ import java.net.URI;
 import java.util.List;
 
 /**
- * 表示从远程或以其他方式获取的原理图。
+ * 表示从网络中获取的原理图。
  * <p>
  * 推荐使用通用实现{@link SchematicImpl}。
  */
@@ -15,9 +15,9 @@ public interface Schematic {
     /**
      * 返回该原理图的来源。
      * <p>
-     * 可以是网站的名称，或者任何东西，没有过多校验。
+     * 该值不为有效字符串时将在页面中显示<code>未知</code>。
      * <p>
-     * 推荐返回翻译后的名称，因为一个{@link SchematicAcquirer}可能会返回多个原理图，但通常都是同一个来源。
+     * 校验逻辑请查看{@link aji.downmatica.util.StringUtil#hasText(String)}。
      * @return 来源
      */
     @Nullable String getSource();
@@ -25,41 +25,51 @@ public interface Schematic {
     /**
      * 返回该原理图的标题。
      * <p>
-     * 标题也会用于下载后保存的文件名称，请确保名称符合文件命名规则。
+     * 该值不为有效字符串时将在页面中显示<code>未知</code>。
      * <p>
-     * 具体校验规则请查看{@link aji.downmatica.util.StringUtil#isValidFileName(String)}。
-     * <p>
-     * 如果不是合理的文件名称，下载后的文件名将会为为一串随机的uuid。
+     * 校验逻辑请查看{@link aji.downmatica.util.StringUtil#hasText(String)}。
      * @return 标题
      */
     @Nullable String getTitle();
 
     /**
-     * 获取该原理图的作者。
+     * 返回该原理图的作者。
+     * <p>
+     * 该值不为有效字符串时将在页面中显示<code>未知</code>。
+     * <p>
+     * 校验逻辑请查看{@link aji.downmatica.util.StringUtil#hasText(String)}。
      * @return 作者
      */
     @Nullable String getAuthor();
 
     /**
-     * 获取该原理图的描述。
+     * 返回该原理图的描述。
+     * <p>
+     * 该值不为有效字符串时将在页面中显示<code>无</code>。
+     * <p>
+     * 校验逻辑请查看{@link aji.downmatica.util.StringUtil#hasText(String)}。
      * @return 描述
      */
     @Nullable String getDescription();
 
     /**
-     * 获取该原理图的下载地址。
+     * 返回该原理图的下载地址。
+     * <p>
+     * 该值为<code>null</code>时，<code>下载</code>按钮将不可点击。
      * @return 下载地址
      */
-    @Nullable URI getDownloadURI();
+    @Nullable SchematicDownloadInfo getDownloadFileInfo();
 
     /**
-     * 获取该原理图的网页地址。
-     * @return 网页地址
+     * 当详情按钮被点击时调用{@link Runnable#run()}
+     * <p>
+     * 当该值为<code>null</code>时，<code>详情</code>按钮将不可点击。
+     * @return 详情按钮点击事件
      */
-    @Nullable URI getWebURI();
+    @Nullable Runnable onDetailButtonClicked();
 
     /**
-     * 获取该原理图用于搜索的字符串。
+     * 返回该原理图用于搜索的字符串。
      * @return 搜索字符串
      */
     List<String> getSearchStrings();
@@ -73,8 +83,8 @@ public interface Schematic {
         private String title;
         private String author;
         private String description;
-        private URI downloadURI;
-        private URI webURI;
+        private SchematicDownloadInfo downloadFileInfo;
+        private Runnable runnable;
 
         public Builder source(String source) {
             this.source = source;
@@ -96,18 +106,18 @@ public interface Schematic {
             return this;
         }
 
-        public Builder downloadURI(URI downloadURI) {
-            this.downloadURI = downloadURI;
+        public Builder downloadFileInfo(String localFileName, URI remoteFileURI) {
+            this.downloadFileInfo = SchematicDownloadInfo.of(localFileName, remoteFileURI);
             return this;
         }
 
-        public Builder webURI(URI webURI) {
-            this.webURI = webURI;
+        public Builder onDetailButtonClicked(Runnable runnable) {
+            this.runnable = runnable;
             return this;
         }
 
         public Schematic build() {
-            return new SchematicImpl(source, title, author, description, downloadURI, webURI);
+            return new SchematicImpl(source, title, author, description, downloadFileInfo, runnable);
         }
     }
 }

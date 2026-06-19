@@ -5,7 +5,7 @@ import aji.downmatica.core.SchematicAcquirerManager;
 import java.util.Collection;
 
 /**
- * 原理图获取器。
+ * 表示原理图获取器。
  */
 @FunctionalInterface
 public interface SchematicAcquirer {
