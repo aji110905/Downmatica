@@ -42,64 +42,52 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer {
     }
 
     private HashMap<String, String> getAllUser() {
-        URI uri = URIBuilder.create(GET_USERS_URL).build();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(uri)
-                .build();
-        HttpResponse<String> response;
         try {
-            response = DownmaticaMod.HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (Exception e) {
-            DownmaticaMod.LOGGER.error("Failed to get all user", e);
-            return new HashMap<>();
-        }
-        HashMap<String, String> rel = new HashMap<>();
-        try {
+            URI uri = URIBuilder.create(GET_USERS_URL).build();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(uri)
+                    .build();
+            HttpResponse<String> response = DownmaticaMod.HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
             JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
+            HashMap<String, String> rel = new HashMap<>();
             for (JsonElement element : jsonObject.get("data").getAsJsonArray()) {
                 JsonObject object = element.getAsJsonObject();
                 rel.put(object.get("_id").getAsString(), object.get("username").getAsString());
             }
-        } catch (Exception e){
+            return rel;
+        } catch (Exception e) {
             DownmaticaMod.LOGGER.error("Failed to get all user", e);
             return new HashMap<>();
         }
-        return rel;
     }
 
     private ArrayList<Schematic> getUserSchematics(String userId, String userName, int count) {
         if (count <= 0) {
             return new ArrayList<>();
         }
-        URI uri = URIBuilder.create(GET_USER_SCHEMATICS_URL)
-                .addParam("page", "1")
-                .addParam("size", String.valueOf(count))
-                .addParam("auth", userId)
-                .build();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(uri)
-                .build();
-        HttpResponse<String> response;
         try {
-            response = DownmaticaMod.HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (Exception e) {
-            DownmaticaMod.LOGGER.error("Failed to get user schematics", e);
-            return new ArrayList<>();
-        }
-        ArrayList<Schematic> rel = new ArrayList<>();
-        try {
+            URI uri = URIBuilder.create(GET_USER_SCHEMATICS_URL)
+                    .addParam("page", "1")
+                    .addParam("size", String.valueOf(count))
+                    .addParam("auth", userId)
+                    .build();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(uri)
+                    .build();
+            HttpResponse<String> response = DownmaticaMod.HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
             JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
+            ArrayList<Schematic> rel = new ArrayList<>();
             for (JsonElement element : jsonObject.get("data").getAsJsonArray()) {
                 Schematic schematic = createSchematic(element, userName);
                 if (schematic != null) {
                     rel.add(schematic);
                 }
             }
+            return rel;
         } catch (Exception e) {
             DownmaticaMod.LOGGER.error("Failed to get user schematics", e);
             return new ArrayList<>();
         }
-        return rel;
     }
 
     @Nullable
@@ -128,22 +116,16 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer {
     }
 
     private int getUserSchematicsCount(String userId) {
-        URI uri = URIBuilder.create(GET_USER_SCHEMATICS_URL)
-                .addParam("page", "1")
-                .addParam("size", "1")
-                .addParam("auth", userId)
-                .build();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(uri)
-                .build();
-        HttpResponse<String> response;
         try {
-            response = DownmaticaMod.HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (Exception e) {
-            DownmaticaMod.LOGGER.error("Failed to get user schematics count", e);
-            return -1;
-        }
-        try {
+            URI uri = URIBuilder.create(GET_USER_SCHEMATICS_URL)
+                    .addParam("page", "1")
+                    .addParam("size", "1")
+                    .addParam("auth", userId)
+                    .build();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(uri)
+                    .build();
+            HttpResponse<String> response = DownmaticaMod.HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
             JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
             return jsonObject.get("total").getAsInt();
         } catch (Exception e) {
