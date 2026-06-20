@@ -11,6 +11,7 @@ import fi.dy.masa.malilib.gui.widgets.WidgetListBase;
 import fi.dy.masa.malilib.gui.widgets.WidgetSearchBar;
 import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.malilib.util.StringUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 
 import java.util.Collection;
@@ -33,6 +34,7 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
     private final Collection<Schematic> entries = new CopyOnWriteArrayList<>();
     private int infoHeight;
     private int infoWidth;
+    private volatile boolean loading = true;
 
     public DownloadWidgetList(int x, int y, int width, int height, DownloadGui gui) {
         super(x, y, width, height, null);
@@ -48,7 +50,10 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
         );
         new Thread(() -> {
             entries.addAll(SchematicAcquirerManager.INSTANCE.getAllSchematics());
-            refreshEntries();
+            Minecraft.getInstance().execute(() -> {
+                refreshEntries();
+                loading = false;
+            });
         }).start();
     }
 
@@ -71,7 +76,7 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
         int x = posX + totalWidth - infoWidth;
         int y = posY;
         RenderUtils.drawOutlinedBox(x, y, infoWidth, infoHeight, GuiListBase.TOOLTIP_BACKGROUND, GuiBase.COLOR_HORIZONTAL_BAR);
-        if (entries.isEmpty()) {
+        if (loading) {
             drawLoading(drawContext, x, y);
             return;
         }
@@ -87,7 +92,7 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
     //$$     int x = posX + totalWidth - infoWidth;
     //$$     int y = posY;
     //$$     RenderUtils.drawOutlinedBox(drawContext, x, y, infoWidth, infoHeight, GuiListBase.TOOLTIP_BACKGROUND, GuiBase.COLOR_HORIZONTAL_BAR);
-    //$$     if (entries.isEmpty()) {
+    //$$     if (loading) {
     //$$         drawLoading(drawContext, x, y);
     //$$         return;
     //$$     }
