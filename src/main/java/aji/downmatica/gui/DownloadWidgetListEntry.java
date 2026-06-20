@@ -26,7 +26,7 @@ public class DownloadWidgetListEntry extends WidgetListEntryBase<Schematic> {
     private static final int HORIZONTAL_MARGIN = 20;
     private static final int VERTICAL_MARGIN  = 1;
     private static final int BUTTON_GAP = 2;
-    private static final int BUTTON_HORIZONTAL_MARGIN = 15;
+    private static final int BUTTON_HORIZONTAL_MARGIN = 10;
     private static final int STRING_HEIGHT = 8;
 
     private final boolean isOdd;
@@ -105,7 +105,7 @@ public class DownloadWidgetListEntry extends WidgetListEntryBase<Schematic> {
     public int getButtonWidget(String... texts){
         int widget = 0;
         for (String text : texts) {
-            widget = Math.max(widget, getStringWidth(text) + BUTTON_HORIZONTAL_MARGIN);
+            widget = Math.max(widget, getStringWidth(text) + BUTTON_HORIZONTAL_MARGIN * 2);
         }
         return widget;
     }
