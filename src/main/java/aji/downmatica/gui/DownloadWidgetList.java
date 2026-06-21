@@ -13,8 +13,10 @@ import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -31,10 +33,10 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
     private static final int STRING_HEIGHT = 8;
 
     private final DownloadGui gui;
-    private final Collection<Schematic> entries = new CopyOnWriteArrayList<>();
+    @Nullable
+    private Collection<Schematic> entries;
     private int infoHeight;
     private int infoWidth;
-    private volatile boolean loading = true;
 
     public DownloadWidgetList(int x, int y, int width, int height, DownloadGui gui) {
         super(x, y, width, height, null);
@@ -48,12 +50,13 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
                 Icons.FILE_ICON_SEARCH,
                 LeftRight.LEFT
         );
+    }
+
+    public void loadEntriesAsync() {
+        entries = new CopyOnWriteArrayList<>();
         new Thread(() -> {
             entries.addAll(SchematicAcquirerManager.INSTANCE.getAllSchematics());
-            Minecraft.getInstance().execute(() -> {
-                refreshEntries();
-                loading = false;
-            });
+            Minecraft.getInstance().execute(this::refreshEntries);
         }).start();
     }
 
@@ -76,7 +79,7 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
         int x = posX + totalWidth - infoWidth;
         int y = posY;
         RenderUtils.drawOutlinedBox(x, y, infoWidth, infoHeight, GuiListBase.TOOLTIP_BACKGROUND, GuiBase.COLOR_HORIZONTAL_BAR);
-        if (loading) {
+        if (entries == null) {
             drawLoading(drawContext, x, y);
             return;
         }
@@ -168,7 +171,7 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
 
     @Override
     protected Collection<Schematic> getAllEntries() {
-        return entries;
+        return entries == null ? Collections.emptyList() : entries;
     }
 
     @Override

@@ -3,8 +3,10 @@ package aji.downmatica.gui;
 import aji.downmatica.api.Schematic;
 import fi.dy.masa.litematica.gui.GuiMainMenu;
 import fi.dy.masa.malilib.gui.GuiListBase;
+import fi.dy.masa.malilib.gui.Message;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.util.StringUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 
 public class DownloadGui extends GuiListBase<Schematic, DownloadWidgetListEntry, DownloadWidgetList> {
@@ -38,7 +40,9 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadWidgetListEntry,
 
     @Override
     protected DownloadWidgetList createListWidget(int listX, int listY) {
-        return new DownloadWidgetList(listX, listY, getBrowserWidth(), getBrowserHeight(), this);
+        DownloadWidgetList list = new DownloadWidgetList(listX, listY, getBrowserWidth(), getBrowserHeight(), this);
+        list.loadEntriesAsync();
+        return list;
     }
 
     @Override
@@ -49,5 +53,14 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadWidgetListEntry,
     @Override
     protected int getBrowserHeight() {
         return height - BOTTOM_MARGIN - TOP_MARGIN - BUTTON_HEIGHT - LIST_BUTTON_SPACING;
+    }
+
+    public void addMessageAsync(Message.MessageType type, String translationKey, Object... args) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.isSameThread()) {
+            addMessage(type, translationKey, args);
+        } else {
+            mc.execute(() -> addMessage(type, translationKey, args));
+        }
     }
 }

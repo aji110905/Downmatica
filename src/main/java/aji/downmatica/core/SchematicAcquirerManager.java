@@ -6,11 +6,12 @@ import aji.downmatica.api.SchematicAcquirer;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SchematicAcquirerManager {
     public static final SchematicAcquirerManager INSTANCE = new SchematicAcquirerManager();
 
-    private final ArrayList<SchematicAcquirer> acquirers = new ArrayList<>();
+    private final CopyOnWriteArrayList<SchematicAcquirer> acquirers = new CopyOnWriteArrayList<>();
 
     private SchematicAcquirerManager(){
 
