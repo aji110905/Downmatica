@@ -9,10 +9,15 @@ import fi.dy.masa.malilib.gui.GuiListBase;
 import fi.dy.masa.malilib.gui.LeftRight;
 import fi.dy.masa.malilib.gui.widgets.WidgetListBase;
 import fi.dy.masa.malilib.gui.widgets.WidgetSearchBar;
+//#if MC >= 12111
+//$$ import fi.dy.masa.malilib.render.GuiContext;
+//#endif
 import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import net.minecraft.client.Minecraft;
+//#if MC < 12111
 import net.minecraft.client.gui.GuiGraphics;
+//#endif
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -88,14 +93,30 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
             drawInfo(drawContext, entry, x + INFO_MARGIN, y + INFO_MARGIN);
         }
     }
-    //#else
+    //#elseif MC < 12111
     //$$ public void drawContents(GuiGraphics drawContext, int mouseX, int mouseY, float partialTicks) {
     //$$     RenderUtils.drawOutlinedBox(drawContext, posX, posY, browserWidth, browserHeight, GuiListBase.TOOLTIP_BACKGROUND, GuiBase.COLOR_HORIZONTAL_BAR);
     //$$     super.drawContents(drawContext, mouseX, mouseY, partialTicks);
     //$$     int x = posX + totalWidth - infoWidth;
     //$$     int y = posY;
     //$$     RenderUtils.drawOutlinedBox(drawContext, x, y, infoWidth, infoHeight, GuiListBase.TOOLTIP_BACKGROUND, GuiBase.COLOR_HORIZONTAL_BAR);
-    //$$     if (loading) {
+    //$$     if (entries == null) {
+    //$$         drawLoading(drawContext, x, y);
+    //$$         return;
+    //$$     }
+    //$$     Schematic entry = getLastSelectedEntry();
+    //$$     if (entry != null) {
+    //$$         drawInfo(drawContext, entry, x + INFO_MARGIN, y + INFO_MARGIN);
+    //$$     }
+    //$$ }
+    //#else
+    //$$ public void drawContents(GuiContext drawContext, int mouseX, int mouseY, float partialTicks) {
+    //$$     RenderUtils.drawOutlinedBox(drawContext, posX, posY, browserWidth, browserHeight, GuiListBase.TOOLTIP_BACKGROUND, GuiBase.COLOR_HORIZONTAL_BAR);
+    //$$     super.drawContents(drawContext, mouseX, mouseY, partialTicks);
+    //$$     int x = posX + totalWidth - infoWidth;
+    //$$     int y = posY;
+    //$$     RenderUtils.drawOutlinedBox(drawContext, x, y, infoWidth, infoHeight, GuiListBase.TOOLTIP_BACKGROUND, GuiBase.COLOR_HORIZONTAL_BAR);
+    //$$     if (entries == null) {
     //$$         drawLoading(drawContext, x, y);
     //$$         return;
     //$$     }
@@ -106,14 +127,22 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
     //$$ }
     //#endif
 
+    //#if MC < 12111
     private void drawLoading(GuiGraphics drawContext, int x, int y) {
+    //#else
+    //$$ private void drawLoading(GuiContext drawContext, int x, int y) {
+    //#endif
         String string = StringUtils.translate("downmatica.gui.text.loading");
         x += (infoWidth - getStringWidth(string)) / 2;
         y += (infoHeight - STRING_HEIGHT) / 2;
         drawString(drawContext, string, x, y, 0xFFFFFFFF);
     }
 
+    //#if MC < 12111
     private void drawInfo(GuiGraphics drawContext, Schematic entry, int x, int y) {
+    //#else
+    //$$ private void drawInfo(GuiContext drawContext, Schematic entry, int x, int y) {
+    //#endif
         final int textColor = 0xC0C0C0C0;
         final int valueColor = 0xFFFFFFFF;
 
@@ -138,7 +167,11 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
         //这里赋值y没用 强迫症 看着不舒服 😄
     }
 
+    //#if MC < 12111
     private int drawInfoText(GuiGraphics drawContext, String text, int x, int y, int color) {
+    //#else
+    //$$ private int drawInfoText(GuiContext drawContext, String text, int x, int y, int color) {
+    //#endif
         final int infoMaxWidth = infoWidth - INFO_MARGIN;
         String[] lines = text.split("\n", -1);
         for (String line : lines) {
