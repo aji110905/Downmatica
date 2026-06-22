@@ -40,7 +40,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadWidgetListEntry,
     @Override
     protected DownloadWidgetList createListWidget(int listX, int listY) {
         DownloadWidgetList list = new DownloadWidgetList(listX, listY, getBrowserWidth(), getBrowserHeight(), this);
-        list.loadEntriesAsync();
+        list.loadEntries();
         return list;
     }
 

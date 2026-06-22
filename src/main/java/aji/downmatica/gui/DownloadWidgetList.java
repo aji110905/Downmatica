@@ -63,7 +63,7 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
         };
     }
 
-    public void loadEntriesAsync() {
+    public void loadEntries() {
         new Thread(() -> {
             Collection<Schematic> schematics = SchematicAcquirerManager.INSTANCE.getAllSchematics();
             Minecraft.getInstance().execute(() -> {
