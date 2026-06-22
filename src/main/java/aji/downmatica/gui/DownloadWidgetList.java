@@ -23,7 +23,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidgetListEntry> {
     private static final int HORIZONTAL_MARGIN = 2;
@@ -38,10 +37,9 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
     private static final int STRING_HEIGHT = 8;
 
     private final DownloadGui gui;
-    @Nullable
-    private Collection<Schematic> entries;
     private int infoHeight;
     private int infoWidth;
+    @Nullable private Collection<Schematic> entries;
 
     public DownloadWidgetList(int x, int y, int width, int height, DownloadGui gui) {
         super(x, y, width, height, null);
@@ -58,10 +56,12 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
     }
 
     public void loadEntriesAsync() {
-        entries = new CopyOnWriteArrayList<>();
         new Thread(() -> {
-            entries.addAll(SchematicAcquirerManager.INSTANCE.getAllSchematics());
-            Minecraft.getInstance().execute(this::refreshEntries);
+            Collection<Schematic> schematics = SchematicAcquirerManager.INSTANCE.getAllSchematics();
+            Minecraft.getInstance().execute(() -> {
+                entries = schematics;
+                refreshEntries();
+            });
         }).start();
     }
 
