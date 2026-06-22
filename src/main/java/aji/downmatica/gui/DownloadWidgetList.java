@@ -44,6 +44,8 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
     public DownloadWidgetList(int x, int y, int width, int height, DownloadGui gui) {
         super(x, y, width, height, null);
         this.gui = gui;
+        browserEntriesOffsetY = SEARCH_BAR_HEIGHT + SEARCH_BAR_ENTRY_GAP;
+        browserEntryHeight = 22;
         widgetSearchBar = new WidgetSearchBar(
                 x + HORIZONTAL_MARGIN,
                 y + VERTICAL_MARGIN,
@@ -52,7 +54,13 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
                 0,
                 Icons.FILE_ICON_SEARCH,
                 LeftRight.LEFT
-        );
+        ){
+            @Override
+            public void setWidth(int width) {
+                super.setWidth(width);
+                searchBox.setWidth(width - iconSearch.getWidth() - 7);
+            }
+        };
     }
 
     public void loadEntriesAsync() {
@@ -71,9 +79,10 @@ public class DownloadWidgetList extends WidgetListBase<Schematic, DownloadWidget
         infoWidth = width / 4;
         infoHeight = height;
         browserWidth = width - infoWidth - INFO_BROWSER_GAP;
-        browserEntryHeight = 22;
         browserEntryWidth = browserWidth - BROWSER_HORIZONTAL_MARGIN * 2 - SCROLL_BAR_WIDTH;
-        browserEntriesOffsetY = SEARCH_BAR_HEIGHT + SEARCH_BAR_ENTRY_GAP;
+        if (widgetSearchBar != null) {
+            widgetSearchBar.setWidth(width);
+        }
     }
 
     @Override
