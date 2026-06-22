@@ -26,8 +26,8 @@ public final class FileUtil {
         if (name.indexOf('/') >= 0 || name.indexOf('\0') >= 0) {
             return false;
         }
-        if (os.contains("mac")) {
-            if (name.startsWith(".")) return false;
+        if (os.contains("mac") && name.startsWith(".")) {
+            return false;
         }
         return name.length() <= 255;
     }
