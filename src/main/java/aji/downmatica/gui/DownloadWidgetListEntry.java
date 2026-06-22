@@ -47,23 +47,23 @@ public class DownloadWidgetListEntry extends WidgetListEntryBase<Schematic> {
                 (button, mouseButton) -> new Thread(() -> {
                     String selectedFolder = TinyFileDialogs.tinyfd_selectFolderDialog("downmatica.gui.button.download.massage.select_folder", "");
                     if (selectedFolder == null) {
-                        gui.addMessageAsync(Message.MessageType.INFO, "downmatica.gui.button.download.massage.cancel");
+                        gui.addMessage(Message.MessageType.INFO, "downmatica.gui.button.download.massage.cancel");
                         return;
                     }
                     if (downloadFileInfo == null) {
-                        gui.addMessageAsync(Message.MessageType.ERROR, "downmatica.gui.button.download.massage.no_file");
+                        gui.addMessage(Message.MessageType.ERROR, "downmatica.gui.button.download.massage.no_file");
                         return;
                     }
                     Path path = Paths.get(selectedFolder, downloadFileInfo.getLocalFileName());
                     if (Files.exists(path)) {
-                        gui.addMessageAsync(Message.MessageType.ERROR, "downmatica.gui.button.download.massage.file_exists");
+                        gui.addMessage(Message.MessageType.ERROR, "downmatica.gui.button.download.massage.file_exists");
                         return;
                     }
                     try {
                         DownloadUtil.download(downloadFileInfo.getRemoteFileURI(), path);
                     } catch (Exception e) {
                         String message = e.getMessage();
-                        gui.addMessageAsync(
+                        gui.addMessage(
                                 Message.MessageType.ERROR,
                                 "downmatica.gui.button.download.massage.error",
                                 StringUtil.hasText(message) ? message : StringUtils.translate("downmatica.gui.text.none")
@@ -71,7 +71,7 @@ public class DownloadWidgetListEntry extends WidgetListEntryBase<Schematic> {
                         DownmaticaMod.LOGGER.error("Download failed", e);
                         return;
                     }
-                    gui.addMessageAsync(Message.MessageType.SUCCESS, "downmatica.gui.button.download.massage.success");
+                    gui.addMessage(Message.MessageType.SUCCESS, "downmatica.gui.button.download.massage.success");
                 }).start()
         );
         if (downloadFileInfo == null) {
