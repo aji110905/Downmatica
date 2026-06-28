@@ -1,6 +1,8 @@
 package aji.downmatica.util;
 
 import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 public class URIBuilder {
     private final StringBuilder builder;
@@ -17,7 +19,9 @@ public class URIBuilder {
         } else {
             builder.append('&');
         }
-        builder.append(key).append('=').append(value);
+        builder.append(URLEncoder.encode(key, StandardCharsets.UTF_8))
+               .append('=')
+               .append(URLEncoder.encode(value, StandardCharsets.UTF_8));
         return this;
     }
 

@@ -17,27 +17,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(GuiMainMenu.class)
 public abstract class MixinGuiMainMenu extends GuiBase {
-    @Unique
-    private static final int LEFT_MARGIN = 12;
-    @Unique
-    private static final int TOP_MARGIN = 30;
-    @Unique
-    private static final int BUTTON_HORIZONTAL_SPACING = 10;
-    @Unique
-    private static final int BUTTON_VERTICAL_SPACING = 2;
-    @Unique
-    private static final int BUTTON_HEIGHT = 20;
-
     @Shadow
     protected abstract int getButtonWidth();
 
     @Inject(method = "initGui", at = @At("RETURN"), remap = false)
     private void initGui(CallbackInfo ci) {
-        final int width = getButtonWidth();
-        final int x = LEFT_MARGIN + width + BUTTON_HORIZONTAL_SPACING * 2;
-        final int y = TOP_MARGIN + (BUTTON_VERTICAL_SPACING + BUTTON_HEIGHT) * 2;
+        int height = 20;
+        int width = getButtonWidth();
+        int x = 12 + width + 20;//12为原方法中按钮的左边界，20为按钮之间的空隙
+        int y = 30 + (2 + height) * 2;//30为原方法中按钮的顶边界，2为按钮之间的空隙
         addButton(
-                new ButtonGeneric(x, y, width, BUTTON_HEIGHT, getButtonText(), (IGuiIcon) null),
+                new ButtonGeneric(x, y, width, height, getButtonText(), (IGuiIcon) null),
                 (button, mouseButton) -> GuiBase.openGui(new DownloadGui(this))
         );
     }
@@ -49,8 +39,7 @@ public abstract class MixinGuiMainMenu extends GuiBase {
             remap = false
     )
     private void getButtonWidth(CallbackInfoReturnable<Integer> cir, @Local(name = "width") int width) {
-        //30表示按钮左右留白（原方法无常量，沿用字面量）
-        cir.setReturnValue(Math.max(width, getStringWidth(getButtonText()) + 30));
+        cir.setReturnValue(Math.max(width, getStringWidth(getButtonText()) + 30));//30表示按钮左右留白
     }
 
     @Unique
