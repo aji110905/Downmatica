@@ -10,7 +10,7 @@
 		"sources": "https://github.com/aji110905/Downmatica"
 	},
 	"license": "MIT",
-	"environment": "CLIENT",
+	"environment": "client",
 	"icon": "assets/downmatica/icon.png",
 	"entrypoints": {
 		"main": [
