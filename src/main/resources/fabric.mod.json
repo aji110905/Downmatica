@@ -11,6 +11,7 @@
 	},
 	"license": "MIT",
 	"environment": "CLIENT",
+	"icon": "assets/downmatica/icon.png",
 	"entrypoints": {
 		"main": [
 			"aji.downmatica.DownmaticaMod"
