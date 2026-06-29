@@ -3,6 +3,7 @@ package aji.downmatica.builtin;
 import aji.downmatica.DownmaticaMod;
 import aji.downmatica.api.Schematic;
 import aji.downmatica.api.SchematicAcquirer;
+import aji.downmatica.util.CompatibleUtil;
 import aji.downmatica.util.StringUtil;
 import aji.downmatica.util.URIBuilder;
 import com.google.gson.JsonArray;
@@ -10,11 +11,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fi.dy.masa.malilib.util.StringUtils;
-//#if MC < 260100
-import net.minecraft.Util;
-//#else
-//$$ import net.minecraft.util.Util;
-//#endif
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
@@ -100,7 +96,7 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer {
                     .title(jsonObject.get("title").getAsString())
                     .author(author)
                     .description(jsonObject.get("description").getAsString())
-                    .onDetailButtonClicked(() -> Util.getPlatform().openUri(URI.create(SDK_ARCHIVE_DETAIL_URL + jsonObject.get("_id").getAsString())));
+                    .onDetailButtonClicked(() -> CompatibleUtil.openUri(URI.create(SDK_ARCHIVE_DETAIL_URL + jsonObject.get("_id").getAsString())));
             if (!jsonArray.isEmpty()) {
                 JsonObject object = jsonArray.get(0).getAsJsonObject();
                 String name = object.get("name").getAsString();
