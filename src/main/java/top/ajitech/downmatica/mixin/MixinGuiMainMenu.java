@@ -1,6 +1,6 @@
-package aji.downmatica.mixin;
+package top.ajitech.downmatica.mixin;
 
-import aji.downmatica.gui.DownloadGui;
+import top.ajitech.downmatica.gui.DownloadGui;
 import com.llamalad7.mixinextras.sugar.Local;
 import fi.dy.masa.litematica.gui.GuiMainMenu;
 import fi.dy.masa.malilib.gui.GuiBase;

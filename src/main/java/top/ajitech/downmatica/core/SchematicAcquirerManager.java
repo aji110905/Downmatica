@@ -1,8 +1,8 @@
-package aji.downmatica.core;
+package top.ajitech.downmatica.core;
 
-import aji.downmatica.DownmaticaMod;
-import aji.downmatica.api.Schematic;
-import aji.downmatica.api.SchematicAcquirer;
+import top.ajitech.downmatica.DownmaticaMod;
+import top.ajitech.downmatica.api.Schematic;
+import top.ajitech.downmatica.api.SchematicAcquirer;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -14,7 +14,7 @@
 	"icon": "assets/downmatica/icon.png",
 	"entrypoints": {
 		"main": [
-			"aji.downmatica.DownmaticaMod"
+          "top.ajitech.downmatica.DownmaticaMod"
 		]
 	},
 	"mixins": [

@@ -1,4 +1,4 @@
-package aji.downmatica.util;
+package top.ajitech.downmatica.util;
 
 public final class FileUtil {
     private FileUtil() {

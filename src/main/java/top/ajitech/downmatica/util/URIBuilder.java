@@ -1,4 +1,4 @@
-package aji.downmatica.util;
+package top.ajitech.downmatica.util;
 
 import java.net.URI;
 import java.net.URLEncoder;

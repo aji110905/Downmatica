@@ -1,11 +1,11 @@
-package aji.downmatica.gui;
+package top.ajitech.downmatica.gui;
 
-import aji.downmatica.DownmaticaMod;
-import aji.downmatica.api.Schematic;
-import aji.downmatica.api.SchematicDownloadInfo;
-import aji.downmatica.core.SchematicAcquirerManager;
-import aji.downmatica.util.DownloadUtil;
-import aji.downmatica.util.StringUtil;
+import top.ajitech.downmatica.DownmaticaMod;
+import top.ajitech.downmatica.api.Schematic;
+import top.ajitech.downmatica.api.SchematicDownloadInfo;
+import top.ajitech.downmatica.core.SchematicAcquirerManager;
+import top.ajitech.downmatica.util.DownloadUtil;
+import top.ajitech.downmatica.util.StringUtil;
 import fi.dy.masa.litematica.gui.Icons;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.gui.GuiListBase;

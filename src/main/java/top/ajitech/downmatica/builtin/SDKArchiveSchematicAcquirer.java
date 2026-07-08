@@ -1,11 +1,11 @@
-package aji.downmatica.builtin;
+package top.ajitech.downmatica.builtin;
 
-import aji.downmatica.DownmaticaMod;
-import aji.downmatica.api.Schematic;
-import aji.downmatica.api.SchematicAcquirer;
-import aji.downmatica.util.CompatibleUtil;
-import aji.downmatica.util.StringUtil;
-import aji.downmatica.util.URIBuilder;
+import top.ajitech.downmatica.DownmaticaMod;
+import top.ajitech.downmatica.api.Schematic;
+import top.ajitech.downmatica.api.SchematicAcquirer;
+import top.ajitech.downmatica.util.CompatibleUtil;
+import top.ajitech.downmatica.util.StringUtil;
+import top.ajitech.downmatica.util.URIBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

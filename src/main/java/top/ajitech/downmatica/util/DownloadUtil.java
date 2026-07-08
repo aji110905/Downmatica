@@ -1,6 +1,6 @@
-package aji.downmatica.util;
+package top.ajitech.downmatica.util;
 
-import aji.downmatica.DownmaticaMod;
+import top.ajitech.downmatica.DownmaticaMod;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +8,6 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;

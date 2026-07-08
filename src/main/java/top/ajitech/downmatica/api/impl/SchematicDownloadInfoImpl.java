@@ -1,6 +1,6 @@
-package aji.downmatica.api.impl;
+package top.ajitech.downmatica.api.impl;
 
-import aji.downmatica.api.SchematicDownloadInfo;
+import top.ajitech.downmatica.api.SchematicDownloadInfo;
 
 import java.net.URI;
 
