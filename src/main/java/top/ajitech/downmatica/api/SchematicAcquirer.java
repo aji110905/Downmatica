@@ -1,6 +1,6 @@
-package aji.downmatica.api;
+package top.ajitech.downmatica.api;
 
-import aji.downmatica.core.SchematicAcquirerManager;
+import top.ajitech.downmatica.core.SchematicAcquirerManager;
 
 import java.util.Collection;
 
@@ -16,6 +16,14 @@ public interface SchematicAcquirer {
      * @return 原理图
      */
     Collection<Schematic> getSchematics();
+
+    /**
+     * 获取原理图获取器的名称。
+     * @return 名称
+     */
+    default String getName(){
+        return this.getClass().getName();
+    }
 
     /**
      * 注册一个原理图获取器。

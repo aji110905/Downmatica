@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "aji.downmatica.mixin",
+  "package": "top.ajitech.downmatica.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
   ],

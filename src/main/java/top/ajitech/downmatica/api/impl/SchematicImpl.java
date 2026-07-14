@@ -1,7 +1,7 @@
-package aji.downmatica.api.impl;
+package top.ajitech.downmatica.api.impl;
 
-import aji.downmatica.api.Schematic;
-import aji.downmatica.api.SchematicDownloadInfo;
+import top.ajitech.downmatica.api.Schematic;
+import top.ajitech.downmatica.api.SchematicDownloadInfo;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

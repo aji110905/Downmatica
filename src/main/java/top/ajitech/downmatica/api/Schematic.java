@@ -1,7 +1,8 @@
-package aji.downmatica.api;
+package top.ajitech.downmatica.api;
 
-import aji.downmatica.api.impl.SchematicImpl;
+import top.ajitech.downmatica.api.impl.SchematicImpl;
 import org.jetbrains.annotations.Nullable;
+import top.ajitech.downmatica.util.StringUtil;
 
 import java.net.URI;
 import java.util.List;
@@ -17,7 +18,7 @@ public interface Schematic {
      * <p>
      * 该值不为有效字符串时将在页面中显示<code>未知</code>。
      * <p>
-     * 校验逻辑请查看{@link aji.downmatica.util.StringUtil#hasText(String)}。
+     * 校验逻辑请查看{@link StringUtil#hasText(String)}。
      * @return 来源
      */
     @Nullable String getSource();
@@ -27,7 +28,7 @@ public interface Schematic {
      * <p>
      * 该值不为有效字符串时将在页面中显示<code>未知</code>。
      * <p>
-     * 校验逻辑请查看{@link aji.downmatica.util.StringUtil#hasText(String)}。
+     * 校验逻辑请查看{@link StringUtil#hasText(String)}。
      * @return 标题
      */
     @Nullable String getTitle();
@@ -37,7 +38,7 @@ public interface Schematic {
      * <p>
      * 该值不为有效字符串时将在页面中显示<code>未知</code>。
      * <p>
-     * 校验逻辑请查看{@link aji.downmatica.util.StringUtil#hasText(String)}。
+     * 校验逻辑请查看{@link StringUtil#hasText(String)}。
      * @return 作者
      */
     @Nullable String getAuthor();
@@ -47,7 +48,7 @@ public interface Schematic {
      * <p>
      * 该值不为有效字符串时将在页面中显示<code>无</code>。
      * <p>
-     * 校验逻辑请查看{@link aji.downmatica.util.StringUtil#hasText(String)}。
+     * 校验逻辑请查看{@link StringUtil#hasText(String)}。
      * @return 描述
      */
     @Nullable String getDescription();

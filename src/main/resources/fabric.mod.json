@@ -3,18 +3,23 @@
 	"id": "downmatica",
 	"version": "${version}",
 	"name": "Downmatica",
+	"description": "It is convenient for you to download the schematic from the network.",
 	"authors": [
 		"Aji"
 	],
 	"contact": {
-		"sources": "https://github.com/aji110905/Downmatica"
+		"sources": "https://github.com/aji110905/Downmatica",
+		"issues": "https://github.com/aji110905/Downmatica/issues"
 	},
 	"license": "MIT",
 	"environment": "client",
 	"icon": "assets/downmatica/icon.png",
 	"entrypoints": {
 		"main": [
-			"aji.downmatica.DownmaticaMod"
+			"top.ajitech.downmatica.Downmatica"
+		],
+		"modmenu": [
+          "top.ajitech.downmatica.compatible.ModMenuApiImpl"
 		]
 	},
 	"mixins": [
@@ -22,7 +27,6 @@
 	],
 	"depends": {
 		"fabricloader": ">=${loader_version}",
-		"minecraft": ">=${minecraft_version}",
-		"java": ">=21"
+		"minecraft": ">=${minecraft_version}"
 	}
 }

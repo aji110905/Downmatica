@@ -1,4 +1,4 @@
-package aji.downmatica.util;
+package top.ajitech.downmatica.util;
 
 //#if MC < 260100
 import net.minecraft.Util;
