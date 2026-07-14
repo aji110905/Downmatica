@@ -12,10 +12,9 @@ Downmatica是[Litematica](https://modrinth.com/mod/litematica)的一个扩展，
 1. 安装Fabric Loader。
 2. 安装对应Minecraft版本的[malilib](https://modrinth.com/mod/malilib)，因为Downmatica依赖这个模组。
 3. 安装对应Minecraft版本的[Downmatica](https://modrinth.com/mod/downmatica)。
-4. 启动客户端后打开Litematica的主界面。
-5. 点击下载原理图按钮。
-6. 找到你需要的原理图。
-7. 点击下载按钮后选择你要保存的位置。
+4. 启动客户端后你有三种方式打开下载界面：在一个世界中按下D + C，然后点击左上角的下载按钮。如果你安装了Litematica，可以在Litematica的主菜单中点击下载原理图按钮。如果你安装了mod-menu，可以在主界面点击模组按钮后打开Downmatica的配置页面，然后点击左上角的下载按钮。
+5. 找到你需要的原理图。
+6. 点击下载按钮后选择你要保存的位置。
 
 ## 支持的源
 
