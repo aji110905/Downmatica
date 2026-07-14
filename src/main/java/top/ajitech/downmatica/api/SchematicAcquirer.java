@@ -18,6 +18,14 @@ public interface SchematicAcquirer {
     Collection<Schematic> getSchematics();
 
     /**
+     * 获取原理图获取器的名称。
+     * @return 名称
+     */
+    default String getName(){
+        return this.getClass().getName();
+    }
+
+    /**
      * 注册一个原理图获取器。
      * <p>
      * 推荐在入口点调用。

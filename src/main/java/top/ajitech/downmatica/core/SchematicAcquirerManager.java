@@ -1,19 +1,21 @@
 package top.ajitech.downmatica.core;
 
-import top.ajitech.downmatica.DownmaticaMod;
+import top.ajitech.downmatica.Downmatica;
 import top.ajitech.downmatica.api.Schematic;
 import top.ajitech.downmatica.api.SchematicAcquirer;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.*;
 
 public class SchematicAcquirerManager {
     public static final SchematicAcquirerManager INSTANCE = new SchematicAcquirerManager();
 
     private final CopyOnWriteArrayList<SchematicAcquirer> acquirers = new CopyOnWriteArrayList<>();
 
-    private SchematicAcquirerManager(){
+    private SchematicAcquirerManager() {
 
     }
 
@@ -29,15 +31,64 @@ public class SchematicAcquirerManager {
         acquirers.add(acquirer);
     }
 
-    public Collection<Schematic> getAllSchematics(){
-        ArrayList<Schematic> schematics = new ArrayList<>();
-        for(SchematicAcquirer acquirer : acquirers){
+    public Collection<Schematic> getAllSchematics() {
+        if (acquirers.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<CompletableFuture<Collection<Schematic>>> futures = new ArrayList<>(acquirers.size());
+        for (SchematicAcquirer acquirer : acquirers) {
+            String name = getAcquirerName(acquirer);
+            CompletableFuture<Collection<Schematic>> future = new CompletableFuture<>();
+            Thread.ofVirtual().name("SchematicAcquirer-" + name).start(() -> {
+                try {
+                    future.complete(acquirer.getSchematics());
+                } catch (Exception e) {
+                    Downmatica.LOGGER.error("Failed to get schematics from acquirer {}", name, e);
+                    future.complete(Collections.emptyList());
+                }
+            });
+            futures.add(future);
+        }
+
+        int timeout = ConfigHandler.INSTANCE.totalTimeout.getIntegerValue();
+        CompletableFuture<Void> all = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+        if (timeout >= 0) {
             try {
-                schematics.addAll(acquirer.getSchematics());
-            } catch (Exception e) {
-                DownmaticaMod.LOGGER.error("Failed to get schematics from acquirer {}", acquirer.getClass().getName(), e);
+                all.get(timeout, TimeUnit.MILLISECONDS);
+            } catch (TimeoutException e) {
+                for (CompletableFuture<Collection<Schematic>> future : futures) {
+                    if (!future.isDone()) {
+                        future.cancel(true);
+                    }
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                for (CompletableFuture<Collection<Schematic>> future : futures) {
+                    future.cancel(true);
+                }
+            } catch (ExecutionException e) {
+                //已在上层catch 理论不会发生
+                Downmatica.LOGGER.error("Unexpected error while waiting for schematics", e);
+            }
+        } else {
+            all.join();
+        }
+
+        List<Schematic> schematics = new ArrayList<>();
+        for (CompletableFuture<Collection<Schematic>> future : futures) {
+            if (future.isDone() && !future.isCancelled()) {
+                schematics.addAll(future.join());
             }
         }
         return schematics;
+    }
+
+    private String getAcquirerName(SchematicAcquirer acquirer) {
+        String name = acquirer.getName();
+        if (name == null) {
+            name = acquirer.getClass().getName();
+        }
+        return name;
     }
 }

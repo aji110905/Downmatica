@@ -12,7 +12,7 @@ public class URIBuilder {
         builder = new StringBuilder(base);
     }
 
-    public URIBuilder addParam(String key, String value) {
+    public synchronized URIBuilder addParam(String key, String value) {
         if (!hasParams) {
             builder.append('?');
             hasParams = true;
@@ -20,12 +20,12 @@ public class URIBuilder {
             builder.append('&');
         }
         builder.append(URLEncoder.encode(key, StandardCharsets.UTF_8))
-               .append('=')
-               .append(URLEncoder.encode(value, StandardCharsets.UTF_8));
+                .append('=')
+                .append(URLEncoder.encode(value, StandardCharsets.UTF_8));
         return this;
     }
 
-    public URI build() {
+    public synchronized URI build() {
         return URI.create(builder.toString());
     }
 
