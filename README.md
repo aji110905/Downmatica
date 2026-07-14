@@ -10,7 +10,7 @@ Downmatica是[Litematica](https://modrinth.com/mod/litematica)的一个扩展，
 ## 如何使用
 
 1. 安装Fabric Loader。
-2. 安装对应Minecraft版本的[Litematica](https://modrinth.com/mod/litematica)和[malilib](https://modrinth.com/mod/malilib)，因为Downmatica依赖这两个模组。
+2. 安装对应Minecraft版本的[malilib](https://modrinth.com/mod/malilib)，因为Downmatica依赖这个模组。
 3. 安装对应Minecraft版本的[Downmatica](https://modrinth.com/mod/downmatica)。
 4. 启动客户端后打开Litematica的主界面。
 5. 点击下载原理图按钮。

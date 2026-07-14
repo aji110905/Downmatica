@@ -10,7 +10,7 @@ Downmatica is an extension for [Litematica](https://modrinth.com/mod/litematica)
 ## How to Use
 
 1. Install Fabric Loader.
-2. Install the appropriate version of [Litematica](https://modrinth.com/mod/litematica) and [malilib](https://modrinth.com/mod/malilib) for your Minecraft version, as Downmatica depends on them.
+2. Install the appropriate version of [malilib](https://modrinth.com/mod/malilib) for your Minecraft version, as Downmatica depends on it.
 3. Install the appropriate version of [Downmatica](https://modrinth.com/mod/downmatica) for your Minecraft version.
 4. Launch the game and open Litematica's main GUI.
 5. Click the **Download Schematic** button.
