@@ -42,7 +42,7 @@ public abstract class MixinGuiMainMenu extends GuiBase {
             cancellable = true,
             remap = false
     )
-    private void getButtonWidth(CallbackInfoReturnable<Integer> cir, @Local int width) {
+    private void getButtonWidth(CallbackInfoReturnable<Integer> cir, @Local(name = "width") int width) {
         if (!ConfigHandler.INSTANCE.litematicaMainMenuButton.getBooleanValue()) {
             return;
         }
