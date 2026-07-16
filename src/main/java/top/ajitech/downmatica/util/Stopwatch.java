@@ -19,6 +19,7 @@ public class Stopwatch {
         if (!running) {
             startTime = System.nanoTime();
             running = true;
+            return;
         }
         throw new IllegalStateException("Stopwatch is already running.");
     }
