@@ -327,7 +327,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                         (button, mouseButton) -> Thread.ofVirtual().name("SchematicDownloader").start(() -> {
                             Path path;
                             if (ConfigHandler.INSTANCE.downloadToSchematicBaseDirectory.getBooleanValue() && LitematicaCompatible.isLitematicaInstalled()) {
-                                //#if MC < 1216
+                                //#if MC < 12105
                                 path = DataManager.getSchematicsBaseDirectory().toPath();
                                 //#else
                                 //$$ path = DataManager.getSchematicsBaseDirectory();

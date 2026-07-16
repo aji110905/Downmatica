@@ -8,11 +8,13 @@ preprocess {
     strictExtraMappings = false
 
     def mc12100 = createNode("1.21", 1_21_00, "")
+    def mc12105 = createNode("1.21.5", 1_21_05, "")
     def mc12106 = createNode("1.21.6", 1_21_06, "")
     def mc12111 = createNode("1.21.11", 1_21_11, "")
     def mc260100 = createNode("26.1", 26_01_00, "")
 
-    mc12106.link(mc12100, null)
+    mc12105.link(mc12100, null)
+    mc12106.link(mc12105, null)
     mc12111.link(mc12106, null)
     mc260100.link(mc12111, null)
 
