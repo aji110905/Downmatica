@@ -1,6 +1,6 @@
 # Downmatica
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/aji110905/Downmatica/blob/release/LICENSE)
 [![Fabric](https://img.shields.io/badge/Fabric-supported-orange.svg)](https://fabricmc.net)
 [![Modrinth Downloads](https://img.shields.io/modrinth/dt/emavu5vy?label=Modrinth%20Downloads)](https://modrinth.com/mod/downmatica)
 
