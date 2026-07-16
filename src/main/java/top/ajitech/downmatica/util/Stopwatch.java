@@ -19,6 +19,7 @@ public class Stopwatch {
         if (!running) {
             startTime = System.nanoTime();
             running = true;
+            return;
         }
         throw new IllegalStateException("Stopwatch is already running.");
     }
@@ -28,9 +29,8 @@ public class Stopwatch {
             accumulated += System.nanoTime() - startTime;
             running = false;
             return getTime();
-        } else {
-            throw new IllegalStateException("Stopwatch is not running.");
         }
+        throw new IllegalStateException("Stopwatch is not running.");
     }
 
     public synchronized long getTime() {

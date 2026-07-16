@@ -5,6 +5,7 @@ import fi.dy.masa.malilib.gui.*;
 import top.ajitech.downmatica.Downmatica;
 import top.ajitech.downmatica.api.Schematic;
 import top.ajitech.downmatica.api.SchematicDownloadInfo;
+import top.ajitech.downmatica.compatible.LitematicaCompatible;
 import top.ajitech.downmatica.core.ConfigHandler;
 import top.ajitech.downmatica.core.HttpClientContainer;
 import top.ajitech.downmatica.core.SchematicAcquirerManager;
@@ -325,8 +326,8 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                         new ButtonGeneric(x, y, downloadButtonWidth, buttonHeight, downloadButtonDisplay),
                         (button, mouseButton) -> Thread.ofVirtual().name("SchematicDownloader").start(() -> {
                             Path path;
-                            if (ConfigHandler.INSTANCE.downloadToSchematicBaseDirectory.getBooleanValue()) {
-                                //#if MC < 1216
+                            if (ConfigHandler.INSTANCE.downloadToSchematicBaseDirectory.getBooleanValue() && LitematicaCompatible.isLitematicaInstalled()) {
+                                //#if MC < 12105
                                 path = DataManager.getSchematicsBaseDirectory().toPath();
                                 //#else
                                 //$$ path = DataManager.getSchematicsBaseDirectory();

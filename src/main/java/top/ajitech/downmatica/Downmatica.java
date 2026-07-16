@@ -1,5 +1,6 @@
 package top.ajitech.downmatica;
 
+import com.google.gson.Gson;
 import fi.dy.masa.malilib.event.InitializationHandler;
 import fi.dy.masa.malilib.registry.Registry;
 import fi.dy.masa.malilib.util.data.ModInfo;
@@ -15,6 +16,7 @@ public class Downmatica implements ModInitializer {
     public static final String MOD_ID = "downmatica";
     public static final String MOD_NAME = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow().getMetadata().getName();
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    public static final Gson GSON = new Gson();
 
     @Override
     public void onInitialize() {

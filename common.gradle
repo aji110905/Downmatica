@@ -35,7 +35,6 @@ dependencies {
     }
     autoImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     autoImplementation "fi.dy.masa.malilib:malilib-fabric-${project.malilib_version}"
-    include (autoImplementation 'me.fallenbreath:conditional-mixin-fabric:0.6.4')
     def autoCompileOnly = {
         dep -> unobfuscated ? compileOnly(dep) : modCompileOnly(dep)
     }
@@ -80,7 +79,6 @@ processResources {
         expand ([
                 "version": version,
                 "minecraft_version": project.minecraft_version,
-                "loader_version": project.loader_version
         ])
     }
 }
