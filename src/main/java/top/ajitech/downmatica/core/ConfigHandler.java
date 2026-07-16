@@ -11,6 +11,7 @@ import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.malilib.util.StringUtils;
+import net.fabricmc.loader.api.FabricLoader;
 import top.ajitech.downmatica.Downmatica;
 import top.ajitech.downmatica.gui.ConfigGui;
 import top.ajitech.downmatica.gui.DownloadGui;
@@ -76,7 +77,7 @@ public class ConfigHandler implements IConfigHandler {
 
     @Override
     public void load() {
-        Path path = FileUtils.getConfigDirectoryAsPath().resolve(getConfigFileName());
+        Path path = getConfigDirectory().resolve(getConfigFileName());
         if (!(Files.exists(path) && Files.isReadable(path))){
             return;
         }
@@ -98,7 +99,7 @@ public class ConfigHandler implements IConfigHandler {
         for (IConfigBase option : configs) {
             object.add(option.getName(), option.getAsJsonElement());
         }
-        Path dirPath = FileUtils.getConfigDirectoryAsPath();
+        Path dirPath = getConfigDirectory();
         if (!Files.exists(dirPath)) {
             FileUtils.createDirectoriesIfMissing(dirPath);
         }
@@ -121,6 +122,10 @@ public class ConfigHandler implements IConfigHandler {
 
     private String getConfigFileName(){
         return Downmatica.MOD_ID + ".json";
+    }
+
+    private Path getConfigDirectory(){
+        return FabricLoader.getInstance().getConfigDir();
     }
 
     enum RedirectPolicyConfigOptionListEntry implements IConfigOptionListEntry {
