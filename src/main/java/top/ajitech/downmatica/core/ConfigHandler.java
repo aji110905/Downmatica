@@ -1,8 +1,8 @@
 package top.ajitech.downmatica.core;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
 import fi.dy.masa.malilib.config.IConfigOptionListEntry;
@@ -10,17 +10,20 @@ import fi.dy.masa.malilib.config.options.*;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.GuiUtils;
-import fi.dy.masa.malilib.util.JsonUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import top.ajitech.downmatica.Downmatica;
 import top.ajitech.downmatica.gui.ConfigGui;
 import top.ajitech.downmatica.gui.DownloadGui;
 
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.net.http.HttpClient;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class ConfigHandler implements IConfigHandler {
     public static final ConfigHandler INSTANCE = new ConfigHandler();
@@ -77,16 +80,15 @@ public class ConfigHandler implements IConfigHandler {
         if (!(Files.exists(path) && Files.isReadable(path))){
             return;
         }
-        JsonElement element = JsonUtils.parseJsonFileAsPath(path);
-        if (element == null || !element.isJsonObject()) {
-            Downmatica.LOGGER.error("Failed to load config.");
-            return;
-        }
-        JsonObject object = element.getAsJsonObject();
-        for (IConfigBase config : configs) {
-            if (object.has(config.getName())) {
-                config.setValueFromJsonElement(object.get(config.getName()));
+        try (InputStreamReader reader = new InputStreamReader(Files.newInputStream(path), StandardCharsets.UTF_8)) {
+            JsonObject object = JsonParser.parseReader(reader).getAsJsonObject();
+            for (IConfigBase config : configs) {
+                if (object.has(config.getName())) {
+                    config.setValueFromJsonElement(object.get(config.getName()));
+                }
             }
+        } catch (Exception e) {
+            Downmatica.LOGGER.error("Failed to load config.", e);
         }
     }
 
@@ -96,11 +98,25 @@ public class ConfigHandler implements IConfigHandler {
         for (IConfigBase option : configs) {
             object.add(option.getName(), option.getAsJsonElement());
         }
-        Path path = FileUtils.getConfigDirectoryAsPath();
-        if (!Files.exists(path)) {
-            FileUtils.createDirectoriesIfMissing(path);
+        Path dirPath = FileUtils.getConfigDirectoryAsPath();
+        if (!Files.exists(dirPath)) {
+            FileUtils.createDirectoriesIfMissing(dirPath);
         }
-        JsonUtils.writeJsonToFileAsPath(object, path.resolve(getConfigFileName()));
+        Path finalPath = dirPath.resolve(getConfigFileName());
+        Path tempPath = Path.of(finalPath + ".tmp");
+        if (Files.exists(tempPath)) {
+            tempPath = Path.of(finalPath.toString() + UUID.randomUUID() + ".tmp");
+        }
+        try (OutputStreamWriter writer = new OutputStreamWriter(Files.newOutputStream(tempPath), StandardCharsets.UTF_8)) {
+            writer.write(Downmatica.GSON.toJson(object));
+            writer.close();
+            if (Files.exists(finalPath)){
+                Files.delete(finalPath);
+            }
+            Files.move(tempPath, finalPath);
+        } catch (Exception e) {
+            Downmatica.LOGGER.error("Failed to save config.", e);
+        }
     }
 
     private String getConfigFileName(){
