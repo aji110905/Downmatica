@@ -67,7 +67,7 @@ group = "top.ajitech"
 version = "v${project.mod_version}-mc${project.minecraft_version}"
 
 base {
-    archivesName.set("downmatica")
+    archivesName.set(project.mod_id)
 }
 
 jar {
@@ -77,6 +77,7 @@ jar {
 processResources {
     filesMatching("fabric.mod.json") {
         expand ([
+                "id": project.mod_id,
                 "version": version,
                 "minecraft_version": project.minecraft_version,
         ])
@@ -91,7 +92,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-            artifactId = "downmatica"
+            artifactId = project.mod_id
         }
     }
     repositories {
