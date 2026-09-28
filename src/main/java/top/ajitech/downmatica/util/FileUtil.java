@@ -9,6 +9,11 @@ public final class FileUtil {
         if (name == null || name.trim().isEmpty() || name.equals(".") || name.equals("..")) {
             return false;
         }
+        for (char c : name.toCharArray()) {
+            if (c == '/' || c == '\\' || c < 0x20) {
+                return false;
+            }
+        }
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win")) {
             if (name.matches(".*[\\\\/:*?\"<>|].*")) {
@@ -22,9 +27,6 @@ public final class FileUtil {
             if (name.endsWith(" ") || name.endsWith(".")) {
                 return false;
             }
-        }
-        if (name.indexOf('/') >= 0 || name.indexOf('\0') >= 0) {
-            return false;
         }
         if (os.contains("mac") && name.startsWith(".")) {
             return false;
