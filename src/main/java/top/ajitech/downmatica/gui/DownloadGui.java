@@ -1,7 +1,20 @@
 package top.ajitech.downmatica.gui;
 
+//#if MC >= 260300
+//$$ import com.sun.jna.Function;
+//$$ import com.sun.jna.Pointer;
+//#endif
 import fi.dy.masa.litematica.data.DataManager;
 import fi.dy.masa.malilib.gui.*;
+//#if MC < 260300
+import org.lwjgl.util.tinyfd.TinyFileDialogs;
+//#else
+//$$ import org.lwjgl.sdl.SDLDialog;
+//$$ import org.lwjgl.sdl.SDL_DialogFileCallback;
+//$$ import org.lwjgl.sdl.SDLProperties;
+//$$ import org.lwjgl.sdl.SDLVideo;
+//$$ import org.lwjgl.system.MemoryUtil;
+//#endif
 import top.ajitech.downmatica.Downmatica;
 import top.ajitech.downmatica.api.Schematic;
 import top.ajitech.downmatica.api.SchematicDownloadInfo;
@@ -27,7 +40,6 @@ import net.minecraft.client.gui.GuiGraphics;
 //#endif
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
 import java.io.InputStream;
 import java.net.http.HttpRequest;
@@ -40,7 +52,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+//#if MC >= 260300
+//$$ import java.util.concurrent.CountDownLatch;
+//#endif
 import java.util.concurrent.TimeUnit;
+//#if MC >= 260300
+//$$ import java.util.concurrent.atomic.AtomicReference;
+//#endif
 
 public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.Entry, DownloadGui.WidgetList> {
     private final ConfigGui configGui;
@@ -333,7 +351,38 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                 //$$ path = DataManager.getSchematicsBaseDirectory();
                                 //#endif
                             } else {
-                                String selectFolder = TinyFileDialogs.tinyfd_selectFolderDialog("downmatica.gui.download.button.download.massage.select_folder", "");
+                                //#if MC < 260300
+                                String selectFolder = TinyFileDialogs.tinyfd_selectFolderDialog(StringUtils.translate("downmatica.gui.download.button.download.massage.select_folder"), "");
+                                //#else
+                                //$$ CountDownLatch latch = new CountDownLatch(1);
+                                //$$ AtomicReference<String> rel = new AtomicReference<>(null);
+                                //$$ long windowHandle = Minecraft.getInstance().getWindow().handle();
+                                //$$ long hwnd = SDLProperties.SDL_GetPointerProperty(SDLVideo.SDL_GetWindowProperties(windowHandle), SDLVideo.SDL_PROP_WINDOW_WIN32_HWND_POINTER, 0L);
+                                //$$ if (hwnd != 0L) {
+                                //$$     Function.getFunction("user32", "EnableWindow").invokeInt(new Object[]{ Pointer.createConstant(hwnd), 0 });
+                                //$$ }
+                                //$$ try (SDL_DialogFileCallback callback = SDL_DialogFileCallback.create((_, filelist, _) -> {
+                                //$$     if (hwnd != 0L) {
+                                //$$         Function.getFunction("user32", "EnableWindow").invokeInt(new Object[]{ Pointer.createConstant(hwnd), 1 });
+                                //$$     }
+                                //$$     if (filelist == 0L) {
+                                //$$         rel.set(null);
+                                //$$     } else {
+                                //$$         long pathPtr = MemoryUtil.memGetAddress(filelist);
+                                //$$         rel.set(pathPtr == 0L ? null : MemoryUtil.memUTF8(pathPtr));
+                                //$$     }
+                                //$$     latch.countDown();
+                                //$$ })) {
+                                //$$     SDLDialog.SDL_ShowOpenFolderDialog(callback, windowHandle, 0L, "", false);
+                                //$$     try {
+                                //$$         latch.await();
+                                //$$     } catch (InterruptedException e) {
+                                //$$         Thread.currentThread().interrupt();
+                                //$$         rel.set(null);
+                                //$$     }
+                                //$$ }
+                                //$$ String selectFolder = rel.get();
+                                //#endif
                                 if (selectFolder == null) {
                                     DownloadGui.this.addMessage(Message.MessageType.INFO, "downmatica.gui.download.button.download.massage.cancel");
                                     return;
