@@ -333,7 +333,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                 //$$ path = DataManager.getSchematicsBaseDirectory();
                                 //#endif
                             } else {
-                                String selectFolder = TinyFileDialogs.tinyfd_selectFolderDialog("downmatica.gui.download.button.download.massage.select_folder", "");
+                                String selectFolder = TinyFileDialogs.tinyfd_selectFolderDialog(StringUtils.translate("downmatica.gui.download.button.download.massage.select_folder"), "");
                                 if (selectFolder == null) {
                                     DownloadGui.this.addMessage(Message.MessageType.INFO, "downmatica.gui.download.button.download.massage.cancel");
                                     return;
