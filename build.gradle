@@ -34,7 +34,7 @@ modrinthPublish {
     environment = 'client_only'
     versionType = 'release'
     dependencies {
-        required 'malilib'
+        required 'GcWjdA9I'
     }
 }
 
