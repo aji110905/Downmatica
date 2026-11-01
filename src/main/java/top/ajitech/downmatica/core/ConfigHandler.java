@@ -72,7 +72,7 @@ public class ConfigHandler implements IConfigHandler {
         httpTimeout.setValueChangeCallback((config) -> HttpClientContainer.INSTANCE.setTimeout(config.getIntegerValue()));
         enableHttp2.setValueChangeCallback((config) -> HttpClientContainer.INSTANCE.setEnableHttp2(config.getBooleanValue()));
         redirectPolicy.setValueChangeCallback((config) -> HttpClientContainer.INSTANCE.setRedirectPolicy(((ConfigHandler.RedirectPolicyConfigOptionListEntry) ConfigHandler.INSTANCE.redirectPolicy.getOptionListValue()).getRedirectPolicy())
-);
+        );
     }
 
     @Override
