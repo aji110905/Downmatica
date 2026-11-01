@@ -6,7 +6,7 @@ import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.util.StringUtils;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.Nullable;
-import top.ajitech.downmatica.Downmatica;
+import top.ajitech.downmatica.DownmaticaMod;
 import top.ajitech.downmatica.core.ConfigHandler;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public class ConfigGui extends GuiConfigsBase {
     private final DownloadGui downloadGui;
 
     public ConfigGui(Screen parent, @Nullable  DownloadGui downloadGui) {
-        super(12, 62, Downmatica.MOD_ID, null, "downmatica.gui.config.title");
+        super(12, 62, DownmaticaMod.MOD_ID, null, "downmatica.gui.config.title");
         if (downloadGui == null) {
             downloadGui = new DownloadGui(parent, this);
         }
@@ -23,7 +23,7 @@ public class ConfigGui extends GuiConfigsBase {
         downloadGui.loadEntries();
         setParent(parent);
         useTitleHierarchy = false;
-        title = Downmatica.MOD_NAME + " => " + title;
+        title = DownmaticaMod.MOD_NAME + " => " + title;
     }
 
     @Override

@@ -85,7 +85,7 @@ Collection<Schematic> getSchematics();
 ```java
 package top.ajitech.downmatica.example;
 
-import top.ajitech.downmatica.Downmatica;
+import top.ajitech.downmatica.DownmaticaMod;
 import top.ajitech.downmatica.api.Schematic;
 import top.ajitech.downmatica.api.SchematicAcquirer;
 import top.ajitech.downmatica.util.CompatibleUtil;
@@ -129,7 +129,7 @@ public class ExampleSchematicAcquirer implements SchematicAcquirer {
                 result.add(schematic);
             }
         } catch (Exception e) {
-            Downmatica.LOGGER.error("Failed to get schematics from Example source", e);
+            DownmaticaMod.LOGGER.error("Failed to get schematics from Example source", e);
         }
         return result;
     }

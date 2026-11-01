@@ -15,7 +15,7 @@ import org.lwjgl.util.tinyfd.TinyFileDialogs;
 //$$ import org.lwjgl.sdl.SDLVideo;
 //$$ import org.lwjgl.system.MemoryUtil;
 //#endif
-import top.ajitech.downmatica.Downmatica;
+import top.ajitech.downmatica.DownmaticaMod;
 import top.ajitech.downmatica.api.Schematic;
 import top.ajitech.downmatica.api.SchematicDownloadInfo;
 import top.ajitech.downmatica.compatible.LitematicaCompatible;
@@ -66,7 +66,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
     public DownloadGui(Screen parent, @Nullable ConfigGui configGui) {
         super(12, 62);
         useTitleHierarchy = false;
-        title = Downmatica.MOD_NAME + " => " + StringUtils.translate("downmatica.gui.download.title");
+        title = DownmaticaMod.MOD_NAME + " => " + StringUtils.translate("downmatica.gui.download.title");
         setParent(parent);
         if (configGui == null) {
             configGui = new ConfigGui(parent, this);
@@ -423,7 +423,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                         "downmatica.gui.download.button.download.massage.error",
                                         StringUtil.hasText(message) ? message : StringUtils.translate("downmatica.gui.download.text.none")
                                 );
-                                Downmatica.LOGGER.error("Download failed", e);
+                                DownmaticaMod.LOGGER.error("Download failed", e);
                                 return;
                             }
                             DownloadGui.this.addMessage(
@@ -437,7 +437,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                     downloadButton.setEnabled(false);
                 } else if (!downloadFileInfo.isValid()) {
                     downloadButton.setEnabled(false);
-                    Downmatica.LOGGER.warn(
+                    DownmaticaMod.LOGGER.warn(
                             "Configuration validation failed for schematic download source \"{}\" from \"{}\". The data is invalid, so the download button has been disabled. If you can confirm which extension or core mod this source belongs to, please report this issue to that source's developer.",
                             title,
                             entry.getSource()

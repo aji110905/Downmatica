@@ -3,7 +3,7 @@ package top.ajitech.downmatica.builtin;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import top.ajitech.downmatica.Downmatica;
+import top.ajitech.downmatica.DownmaticaMod;
 import top.ajitech.downmatica.api.Schematic;
 import top.ajitech.downmatica.api.SchematicAcquirer;
 import top.ajitech.downmatica.core.HttpClientContainer;
@@ -37,7 +37,7 @@ public class OpenSTSchematicAcquirer implements SchematicAcquirer {
                 rel.add(schematic);
             });
         } catch (Exception e) {
-            Downmatica.LOGGER.error("Failed to get OpenST schematics", e);
+            DownmaticaMod.LOGGER.error("Failed to get OpenST schematics", e);
             return rel;
         }
         return rel;

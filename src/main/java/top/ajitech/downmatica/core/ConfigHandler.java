@@ -12,7 +12,7 @@ import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import net.fabricmc.loader.api.FabricLoader;
-import top.ajitech.downmatica.Downmatica;
+import top.ajitech.downmatica.DownmaticaMod;
 import top.ajitech.downmatica.gui.ConfigGui;
 import top.ajitech.downmatica.gui.DownloadGui;
 
@@ -50,12 +50,12 @@ public class ConfigHandler implements IConfigHandler {
             try {
                 if (field.get(this) instanceof IConfigBase config) {
                     if (config instanceof ConfigBase<?> configBase) {
-                        configBase.apply(Downmatica.MOD_ID + ".config");
+                        configBase.apply(DownmaticaMod.MOD_ID + ".config");
                     }
                     configs.add(config);
                 }
             } catch (Exception e) {
-                Downmatica.LOGGER.error("Failed to get config option.", e);
+                DownmaticaMod.LOGGER.error("Failed to get config option.", e);
             }
         }
         this.configs = ImmutableList.copyOf(configs);
@@ -89,7 +89,7 @@ public class ConfigHandler implements IConfigHandler {
                 }
             }
         } catch (Exception e) {
-            Downmatica.LOGGER.error("Failed to load config.", e);
+            DownmaticaMod.LOGGER.error("Failed to load config.", e);
         }
     }
 
@@ -109,19 +109,19 @@ public class ConfigHandler implements IConfigHandler {
             tempPath = Path.of(finalPath.toString() + UUID.randomUUID() + ".tmp");
         }
         try (OutputStreamWriter writer = new OutputStreamWriter(Files.newOutputStream(tempPath), StandardCharsets.UTF_8)) {
-            writer.write(Downmatica.GSON.toJson(object));
+            writer.write(DownmaticaMod.GSON.toJson(object));
             writer.close();
             if (Files.exists(finalPath)){
                 Files.delete(finalPath);
             }
             Files.move(tempPath, finalPath);
         } catch (Exception e) {
-            Downmatica.LOGGER.error("Failed to save config.", e);
+            DownmaticaMod.LOGGER.error("Failed to save config.", e);
         }
     }
 
     private String getConfigFileName(){
-        return Downmatica.MOD_ID + ".json";
+        return DownmaticaMod.MOD_ID + ".json";
     }
 
     private Path getConfigDirectory(){

@@ -1,6 +1,6 @@
 package top.ajitech.downmatica.core;
 
-import top.ajitech.downmatica.Downmatica;
+import top.ajitech.downmatica.DownmaticaMod;
 import top.ajitech.downmatica.api.Schematic;
 import top.ajitech.downmatica.api.SchematicAcquirer;
 
@@ -44,7 +44,7 @@ public class SchematicAcquirerManager {
                 try {
                     future.complete(acquirer.getSchematics());
                 } catch (Exception e) {
-                    Downmatica.LOGGER.error("Failed to get schematics from acquirer {}", name, e);
+                    DownmaticaMod.LOGGER.error("Failed to get schematics from acquirer {}", name, e);
                     future.complete(Collections.emptyList());
                 }
             });
@@ -69,7 +69,7 @@ public class SchematicAcquirerManager {
                 }
             } catch (ExecutionException e) {
                 //已在上层catch 理论不会发生
-                Downmatica.LOGGER.error("Unexpected error while waiting for schematics", e);
+                DownmaticaMod.LOGGER.error("Unexpected error while waiting for schematics", e);
             }
         } else {
             all.join();
