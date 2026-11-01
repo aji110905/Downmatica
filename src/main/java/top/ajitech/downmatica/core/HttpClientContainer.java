@@ -9,7 +9,7 @@ public class HttpClientContainer {
     private HttpClient httpClient;
     private int timeout = ConfigHandler.INSTANCE.httpTimeout.getDefaultIntegerValue();
     private boolean enableHttp2 = ConfigHandler.INSTANCE.enableHttp2.getDefaultBooleanValue();
-    private HttpClient.Redirect redirectPolicy = ((ConfigHandler.RedirectPolicyConfigOptionListEntry) ConfigHandler.INSTANCE.redirectPolicy.getDefaultOptionListValue()).getRedirectPolicy();
+    private HttpClient.Redirect redirectPolicy = ((RedirectPolicyConfigOptionListEntry) ConfigHandler.INSTANCE.redirectPolicy.getDefaultOptionListValue()).getRedirectPolicy();
 
     private HttpClientContainer(){
         createHttpClient();

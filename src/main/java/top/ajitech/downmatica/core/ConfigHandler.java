@@ -5,12 +5,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
-import fi.dy.masa.malilib.config.IConfigOptionListEntry;
 import fi.dy.masa.malilib.config.options.*;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.GuiUtils;
-import fi.dy.masa.malilib.util.StringUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import top.ajitech.downmatica.DownmaticaMod;
 import top.ajitech.downmatica.gui.ConfigGui;
@@ -19,7 +17,6 @@ import top.ajitech.downmatica.gui.DownloadGui;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
-import java.net.http.HttpClient;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -71,7 +68,7 @@ public class ConfigHandler implements IConfigHandler {
 
         httpTimeout.setValueChangeCallback((config) -> HttpClientContainer.INSTANCE.setTimeout(config.getIntegerValue()));
         enableHttp2.setValueChangeCallback((config) -> HttpClientContainer.INSTANCE.setEnableHttp2(config.getBooleanValue()));
-        redirectPolicy.setValueChangeCallback((config) -> HttpClientContainer.INSTANCE.setRedirectPolicy(((ConfigHandler.RedirectPolicyConfigOptionListEntry) ConfigHandler.INSTANCE.redirectPolicy.getOptionListValue()).getRedirectPolicy())
+        redirectPolicy.setValueChangeCallback((config) -> HttpClientContainer.INSTANCE.setRedirectPolicy(((RedirectPolicyConfigOptionListEntry) config.getOptionListValue()).getRedirectPolicy())
         );
     }
 
@@ -126,60 +123,5 @@ public class ConfigHandler implements IConfigHandler {
 
     private Path getConfigDirectory(){
         return FabricLoader.getInstance().getConfigDir();
-    }
-
-    enum RedirectPolicyConfigOptionListEntry implements IConfigOptionListEntry {
-        NEVER("never", "downmatica.config.option.redirectPolicy.never", HttpClient.Redirect.NEVER),
-        ALWAYS("always", "downmatica.config.option.redirectPolicy.always", HttpClient.Redirect.ALWAYS),
-        NORMAL("normal", "downmatica.config.option.redirectPolicy.normal", HttpClient.Redirect.NORMAL);
-
-        private final String name;
-        private final String translationKey;
-        private final HttpClient.Redirect redirectPolicy;
-
-        RedirectPolicyConfigOptionListEntry(String name, String translationKey, HttpClient.Redirect redirectPolicy){
-            this.name = name;
-            this.translationKey = translationKey;
-            this.redirectPolicy = redirectPolicy;
-        }
-
-        @Override
-        public String getStringValue() {
-            return name;
-        }
-
-        @Override
-        public String getDisplayName() {
-            return StringUtils.translate(translationKey);
-        }
-
-        @Override
-        public IConfigOptionListEntry cycle(boolean forward) {
-            int id = ordinal();
-            if (forward) {
-                if (++id >= values().length) {
-                    id = 0;
-                }
-            } else {
-                if (--id < 0) {
-                    id = values().length - 1;
-                }
-            }
-            return values()[id % values().length];
-        }
-
-        @Override
-        public IConfigOptionListEntry fromString(String value) {
-            for (RedirectPolicyConfigOptionListEntry redirectPolicyConfigOptionListEntry : RedirectPolicyConfigOptionListEntry.values()) {
-                if (redirectPolicyConfigOptionListEntry.name.equals(value)) {
-                    return redirectPolicyConfigOptionListEntry;
-                }
-            }
-            return NORMAL;
-        }
-
-        public HttpClient.Redirect getRedirectPolicy() {
-            return redirectPolicy;
-        }
     }
 }
