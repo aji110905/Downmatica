@@ -1,9 +1,9 @@
 package top.ajitech.downmatica.builtin;
 
 import top.ajitech.downmatica.DownmaticaMod;
+import top.ajitech.downmatica.api.HttpClientGetter;
 import top.ajitech.downmatica.api.Schematic;
 import top.ajitech.downmatica.api.SchematicAcquirer;
-import top.ajitech.downmatica.core.HttpClientContainer;
 import top.ajitech.downmatica.util.CompatibleUtil;
 import top.ajitech.downmatica.util.StringUtil;
 import top.ajitech.downmatica.util.URIBuilder;
@@ -44,7 +44,7 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(uri)
                     .build();
-            HttpResponse<String> response = HttpClientContainer.INSTANCE.get().send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = HttpClientGetter.get().send(request, HttpResponse.BodyHandlers.ofString());
             JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
             HashMap<String, String> rel = new HashMap<>();
             for (JsonElement element : jsonObject.get("data").getAsJsonArray()) {
@@ -71,7 +71,7 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(uri)
                     .build();
-            HttpResponse<String> response = HttpClientContainer.INSTANCE.get().send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = HttpClientGetter.get().send(request, HttpResponse.BodyHandlers.ofString());
             JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
             ArrayList<Schematic> rel = new ArrayList<>();
             for (JsonElement element : jsonObject.get("data").getAsJsonArray()) {
@@ -122,7 +122,7 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(uri)
                     .build();
-            HttpResponse<String> response = HttpClientContainer.INSTANCE.get().send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = HttpClientGetter.get().send(request, HttpResponse.BodyHandlers.ofString());
             JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
             return jsonObject.get("total").getAsInt();
         } catch (Exception e) {

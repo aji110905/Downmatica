@@ -16,11 +16,11 @@ import org.lwjgl.util.tinyfd.TinyFileDialogs;
 //$$ import org.lwjgl.system.MemoryUtil;
 //#endif
 import top.ajitech.downmatica.DownmaticaMod;
+import top.ajitech.downmatica.api.HttpClientGetter;
 import top.ajitech.downmatica.api.Schematic;
 import top.ajitech.downmatica.api.SchematicDownloadInfo;
 import top.ajitech.downmatica.compatible.LitematicaCompatible;
 import top.ajitech.downmatica.core.ConfigHandler;
-import top.ajitech.downmatica.core.HttpClientContainer;
 import top.ajitech.downmatica.core.SchematicAcquirerManager;
 import top.ajitech.downmatica.util.Stopwatch;
 import top.ajitech.downmatica.util.GuiUtil;
@@ -412,7 +412,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                 HttpRequest request = HttpRequest.newBuilder()
                                         .uri(downloadFileInfo.getRemoteFileURI())
                                         .build();
-                                HttpResponse<InputStream> response = HttpClientContainer.INSTANCE.get().send(request, HttpResponse.BodyHandlers.ofInputStream());
+                                HttpResponse<InputStream> response = HttpClientGetter.get().send(request, HttpResponse.BodyHandlers.ofInputStream());
                                 try (InputStream inputStream = response.body()) {
                                     Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
                                 }

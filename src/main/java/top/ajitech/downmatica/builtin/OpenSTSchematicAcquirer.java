@@ -4,9 +4,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import top.ajitech.downmatica.DownmaticaMod;
+import top.ajitech.downmatica.api.HttpClientGetter;
 import top.ajitech.downmatica.api.Schematic;
 import top.ajitech.downmatica.api.SchematicAcquirer;
-import top.ajitech.downmatica.core.HttpClientContainer;
 import top.ajitech.downmatica.util.CompatibleUtil;
 
 import java.net.URI;
@@ -21,7 +21,7 @@ public class OpenSTSchematicAcquirer implements SchematicAcquirer {
         ArrayList<Schematic> rel = new ArrayList<>();
         try {
             HttpRequest request = HttpRequest.newBuilder(URI.create("https://raw.githubusercontent.com/OpenST-mc/website/main/archive/data/database.json")).build();
-            HttpResponse<String> response = HttpClientContainer.INSTANCE.get().send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = HttpClientGetter.get().send(request, HttpResponse.BodyHandlers.ofString());
             JsonArray array = JsonParser.parseString(response.body()).getAsJsonArray();
             array.forEach(element -> {
                 JsonObject object = element.getAsJsonObject();
