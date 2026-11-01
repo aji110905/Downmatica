@@ -6,6 +6,7 @@ import fi.dy.masa.malilib.registry.Registry;
 import fi.dy.masa.malilib.util.data.ModInfo;
 import net.fabricmc.loader.api.FabricLoader;
 import top.ajitech.downmatica.api.SchematicAcquirer;
+import top.ajitech.downmatica.builtin.OpenSTSchematicAcquirer;
 import top.ajitech.downmatica.builtin.SDKArchiveSchematicAcquirer;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
@@ -26,5 +27,6 @@ public class Downmatica implements ModInitializer {
         ));
 
         SchematicAcquirer.register(new SDKArchiveSchematicAcquirer());
+        SchematicAcquirer.register(new OpenSTSchematicAcquirer());
     }
 }
