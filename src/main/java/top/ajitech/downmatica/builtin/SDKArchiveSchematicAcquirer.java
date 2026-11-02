@@ -87,15 +87,15 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer {
     private Schematic createSchematic(JsonElement jsonElement, String author) {
         try {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
-            JsonArray jsonArray = jsonObject.get("file").getAsJsonArray();
             Schematic.Builder builder = Schematic.builder()
                     .source(StringUtils.translate("downmatica.source.sdk_archive"))
                     .title(jsonObject.get("title").getAsString())
                     .author(author)
                     .description(jsonObject.get("description").getAsString())
                     .onDetailButtonClicked(() -> CompatibleUtil.openUri(URI.create(SDK_ARCHIVE_DETAIL_URL + jsonObject.get("_id").getAsString())));
-            if (!jsonArray.isEmpty()) {
-                JsonObject object = jsonArray.get(0).getAsJsonObject();
+            JsonArray jsonArray = jsonObject.get("file").getAsJsonArray();
+            for (JsonElement element : jsonArray) {
+                JsonObject object = element.getAsJsonObject();
                 String name = object.get("name").getAsString();
                 if (StringUtil.hasText(name)) {
                     builder.downloadFileInfo(name, URI.create(object.get("url").getAsString()));
