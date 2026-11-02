@@ -47,7 +47,6 @@ public class OpenSTSchematicAcquirer implements SchematicAcquirer {
             });
         } catch (Exception e) {
             DownmaticaMod.LOGGER.error("Failed to get OpenST schematics", e);
-            return rel;
         }
         return rel;
     }
