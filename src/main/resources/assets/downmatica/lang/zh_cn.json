@@ -19,7 +19,7 @@
   "downmatica.gui.download.button.download.massage.file_exists": "文件已存在",
   "downmatica.gui.download.button.download.massage.start": "正在下载%s到%s。",
   "downmatica.gui.download.button.download.massage.complete": "%s下载完成，用时%s毫秒。",
-  "downmatica.gui.download.button.download.massage.no_file": "下载失败，这不是你的问题，你可以选择上报该模组开发人员，之后点击详情去取该网页下载。",
+  "downmatica.gui.download.button.download.massage.no_file": "下载失败，这不是你的问题，你可以选择上报该模组开发人员，之后点击详情去该网页下载。",
   "downmatica.gui.download.button.download.massage.error": "下载失败，可提供信息如下：%s",
   "downmatica.gui.download.button.reload.display": "重载原理图",
   "downmatica.gui.config.title": "配置",
