@@ -64,6 +64,12 @@ public interface Schematic {
     Collection<SchematicDownloadInfo> getDownloadFileInfos();
 
     /**
+     * 返回该原理图是否可以下载。
+     * @return 是否可以下载
+     */
+    boolean canDownload();
+
+    /**
      * 当详情按钮被点击时调用{@link Runnable#run()}
      * <p>
      * 当该值为<code>null</code>时，<code>详情</code>按钮将不可点击。

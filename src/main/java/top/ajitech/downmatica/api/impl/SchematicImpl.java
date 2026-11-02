@@ -51,6 +51,11 @@ public class SchematicImpl implements Schematic {
     }
 
     @Override
+    public boolean canDownload() {
+        return !getDownloadFileInfos().isEmpty();
+    }
+
+    @Override
     public @Nullable Runnable onDetailButtonClicked() {
         return runnable;
     }

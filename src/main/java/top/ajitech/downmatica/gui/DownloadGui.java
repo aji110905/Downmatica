@@ -382,7 +382,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                 }
                                 path = Paths.get(selectFolder);
                             }
-                            if (downloadFileInfos.isEmpty()) {
+                            if (!entry.canDownload()) {
                                 DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.no_file");
                                 return;
                             }
