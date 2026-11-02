@@ -44,6 +44,8 @@
   "downmatica.config.option.redirectPolicy.never": "从不",
   "downmatica.config.option.redirectPolicy.always": "总是",
   "downmatica.config.option.redirectPolicy.normal": "正常",
+  "downmatica.config.name.userAgent": "User-Agent",
+  "downmatica.config.comment.userAgent": "设置HTTP请求的User-Agent头。",
   "downmatica.hotkeys_category": "通用快捷键",
   "modmenu.descriptionTranslation.downmatica": "让您方便地从网络中下载原理图。"
 }

@@ -16,6 +16,7 @@ import top.ajitech.downmatica.gui.ConfigGui;
 public class DownmaticaMod implements ModInitializer {
     public static final String MOD_ID = "downmatica";
     public static final String MOD_NAME = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow().getMetadata().getName();
+    public static final String MOD_VERSION = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow().getMetadata().getVersion().toString();
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final Gson GSON = new Gson();
 

@@ -41,10 +41,8 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer {
     private HashMap<String, String> getAllUser() {
         try {
             URI uri = URIBuilder.create(GET_USERS_URL).build();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .build();
-            HttpResponse<String> response = HttpClientGetter.get().send(request, HttpResponse.BodyHandlers.ofString());
+            HttpRequest.Builder request = HttpRequest.newBuilder().uri(uri);
+            HttpResponse<String> response = HttpClientGetter.send(request, HttpResponse.BodyHandlers.ofString());
             JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
             HashMap<String, String> rel = new HashMap<>();
             for (JsonElement element : jsonObject.get("data").getAsJsonArray()) {
@@ -68,10 +66,8 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer {
                     .addParam("size", String.valueOf(count))
                     .addParam("auth", userId)
                     .build();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .build();
-            HttpResponse<String> response = HttpClientGetter.get().send(request, HttpResponse.BodyHandlers.ofString());
+            HttpRequest.Builder request = HttpRequest.newBuilder().uri(uri);
+            HttpResponse<String> response = HttpClientGetter.send(request, HttpResponse.BodyHandlers.ofString());
             JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
             ArrayList<Schematic> rel = new ArrayList<>();
             for (JsonElement element : jsonObject.get("data").getAsJsonArray()) {
@@ -119,10 +115,8 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer {
                     .addParam("size", "1")
                     .addParam("auth", userId)
                     .build();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .build();
-            HttpResponse<String> response = HttpClientGetter.get().send(request, HttpResponse.BodyHandlers.ofString());
+            HttpRequest.Builder  request = HttpRequest.newBuilder().uri(uri);
+            HttpResponse<String> response = HttpClientGetter.send(request, HttpResponse.BodyHandlers.ofString());
             JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
             return jsonObject.get("total").getAsInt();
         } catch (Exception e) {

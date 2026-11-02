@@ -409,10 +409,8 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                 if (!Files.exists(parent)) {
                                     Files.createDirectories(parent);
                                 }
-                                HttpRequest request = HttpRequest.newBuilder()
-                                        .uri(downloadFileInfo.getRemoteFileURI())
-                                        .build();
-                                HttpResponse<InputStream> response = HttpClientGetter.get().send(request, HttpResponse.BodyHandlers.ofInputStream());
+                                HttpRequest.Builder request = HttpRequest.newBuilder().uri(downloadFileInfo.getRemoteFileURI());
+                                HttpResponse<InputStream> response = HttpClientGetter.send(request, HttpResponse.BodyHandlers.ofInputStream());
                                 try (InputStream inputStream = response.body()) {
                                     Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
                                 }

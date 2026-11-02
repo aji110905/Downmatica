@@ -44,6 +44,8 @@
   "downmatica.config.option.redirectPolicy.never": "never",
   "downmatica.config.option.redirectPolicy.always": "always",
   "downmatica.config.option.redirectPolicy.normal": "normal",
+  "downmatica.config.name.userAgent": "User-Agent",
+  "downmatica.config.comment.userAgent": "Set the HTTP request User-Agent header.",
   "downmatica.hotkeys_category": "General hotkeys",
   "modmenu.descriptionTranslation.downmatica": "It is convenient for you to download the schematic from the network."
 }
