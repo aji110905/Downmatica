@@ -37,8 +37,7 @@ public class OpenSTSchematicAcquirer implements SchematicAcquirer {
                         .title(object.get("name").getAsString())
                         .author(object.get("author").getAsString())
                         .description(object.get("description").getAsString())
-                        .onDetailButtonClicked(() ->
-                                CompatibleUtil.openUri(URI.create(OPEN_ST_DETAIL_URL_PREFIX + subId)))
+                        .onDetailButtonClicked(() -> CompatibleUtil.openUri(URI.create(OPEN_ST_DETAIL_URL_PREFIX + subId)))
                         .downloadFileInfo(
                                 object.get("filename").getAsString(),
                                 URI.create(OPEN_ST_DOWNLOAD_URL_PREFIX + subId)
