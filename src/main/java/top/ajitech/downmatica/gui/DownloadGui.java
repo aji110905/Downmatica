@@ -137,13 +137,6 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
         }
     }
 
-    public void loadEntries() {
-        WidgetList list = getListWidget();
-        if (list != null) {
-            list.loadEntries();
-        }
-    }
-
     public class WidgetList extends WidgetListBase<Schematic, DownloadGui.WidgetList.Entry> {
         private int infoHeight;
         private int infoWidth;

@@ -20,7 +20,6 @@ public class ConfigGui extends GuiConfigsBase {
             downloadGui = new DownloadGui(parent, this);
         }
         this.downloadGui = downloadGui;
-        downloadGui.loadEntries();
         setParent(parent);
         useTitleHierarchy = false;
         title = DownmaticaMod.MOD_NAME + " => " + title;
