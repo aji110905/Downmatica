@@ -426,7 +426,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                             }
                         })
                 );
-                if (entry.canDownload()) {
+                if (!entry.canDownload()) {
                     downloadButton.setEnabled(false);
                 } else if (!downloadFileInfos.stream().allMatch(SchematicDownloadInfo::isValid)) {
                     downloadButton.setEnabled(false);
