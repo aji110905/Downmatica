@@ -16,11 +16,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class OpenSTSchematicAcquirer implements SchematicAcquirer {
+
+    private static final String OPEN_ST_DATABASE_URL = "https://raw.githubusercontent.com/OpenST-mc/website/main/archive/data/database.json";
+    private static final String OPEN_ST_BASE_URL = "https://openstmc.com/";
+    private static final String OPEN_ST_DETAIL_URL_PREFIX = OPEN_ST_BASE_URL + "archive?";
+    private static final String OPEN_ST_DOWNLOAD_URL_PREFIX = OPEN_ST_BASE_URL + "api/download?id=";
+
     @Override
     public Collection<Schematic> getSchematics() {
         ArrayList<Schematic> rel = new ArrayList<>();
         try {
-            HttpRequest request = HttpRequest.newBuilder(URI.create("https://raw.githubusercontent.com/OpenST-mc/website/main/archive/data/database.json")).build();
+            HttpRequest request = HttpRequest.newBuilder(URI.create(OPEN_ST_DATABASE_URL)).build();
             HttpResponse<String> response = HttpClientGetter.get().send(request, HttpResponse.BodyHandlers.ofString());
             JsonArray array = JsonParser.parseString(response.body()).getAsJsonArray();
             array.forEach(element -> {
@@ -31,8 +37,12 @@ public class OpenSTSchematicAcquirer implements SchematicAcquirer {
                         .title(object.get("name").getAsString())
                         .author(object.get("author").getAsString())
                         .description(object.get("description").getAsString())
-                        .onDetailButtonClicked(() -> CompatibleUtil.openUri(URI.create("https://openstmc.com/archive?" + subId)))
-                        .downloadFileInfo(object.get("filename").getAsString(), URI.create("https://openstmc.com/api/download?id=" + subId))
+                        .onDetailButtonClicked(() ->
+                                CompatibleUtil.openUri(URI.create(OPEN_ST_DETAIL_URL_PREFIX + subId)))
+                        .downloadFileInfo(
+                                object.get("filename").getAsString(),
+                                URI.create(OPEN_ST_DOWNLOAD_URL_PREFIX + subId)
+                        )
                         .build();
                 rel.add(schematic);
             });
