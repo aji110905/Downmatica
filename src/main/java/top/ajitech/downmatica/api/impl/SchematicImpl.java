@@ -5,6 +5,7 @@ import top.ajitech.downmatica.api.SchematicDownloadInfo;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class SchematicImpl implements Schematic {
@@ -12,15 +13,15 @@ public class SchematicImpl implements Schematic {
     private final String title;
     private final String author;
     private final String description;
-    private final SchematicDownloadInfo downloadFileInfo;
+    private final Collection<SchematicDownloadInfo> downloadFileInfos;
     private final Runnable runnable;
 
-    public SchematicImpl(String source, String title, String author, String description, SchematicDownloadInfo downloadFileInfo, Runnable runnable) {
+    public SchematicImpl(String source, String title, String author, String description, Collection<SchematicDownloadInfo> downloadFileInfos, Runnable runnable) {
         this.source = source;
         this.title = title;
         this.author = author;
         this.description = description;
-        this.downloadFileInfo = downloadFileInfo;
+        this.downloadFileInfos = downloadFileInfos;
         this.runnable = runnable;
     }
 
@@ -45,8 +46,8 @@ public class SchematicImpl implements Schematic {
     }
 
     @Override
-    public @Nullable SchematicDownloadInfo getDownloadFileInfo() {
-        return downloadFileInfo;
+    public Collection<SchematicDownloadInfo> getDownloadFileInfos() {
+        return downloadFileInfos;
     }
 
     @Override
