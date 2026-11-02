@@ -38,9 +38,13 @@ public class SchematicAcquirerManager {
 
         List<CompletableFuture<Collection<Schematic>>> futures = new ArrayList<>(acquirers.size());
         for (SchematicAcquirer acquirer : acquirers) {
-            String name = getAcquirerName(acquirer);
+            String temp = acquirer.getName();
+            if (temp == null) {
+                temp = acquirer.getClass().getName();
+            }
+            String name = temp;
             CompletableFuture<Collection<Schematic>> future = new CompletableFuture<>();
-            Thread.ofVirtual().name("SchematicAcquirer-" + name).start(() -> {
+            Thread.ofVirtual().name("SchematicAcquirer-" + temp).start(() -> {
                 try {
                     future.complete(acquirer.getSchematics());
                 } catch (Exception e) {
@@ -82,13 +86,5 @@ public class SchematicAcquirerManager {
             }
         }
         return schematics;
-    }
-
-    private String getAcquirerName(SchematicAcquirer acquirer) {
-        String name = acquirer.getName();
-        if (name == null) {
-            name = acquirer.getClass().getName();
-        }
-        return name;
     }
 }
