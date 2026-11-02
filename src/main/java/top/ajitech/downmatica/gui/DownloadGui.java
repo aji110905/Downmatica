@@ -106,7 +106,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                     }
                 }
         );
-        if (bl){
+        if (bl || listWidget.entries != null){
             reloadButton.setEnabled(false);
         }
     }
