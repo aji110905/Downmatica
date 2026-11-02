@@ -17,7 +17,7 @@
 	"icon": "assets/downmatica/icon.png",
 	"entrypoints": {
 		"main": [
-			"top.ajitech.downmatica.Downmatica"
+          "top.ajitech.downmatica.DownmaticaMod"
 		],
 		"modmenu": [
           "top.ajitech.downmatica.compatible.ModMenuApiImpl"

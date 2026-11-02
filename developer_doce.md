@@ -85,7 +85,8 @@ Collection<Schematic> getSchematics();
 ```java
 package top.ajitech.downmatica.example;
 
-import top.ajitech.downmatica.Downmatica;
+import top.ajitech.downmatica.DownmaticaMod;
+import top.ajitech.downmatica.api.HttpClientGetter;
 import top.ajitech.downmatica.api.Schematic;
 import top.ajitech.downmatica.api.SchematicAcquirer;
 import top.ajitech.downmatica.util.CompatibleUtil;
@@ -110,7 +111,7 @@ public class ExampleSchematicAcquirer implements SchematicAcquirer {
             // 构建请求 URI
             URI uri = URIBuilder.create("https://example.com/api/schematics").build();
             HttpRequest request = HttpRequest.newBuilder().uri(uri).build();
-            HttpResponse<String> response = Downmatica.HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = HttpClientGertter.get().send(request, HttpResponse.BodyHandlers.ofString());
 
             // 解析 JSON 响应
             JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
@@ -129,7 +130,7 @@ public class ExampleSchematicAcquirer implements SchematicAcquirer {
                 result.add(schematic);
             }
         } catch (Exception e) {
-            Downmatica.LOGGER.error("Failed to get schematics from Example source", e);
+            DownmaticaMod.LOGGER.error("Failed to get schematics from Example source", e);
         }
         return result;
     }
@@ -170,6 +171,6 @@ public void onInitialize() {
 
 - **异常处理**：`getSchematics()` 内部应妥善捕获异常，避免影响其他获取器。建议使用日志记录错误。
 - **兼容性**：需要打开网页推荐使用 `top.ajitech.downmatica.util.CompatibleUtil#openUri()` ，因为在不同的Minecraft 版本中，打开网页的方式有差异。
-- **HttpClient**：请使用 `top.ajitech.downmatica.core.HttpClientContainer#get()` 获取 HttpClient 实例，该实例受用户配置。
+- **HttpClient**：请使用 `top.ajitech.downmatica.api.HttpClientGetter#get()` 获取 HttpClient 实例，该实例受用户配置。
 
 如果有任何问题，欢迎通过 Issue 或 Pull Request 与我们交流！
