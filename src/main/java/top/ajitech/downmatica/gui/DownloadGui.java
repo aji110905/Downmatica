@@ -102,7 +102,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                     }
                 }
         );
-        if (bl || listWidget.entries != null){
+        if (bl || listWidget.entries == null){
             reloadButton.setEnabled(false);
         }
     }
@@ -172,6 +172,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                 Minecraft.getInstance().execute(() -> {
                     entries = schematics;
                     refreshEntries();
+                    DownloadGui.this.initGui();
                 });
             });
         }
@@ -179,6 +180,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
         public void reloadEntries() {
             entries = null;
             refreshEntries();
+            DownloadGui.this.initGui();
             loadEntries();
         }
 
