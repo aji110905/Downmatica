@@ -7,6 +7,7 @@ import fi.dy.masa.malilib.util.data.ModInfo;
 import net.fabricmc.loader.api.FabricLoader;
 import top.ajitech.downmatica.api.SchematicAcquirer;
 import top.ajitech.downmatica.builtin.OpenSTSchematicAcquirer;
+//import top.ajitech.downmatica.builtin.RedenMCSchematicAcquirer;
 import top.ajitech.downmatica.builtin.SDKArchiveSchematicAcquirer;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import top.ajitech.downmatica.gui.ConfigGui;
 public class DownmaticaMod implements ModInitializer {
     public static final String MOD_ID = "downmatica";
     public static final String MOD_NAME = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow().getMetadata().getName();
+    public static final String MOD_VERSION = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow().getMetadata().getVersion().toString();
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final Gson GSON = new Gson();
 
@@ -23,10 +25,12 @@ public class DownmaticaMod implements ModInitializer {
     public void onInitialize() {
         InitializationHandler.getInstance().registerInitializationHandler(new top.ajitech.downmatica.core.InitializationHandler());
         Registry.CONFIG_SCREEN.registerConfigScreenFactory(new ModInfo(
-                MOD_ID, MOD_NAME, () -> new ConfigGui(null, null)
+                MOD_ID, MOD_NAME, () -> ConfigGui.INSTANCE
         ));
 
         SchematicAcquirer.register(new SDKArchiveSchematicAcquirer());
         SchematicAcquirer.register(new OpenSTSchematicAcquirer());
+        //RedenMC的集成尚未得到许可
+        //SchematicAcquirer.register(new RedenMCSchematicAcquirer());
     }
 }

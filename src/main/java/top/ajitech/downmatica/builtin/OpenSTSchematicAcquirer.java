@@ -26,8 +26,8 @@ public class OpenSTSchematicAcquirer implements SchematicAcquirer {
     public Collection<Schematic> getSchematics() {
         ArrayList<Schematic> rel = new ArrayList<>();
         try {
-            HttpRequest request = HttpRequest.newBuilder(URI.create(OPEN_ST_DATABASE_URL)).build();
-            HttpResponse<String> response = HttpClientGetter.get().send(request, HttpResponse.BodyHandlers.ofString());
+            HttpRequest.Builder request = HttpRequest.newBuilder(URI.create(OPEN_ST_DATABASE_URL));
+            HttpResponse<String> response = HttpClientGetter.send(request, HttpResponse.BodyHandlers.ofString());
             JsonArray array = JsonParser.parseString(response.body()).getAsJsonArray();
             array.forEach(element -> {
                 JsonObject object = element.getAsJsonObject();
@@ -37,8 +37,7 @@ public class OpenSTSchematicAcquirer implements SchematicAcquirer {
                         .title(object.get("name").getAsString())
                         .author(object.get("author").getAsString())
                         .description(object.get("description").getAsString())
-                        .onDetailButtonClicked(() ->
-                                CompatibleUtil.openUri(URI.create(OPEN_ST_DETAIL_URL_PREFIX + subId)))
+                        .onDetailButtonClicked(() -> CompatibleUtil.openUri(URI.create(OPEN_ST_DETAIL_URL_PREFIX + subId)))
                         .downloadFileInfo(
                                 object.get("filename").getAsString(),
                                 URI.create(OPEN_ST_DOWNLOAD_URL_PREFIX + subId)
@@ -48,7 +47,6 @@ public class OpenSTSchematicAcquirer implements SchematicAcquirer {
             });
         } catch (Exception e) {
             DownmaticaMod.LOGGER.error("Failed to get OpenST schematics", e);
-            return rel;
         }
         return rel;
     }

@@ -41,10 +41,8 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer {
     private HashMap<String, String> getAllUser() {
         try {
             URI uri = URIBuilder.create(GET_USERS_URL).build();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .build();
-            HttpResponse<String> response = HttpClientGetter.get().send(request, HttpResponse.BodyHandlers.ofString());
+            HttpRequest.Builder request = HttpRequest.newBuilder().uri(uri);
+            HttpResponse<String> response = HttpClientGetter.send(request, HttpResponse.BodyHandlers.ofString());
             JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
             HashMap<String, String> rel = new HashMap<>();
             for (JsonElement element : jsonObject.get("data").getAsJsonArray()) {
@@ -68,10 +66,8 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer {
                     .addParam("size", String.valueOf(count))
                     .addParam("auth", userId)
                     .build();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .build();
-            HttpResponse<String> response = HttpClientGetter.get().send(request, HttpResponse.BodyHandlers.ofString());
+            HttpRequest.Builder request = HttpRequest.newBuilder().uri(uri);
+            HttpResponse<String> response = HttpClientGetter.send(request, HttpResponse.BodyHandlers.ofString());
             JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
             ArrayList<Schematic> rel = new ArrayList<>();
             for (JsonElement element : jsonObject.get("data").getAsJsonArray()) {
@@ -91,15 +87,15 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer {
     private Schematic createSchematic(JsonElement jsonElement, String author) {
         try {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
-            JsonArray jsonArray = jsonObject.get("file").getAsJsonArray();
             Schematic.Builder builder = Schematic.builder()
                     .source(StringUtils.translate("downmatica.source.sdk_archive"))
                     .title(jsonObject.get("title").getAsString())
                     .author(author)
                     .description(jsonObject.get("description").getAsString())
                     .onDetailButtonClicked(() -> CompatibleUtil.openUri(URI.create(SDK_ARCHIVE_DETAIL_URL + jsonObject.get("_id").getAsString())));
-            if (!jsonArray.isEmpty()) {
-                JsonObject object = jsonArray.get(0).getAsJsonObject();
+            JsonArray jsonArray = jsonObject.get("file").getAsJsonArray();
+            for (JsonElement element : jsonArray) {
+                JsonObject object = element.getAsJsonObject();
                 String name = object.get("name").getAsString();
                 if (StringUtil.hasText(name)) {
                     builder.downloadFileInfo(name, URI.create(object.get("url").getAsString()));
@@ -119,10 +115,8 @@ public class SDKArchiveSchematicAcquirer implements SchematicAcquirer {
                     .addParam("size", "1")
                     .addParam("auth", userId)
                     .build();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .build();
-            HttpResponse<String> response = HttpClientGetter.get().send(request, HttpResponse.BodyHandlers.ofString());
+            HttpRequest.Builder  request = HttpRequest.newBuilder().uri(uri);
+            HttpResponse<String> response = HttpClientGetter.send(request, HttpResponse.BodyHandlers.ofString());
             JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
             return jsonObject.get("total").getAsInt();
         } catch (Exception e) {

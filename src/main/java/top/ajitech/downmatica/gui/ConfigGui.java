@@ -5,22 +5,16 @@ import fi.dy.masa.malilib.gui.GuiConfigsBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.util.StringUtils;
 import net.minecraft.client.gui.screens.Screen;
-import org.jetbrains.annotations.Nullable;
 import top.ajitech.downmatica.DownmaticaMod;
 import top.ajitech.downmatica.core.ConfigHandler;
 
 import java.util.List;
 
 public class ConfigGui extends GuiConfigsBase {
-    private final DownloadGui downloadGui;
+    public static final ConfigGui INSTANCE = new ConfigGui(null);
 
-    public ConfigGui(Screen parent, @Nullable  DownloadGui downloadGui) {
+    public ConfigGui(Screen parent) {
         super(12, 62, DownmaticaMod.MOD_ID, null, "downmatica.gui.config.title");
-        if (downloadGui == null) {
-            downloadGui = new DownloadGui(parent, this);
-        }
-        this.downloadGui = downloadGui;
-        downloadGui.loadEntries();
         setParent(parent);
         useTitleHierarchy = false;
         title = DownmaticaMod.MOD_NAME + " => " + title;
@@ -37,7 +31,7 @@ public class ConfigGui extends GuiConfigsBase {
         int downloadButtonWidth = getStringWidth(downloadButtonDisplay) + 10 * 2;//10为按钮的左右留白
         addButton(
                 new ButtonGeneric(x, y, downloadButtonWidth, 20, downloadButtonDisplay),
-                (button, mouseButton) -> GuiBase.openGui(downloadGui)
+                (button, mouseButton) -> DownloadGui.open(getParent())
         );
 
         x += downloadButtonWidth + 4;//4表示按钮间的间隔
@@ -51,5 +45,10 @@ public class ConfigGui extends GuiConfigsBase {
     @Override
     public List<ConfigOptionWrapper> getConfigs() {
         return ConfigOptionWrapper.createFor(ConfigHandler.INSTANCE.configs);
+    }
+
+    public static void open(Screen parent) {
+        INSTANCE.setParent(parent);
+        GuiBase.openGui(INSTANCE);
     }
 }

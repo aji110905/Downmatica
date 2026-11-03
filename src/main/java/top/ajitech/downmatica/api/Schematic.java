@@ -5,6 +5,8 @@ import org.jetbrains.annotations.Nullable;
 import top.ajitech.downmatica.util.StringUtil;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -59,7 +61,13 @@ public interface Schematic {
      * 该值为<code>null</code>时，<code>下载</code>按钮将不可点击。
      * @return 下载地址
      */
-    @Nullable SchematicDownloadInfo getDownloadFileInfo();
+    Collection<SchematicDownloadInfo> getDownloadFileInfos();
+
+    /**
+     * 返回该原理图是否可以下载。
+     * @return 是否可以下载
+     */
+    boolean canDownload();
 
     /**
      * 当详情按钮被点击时调用{@link Runnable#run()}
@@ -84,7 +92,7 @@ public interface Schematic {
         private String title;
         private String author;
         private String description;
-        private SchematicDownloadInfo downloadFileInfo;
+        private final Collection<SchematicDownloadInfo> downloadFileInfos = new ArrayList<>();
         private Runnable runnable;
 
         public Builder source(String source) {
@@ -108,7 +116,7 @@ public interface Schematic {
         }
 
         public Builder downloadFileInfo(String localFileName, URI remoteFileURI) {
-            this.downloadFileInfo = SchematicDownloadInfo.of(localFileName, remoteFileURI);
+            downloadFileInfos.add(SchematicDownloadInfo.of(localFileName, remoteFileURI));
             return this;
         }
 
@@ -118,7 +126,7 @@ public interface Schematic {
         }
 
         public Schematic build() {
-            return new SchematicImpl(source, title, author, description, downloadFileInfo, runnable);
+            return new SchematicImpl(source, title, author, description, downloadFileInfos, runnable);
         }
     }
 }

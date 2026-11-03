@@ -6,7 +6,6 @@ import com.google.gson.JsonParser;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
 import fi.dy.masa.malilib.config.options.*;
-import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.GuiUtils;
 import net.fabricmc.loader.api.FabricLoader;
@@ -38,7 +37,7 @@ public class ConfigHandler implements IConfigHandler {
 
     public final ConfigInteger httpTimeout = new ConfigInteger("httpTimeout", 5000, -1, Integer.MAX_VALUE);
     public final ConfigBoolean enableHttp2 = new ConfigBoolean("enableHttp2", false);
-    public final ConfigOptionList redirectPolicy = new ConfigOptionList("redirectPolicy", RedirectPolicyConfigOptionListEntry.NORMAL);
+    public final ConfigString userAgent = new ConfigString("userAgent", DownmaticaMod.MOD_NAME + "/" + DownmaticaMod.MOD_VERSION);
 
     private ConfigHandler(){
         ArrayList<IConfigBase> configs = new ArrayList<>();
@@ -58,18 +57,16 @@ public class ConfigHandler implements IConfigHandler {
         this.configs = ImmutableList.copyOf(configs);
 
         openConfigInterface.getKeybind().setCallback((keyAction, keybind) -> {
-            GuiBase.openGui(new ConfigGui(GuiUtils.getCurrentScreen(), null));
+            ConfigGui.open(GuiUtils.getCurrentScreen());
             return true;
         });
         openDownloadInterface.getKeybind().setCallback((keyAction, keybind) -> {
-            GuiBase.openGui(new DownloadGui(GuiUtils.getCurrentScreen(), null));
+            DownloadGui.open(GuiUtils.getCurrentScreen());
             return true;
         });
 
         httpTimeout.setValueChangeCallback((config) -> HttpClientContainer.INSTANCE.setTimeout(config.getIntegerValue()));
         enableHttp2.setValueChangeCallback((config) -> HttpClientContainer.INSTANCE.setEnableHttp2(config.getBooleanValue()));
-        redirectPolicy.setValueChangeCallback((config) -> HttpClientContainer.INSTANCE.setRedirectPolicy(((RedirectPolicyConfigOptionListEntry) config.getOptionListValue()).getRedirectPolicy())
-        );
     }
 
     @Override

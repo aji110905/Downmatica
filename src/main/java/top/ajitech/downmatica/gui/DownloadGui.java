@@ -41,6 +41,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -61,17 +62,12 @@ import java.util.concurrent.TimeUnit;
 //#endif
 
 public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.Entry, DownloadGui.WidgetList> {
-    private final ConfigGui configGui;
+    public static final DownloadGui INSTANCE = new DownloadGui();
 
-    public DownloadGui(Screen parent, @Nullable ConfigGui configGui) {
+    public DownloadGui() {
         super(12, 62);
         useTitleHierarchy = false;
         title = DownmaticaMod.MOD_NAME + " => " + StringUtils.translate("downmatica.gui.download.title");
-        setParent(parent);
-        if (configGui == null) {
-            configGui = new ConfigGui(parent, this);
-        }
-        this.configGui = configGui;
     }
 
     @Override
@@ -90,7 +86,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
         int configButtonWidth = GuiUtil.getStringWidth(configButtonDisplay) + 10 * 2;
         addButton(
                 new ButtonGeneric(x, y, configButtonWidth, 20, configButtonDisplay),
-                (button, mouseButton) -> GuiBase.openGui(configGui)
+                (button, mouseButton) -> ConfigGui.open(getParent())
         );
 
         String reloadButtonDisplay = StringUtils.translate("downmatica.gui.download.button.reload.display");
@@ -106,7 +102,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                     }
                 }
         );
-        if (bl){
+        if (bl || listWidget.entries == null){
             reloadButton.setEnabled(false);
         }
     }
@@ -137,11 +133,9 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
         }
     }
 
-    public void loadEntries() {
-        WidgetList list = getListWidget();
-        if (list != null) {
-            list.loadEntries();
-        }
+    public static void open(Screen parent) {
+        INSTANCE.setParent(parent);
+        GuiBase.openGui(INSTANCE);
     }
 
     public class WidgetList extends WidgetListBase<Schematic, DownloadGui.WidgetList.Entry> {
@@ -178,6 +172,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                 Minecraft.getInstance().execute(() -> {
                     entries = schematics;
                     refreshEntries();
+                    DownloadGui.this.initGui();
                 });
             });
         }
@@ -185,6 +180,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
         public void reloadEntries() {
             entries = null;
             refreshEntries();
+            DownloadGui.this.initGui();
             loadEntries();
         }
 
@@ -339,7 +335,6 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                 int downloadButtonWidth = GuiUtil.getStringWidth(downloadButtonDisplay) + 10 * 2;
                 x += width - downloadButtonWidth - 2;//2表示右边留空
                 String title = entry.getTitle();
-                SchematicDownloadInfo downloadFileInfo = entry.getDownloadFileInfo();
                 ButtonGeneric downloadButton = addButton(
                         new ButtonGeneric(x, y, downloadButtonWidth, buttonHeight, downloadButtonDisplay),
                         (button, mouseButton) -> Thread.ofVirtual().name("SchematicDownloader").start(() -> {
@@ -389,59 +384,61 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                 }
                                 path = Paths.get(selectFolder);
                             }
-                            if (downloadFileInfo == null) {
+                            if (!entry.canDownload()) {
                                 DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.no_file");
                                 return;
                             }
-                            path = path.resolve(downloadFileInfo.getLocalFileName());
-                            if (Files.exists(path) && !ConfigHandler.INSTANCE.downloadOverlayFile.getBooleanValue()) {
-                                DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.file_exists");
-                                return;
+                            if (!Files.exists(path)) {
+                                try {
+                                    Files.createDirectories(path);
+                                } catch (IOException e) {
+                                    DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.create_directory_failed", e.getMessage());
+                                    return;
+                                }
                             }
-                            DownloadGui.this.addMessage(
-                                    Message.MessageType.INFO,
-                                    "downmatica.gui.download.button.download.massage.start",
-                                    title, path
-                            );
-                            Stopwatch stopwatch = new Stopwatch();
-                            try {
-                                Path parent = path.getParent();
-                                if (!Files.exists(parent)) {
-                                    Files.createDirectories(parent);
+                            Collection<SchematicDownloadInfo> downloadFileInfos = entry.getDownloadFileInfos();
+                            for (SchematicDownloadInfo downloadFileInfo : downloadFileInfos) {
+                                if (!downloadFileInfo.isValid()) {
+                                    DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.invalid_file");
+                                    continue;
                                 }
-                                HttpRequest request = HttpRequest.newBuilder()
-                                        .uri(downloadFileInfo.getRemoteFileURI())
-                                        .build();
-                                HttpResponse<InputStream> response = HttpClientGetter.get().send(request, HttpResponse.BodyHandlers.ofInputStream());
-                                try (InputStream inputStream = response.body()) {
-                                    Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
+                                Path file = path.resolve(downloadFileInfo.getLocalFileName());
+                                if (Files.exists(file) && !ConfigHandler.INSTANCE.downloadOverlayFile.getBooleanValue()) {
+                                    DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.file_exists");
+                                    continue;
                                 }
-                            } catch (Exception e) {
-                                String message = e.getMessage();
                                 DownloadGui.this.addMessage(
-                                        Message.MessageType.ERROR,
-                                        "downmatica.gui.download.button.download.massage.error",
-                                        StringUtil.hasText(message) ? message : StringUtils.translate("downmatica.gui.download.text.none")
+                                        Message.MessageType.INFO,
+                                        "downmatica.gui.download.button.download.massage.start",
+                                        title, file
                                 );
-                                DownmaticaMod.LOGGER.error("Download failed", e);
-                                return;
+                                Stopwatch stopwatch = new Stopwatch();
+                                try {
+                                    HttpRequest.Builder request = HttpRequest.newBuilder().uri(downloadFileInfo.getRemoteFileURI());
+                                    HttpResponse<InputStream> response = HttpClientGetter.send(request, HttpResponse.BodyHandlers.ofInputStream());
+                                    try (InputStream inputStream = response.body()) {
+                                        Files.copy(inputStream, file, StandardCopyOption.REPLACE_EXISTING);
+                                    }
+                                } catch (Exception e) {
+                                    String message = e.getMessage();
+                                    DownloadGui.this.addMessage(
+                                            Message.MessageType.ERROR,
+                                            "downmatica.gui.download.button.download.massage.error",
+                                            StringUtil.hasText(message) ? message : StringUtils.translate("downmatica.gui.download.text.none")
+                                    );
+                                    DownmaticaMod.LOGGER.error("Download failed", e);
+                                    continue;
+                                }
+                                DownloadGui.this.addMessage(
+                                        Message.MessageType.SUCCESS,
+                                        "downmatica.gui.download.button.download.massage.complete",
+                                        title, TimeUnit.NANOSECONDS.toMillis(stopwatch.getTime())
+                                );
                             }
-                            DownloadGui.this.addMessage(
-                                    Message.MessageType.SUCCESS,
-                                    "downmatica.gui.download.button.download.massage.complete",
-                                    title, TimeUnit.NANOSECONDS.toMillis(stopwatch.getTime())
-                            );
                         })
                 );
-                if (downloadFileInfo == null) {
+                if (!entry.canDownload()) {
                     downloadButton.setEnabled(false);
-                } else if (!downloadFileInfo.isValid()) {
-                    downloadButton.setEnabled(false);
-                    DownmaticaMod.LOGGER.warn(
-                            "Configuration validation failed for schematic download source \"{}\" from \"{}\". The data is invalid, so the download button has been disabled. If you can confirm which extension or core mod this source belongs to, please report this issue to that source's developer.",
-                            title,
-                            entry.getSource()
-                    );
                 }
 
                 String detailsButtonDisplay = StringUtils.translate("downmatica.gui.download.button.details.display");
