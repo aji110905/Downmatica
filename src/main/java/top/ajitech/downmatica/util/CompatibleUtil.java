@@ -5,6 +5,7 @@ import net.minecraft.Util;
 //#else
 //$$ import org.lwjgl.sdl.SDLMisc;
 //#endif
+import net.minecraft.client.Minecraft;
 import java.net.URI;
 
 public final class CompatibleUtil {
@@ -17,5 +18,9 @@ public final class CompatibleUtil {
         //#else
         //$$ SDLMisc.SDL_OpenURL(uri.toString());
         //#endif
+    }
+
+    public static String getLanguageCode() {
+        return Minecraft.getInstance().options.languageCode;
     }
 }
