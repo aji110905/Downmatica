@@ -7,7 +7,7 @@ import fi.dy.masa.malilib.util.data.ModInfo;
 import net.fabricmc.loader.api.FabricLoader;
 import top.ajitech.downmatica.api.SchematicAcquirer;
 import top.ajitech.downmatica.builtin.OpenSTSchematicAcquirer;
-import top.ajitech.downmatica.builtin.RedenMCSchematicAcquirer;
+//import top.ajitech.downmatica.builtin.RedenMCSchematicAcquirer;
 import top.ajitech.downmatica.builtin.SDKArchiveSchematicAcquirer;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
@@ -30,6 +30,7 @@ public class DownmaticaMod implements ModInitializer {
 
         SchematicAcquirer.register(new SDKArchiveSchematicAcquirer());
         SchematicAcquirer.register(new OpenSTSchematicAcquirer());
-        SchematicAcquirer.register(new RedenMCSchematicAcquirer());
+        //RedenMC的集成尚未得到许可
+        //SchematicAcquirer.register(new RedenMCSchematicAcquirer());
     }
 }
