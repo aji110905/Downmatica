@@ -187,7 +187,7 @@ public class RedenMCSchematicAcquirer implements SchematicAcquirer {
                     for (JsonElement jsonElement : object.get("attachments").getAsJsonArray()) {
                         JsonObject jsonObject = jsonElement.getAsJsonObject();
                         String string = jsonObject.get("url").getAsString();
-                        downloadFileInfos.add(SchematicDownloadInfo.of(jsonObject.get("name").getAsString(), URI.create(DOWNLOAD_URI_TEMPLATE.formatted(key, string.substring(string.lastIndexOf('/'))))));
+                        downloadFileInfos.add(SchematicDownloadInfo.of(jsonObject.get("name").getAsString(), URI.create(DOWNLOAD_URI_TEMPLATE.formatted(key, string.substring(string.lastIndexOf('/') + 1)))));
                     }
                 }
             } catch (Exception e) {
