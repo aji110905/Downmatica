@@ -332,7 +332,6 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                 int downloadButtonWidth = GuiUtil.getStringWidth(downloadButtonDisplay) + 10 * 2;
                 x += width - downloadButtonWidth - 2;//2表示右边留空
                 String title = entry.getTitle();
-                Collection<SchematicDownloadInfo> downloadFileInfos = entry.getDownloadFileInfos();
                 ButtonGeneric downloadButton = addButton(
                         new ButtonGeneric(x, y, downloadButtonWidth, buttonHeight, downloadButtonDisplay),
                         (button, mouseButton) -> Thread.ofVirtual().name("SchematicDownloader").start(() -> {
@@ -386,11 +385,16 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                 DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.no_file");
                                 return;
                             }
+                            Collection<SchematicDownloadInfo> downloadFileInfos = entry.getDownloadFileInfos();
                             for (SchematicDownloadInfo downloadFileInfo : downloadFileInfos) {
+                                if (!downloadFileInfo.isValid()) {
+                                    DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.invalid_file");
+                                    continue;
+                                }
                                 path = path.resolve(downloadFileInfo.getLocalFileName());
                                 if (Files.exists(path) && !ConfigHandler.INSTANCE.downloadOverlayFile.getBooleanValue()) {
                                     DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.file_exists");
-                                    return;
+                                    continue;
                                 }
                                 DownloadGui.this.addMessage(
                                         Message.MessageType.INFO,
@@ -416,7 +420,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                             StringUtil.hasText(message) ? message : StringUtils.translate("downmatica.gui.download.text.none")
                                     );
                                     DownmaticaMod.LOGGER.error("Download failed", e);
-                                    return;
+                                    continue;
                                 }
                                 DownloadGui.this.addMessage(
                                         Message.MessageType.SUCCESS,
@@ -428,13 +432,6 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                 );
                 if (!entry.canDownload()) {
                     downloadButton.setEnabled(false);
-                } else if (!downloadFileInfos.stream().allMatch(SchematicDownloadInfo::isValid)) {
-                    downloadButton.setEnabled(false);
-                    DownmaticaMod.LOGGER.warn(
-                            "Configuration validation failed for schematic download source \"{}\" from \"{}\". The data is invalid, so the download button has been disabled. If you can confirm which extension or core mod this source belongs to, please report this issue to that source's developer.",
-                            title,
-                            entry.getSource()
-                    );
                 }
 
                 String detailsButtonDisplay = StringUtils.translate("downmatica.gui.download.button.details.display");

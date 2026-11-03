@@ -21,6 +21,7 @@
   "downmatica.gui.download.button.download.massage.complete": "%s Download completed, time %s millisecond.",
   "downmatica.gui.download.button.download.massage.no_file": "Download failed. This is not your fault. You may report this issue to the mod developer, then click Details to download from the webpage.",
   "downmatica.gui.download.button.download.massage.error": "Download failed. Additional info: %s",
+  "downmatica.gui.download.button.download.massage.invalid_file": "Download file is unsafe, download cancelled. Click Details to download from the webpage.",
   "downmatica.gui.download.button.reload.display": "Reload Schematics",
   "downmatica.gui.config.title": "Configuration",
   "downmatica.config.name.openDownloadInterface": "openDownloadInterface",
