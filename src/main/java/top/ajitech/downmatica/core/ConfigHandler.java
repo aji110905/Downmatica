@@ -37,7 +37,6 @@ public class ConfigHandler implements IConfigHandler {
 
     public final ConfigInteger httpTimeout = new ConfigInteger("httpTimeout", 5000, -1, Integer.MAX_VALUE);
     public final ConfigBoolean enableHttp2 = new ConfigBoolean("enableHttp2", false);
-    public final ConfigOptionList redirectPolicy = new ConfigOptionList("redirectPolicy", RedirectPolicyConfigOptionListEntry.NORMAL);
     public final ConfigString userAgent = new ConfigString("userAgent", DownmaticaMod.MOD_NAME + "/" + DownmaticaMod.MOD_VERSION);
 
     private ConfigHandler(){
@@ -68,7 +67,6 @@ public class ConfigHandler implements IConfigHandler {
 
         httpTimeout.setValueChangeCallback((config) -> HttpClientContainer.INSTANCE.setTimeout(config.getIntegerValue()));
         enableHttp2.setValueChangeCallback((config) -> HttpClientContainer.INSTANCE.setEnableHttp2(config.getBooleanValue()));
-        redirectPolicy.setValueChangeCallback((config) -> HttpClientContainer.INSTANCE.setRedirectPolicy(((RedirectPolicyConfigOptionListEntry) config.getOptionListValue()).getRedirectPolicy()));
     }
 
     @Override
