@@ -24,7 +24,7 @@ public class DownmaticaMod implements ModInitializer {
     public void onInitialize() {
         InitializationHandler.getInstance().registerInitializationHandler(new top.ajitech.downmatica.core.InitializationHandler());
         Registry.CONFIG_SCREEN.registerConfigScreenFactory(new ModInfo(
-                MOD_ID, MOD_NAME, () -> new ConfigGui(null, null)
+                MOD_ID, MOD_NAME, () -> ConfigGui.INSTANCE
         ));
 
         SchematicAcquirer.register(new SDKArchiveSchematicAcquirer());

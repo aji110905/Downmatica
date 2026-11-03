@@ -62,17 +62,12 @@ import java.util.concurrent.TimeUnit;
 //#endif
 
 public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.Entry, DownloadGui.WidgetList> {
-    private final ConfigGui configGui;
+    public static final DownloadGui INSTANCE = new DownloadGui();
 
-    public DownloadGui(Screen parent, @Nullable ConfigGui configGui) {
+    public DownloadGui() {
         super(12, 62);
         useTitleHierarchy = false;
         title = DownmaticaMod.MOD_NAME + " => " + StringUtils.translate("downmatica.gui.download.title");
-        setParent(parent);
-        if (configGui == null) {
-            configGui = new ConfigGui(parent, this);
-        }
-        this.configGui = configGui;
     }
 
     @Override
@@ -91,7 +86,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
         int configButtonWidth = GuiUtil.getStringWidth(configButtonDisplay) + 10 * 2;
         addButton(
                 new ButtonGeneric(x, y, configButtonWidth, 20, configButtonDisplay),
-                (button, mouseButton) -> GuiBase.openGui(configGui)
+                (button, mouseButton) -> ConfigGui.open(getParent())
         );
 
         String reloadButtonDisplay = StringUtils.translate("downmatica.gui.download.button.reload.display");
@@ -136,6 +131,11 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
         } else {
             mc.execute(() -> super.addMessage(type, translationKey, args));
         }
+    }
+
+    public static void open(Screen parent) {
+        INSTANCE.setParent(parent);
+        GuiBase.openGui(INSTANCE);
     }
 
     public class WidgetList extends WidgetListBase<Schematic, DownloadGui.WidgetList.Entry> {
