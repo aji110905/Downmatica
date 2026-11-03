@@ -41,6 +41,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -385,32 +386,36 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                 DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.no_file");
                                 return;
                             }
+                            if (!Files.exists(path)) {
+                                try {
+                                    Files.createDirectories(path);
+                                } catch (IOException e) {
+                                    DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.create_directory_failed", e.getMessage());
+                                    return;
+                                }
+                            }
                             Collection<SchematicDownloadInfo> downloadFileInfos = entry.getDownloadFileInfos();
                             for (SchematicDownloadInfo downloadFileInfo : downloadFileInfos) {
                                 if (!downloadFileInfo.isValid()) {
                                     DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.invalid_file");
                                     continue;
                                 }
-                                path = path.resolve(downloadFileInfo.getLocalFileName());
-                                if (Files.exists(path) && !ConfigHandler.INSTANCE.downloadOverlayFile.getBooleanValue()) {
+                                Path file = path.resolve(downloadFileInfo.getLocalFileName());
+                                if (Files.exists(file) && !ConfigHandler.INSTANCE.downloadOverlayFile.getBooleanValue()) {
                                     DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.file_exists");
                                     continue;
                                 }
                                 DownloadGui.this.addMessage(
                                         Message.MessageType.INFO,
                                         "downmatica.gui.download.button.download.massage.start",
-                                        title, path
+                                        title, file
                                 );
                                 Stopwatch stopwatch = new Stopwatch();
                                 try {
-                                    Path parent = path.getParent();
-                                    if (!Files.exists(parent)) {
-                                        Files.createDirectories(parent);
-                                    }
                                     HttpRequest.Builder request = HttpRequest.newBuilder().uri(downloadFileInfo.getRemoteFileURI());
                                     HttpResponse<InputStream> response = HttpClientGetter.send(request, HttpResponse.BodyHandlers.ofInputStream());
                                     try (InputStream inputStream = response.body()) {
-                                        Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
+                                        Files.copy(inputStream, file, StandardCopyOption.REPLACE_EXISTING);
                                     }
                                 } catch (Exception e) {
                                     String message = e.getMessage();

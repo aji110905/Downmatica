@@ -16,6 +16,7 @@
   "downmatica.gui.download.button.download.display": "Download",
   "downmatica.gui.download.button.download.massage.select_folder": "Please select download directory",
   "downmatica.gui.download.button.download.massage.cancel": "Download cancelled",
+  "downmatica.gui.download.button.download.massage.create_directory_failed": "Failed to create directory, additional info: %s",
   "downmatica.gui.download.button.download.massage.file_exists": "File already exists",
   "downmatica.gui.download.button.download.massage.start": "Downloading %s to %s.",
   "downmatica.gui.download.button.download.massage.complete": "%s Download completed, time %s millisecond.",

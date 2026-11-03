@@ -16,6 +16,7 @@
   "downmatica.gui.download.button.download.display": "下载",
   "downmatica.gui.download.button.download.massage.select_folder": "请选择下载目录",
   "downmatica.gui.download.button.download.massage.cancel": "已取消下载",
+  "downmatica.gui.download.button.download.massage.create_directory_failed": "创建目录失败，可提供信息如下：%s",
   "downmatica.gui.download.button.download.massage.file_exists": "文件已存在",
   "downmatica.gui.download.button.download.massage.start": "正在下载%s到%s。",
   "downmatica.gui.download.button.download.massage.complete": "%s下载完成，用时%s毫秒。",
