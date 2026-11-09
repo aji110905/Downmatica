@@ -33,7 +33,6 @@ public class ConfigHandler implements IConfigHandler {
     public final ConfigBoolean litematicaMainMenuButton = new ConfigBoolean("litematicaMainMenuButton", true);
     public final ConfigBoolean downloadToSchematicBaseDirectory = new ConfigBoolean("downloadToSchematicBaseDirectory", false);
     public final ConfigBoolean downloadOverlayFile = new ConfigBoolean("downloadOverlayFile", false);
-    public final ConfigInteger totalTimeout = new ConfigInteger("totalTimeout", 20000, -1, Integer.MAX_VALUE);
 
     public final ConfigInteger httpTimeout = new ConfigInteger("httpTimeout", 5000, -1, Integer.MAX_VALUE);
     public final ConfigBoolean enableHttp2 = new ConfigBoolean("enableHttp2", false);

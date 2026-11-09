@@ -7,7 +7,6 @@ import top.ajitech.downmatica.util.StringUtil;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * 表示从网络中获取的原理图。
@@ -76,12 +75,6 @@ public interface Schematic {
      * @return 详情按钮点击事件
      */
     @Nullable Runnable onDetailButtonClicked();
-
-    /**
-     * 返回该原理图用于搜索的字符串。
-     * @return 搜索字符串
-     */
-    List<String> getSearchStrings();
 
     static Builder builder() {
         return new Builder();
