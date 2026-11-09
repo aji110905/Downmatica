@@ -21,6 +21,8 @@ Downmatica is convenient for you to download the schematic from the network.
 ## Supported Sources
 
 - [SDK Archive](https://sdkarchive.com)
+- [OpenST](https://openstmc.com)
+- [RedenMC](https://redenmc.com)
 
 ## Contributing to Downmatica
 

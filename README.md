@@ -21,6 +21,8 @@ Downmatica可以让你方便地从网络中下载原理图。
 ## 支持的源
 
 - [SDK Archive](https://sdkarchive.com)
+- [OpenST](https://openstmc.com)
+- [RedenMC](https://redenmc.com)
 
 ## 为Downmatica贡献
 
