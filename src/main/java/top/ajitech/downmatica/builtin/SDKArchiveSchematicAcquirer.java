@@ -3,7 +3,7 @@ package top.ajitech.downmatica.builtin;
 import top.ajitech.downmatica.DownmaticaMod;
 import top.ajitech.downmatica.api.HttpClientGetter;
 import top.ajitech.downmatica.api.Schematic;
-import top.ajitech.downmatica.api.SchematicAcquirer;
+import top.ajitech.downmatica.api.impl.CachedListSchematicAcquirer;
 import top.ajitech.downmatica.util.CompatibleUtil;
 import top.ajitech.downmatica.util.StringUtil;
 import top.ajitech.downmatica.util.URIBuilder;
@@ -17,19 +17,16 @@ import org.jetbrains.annotations.Nullable;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-public class SDKArchiveSchematicAcquirer implements SchematicAcquirer {
+public class SDKArchiveSchematicAcquirer extends CachedListSchematicAcquirer {
     private static final String SDK_ARCHIVE_API_URL = "https://sdkarchive.com/api/";
     private static final String GET_USERS_URL = SDK_ARCHIVE_API_URL + "user/getUsers";
     private static final String GET_USER_SCHEMATICS_URL = SDK_ARCHIVE_API_URL + "schematics/geiSchematicsByPage";
     private static final String SDK_ARCHIVE_DETAIL_URL = "https://sdkarchive.com/schematics/detail/";
 
     @Override
-    public Collection<Schematic> getSchematics() {
+    protected Collection<Schematic> getSchematics() {
         ArrayList<Schematic> rel = new ArrayList<>();
         for (Map.Entry<String, String> entry : getAllUser().entrySet()) {
             String id = entry.getKey();

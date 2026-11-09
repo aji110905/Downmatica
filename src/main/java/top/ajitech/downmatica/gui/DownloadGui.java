@@ -21,6 +21,8 @@ import top.ajitech.downmatica.api.Schematic;
 import top.ajitech.downmatica.api.SchematicDownloadInfo;
 import top.ajitech.downmatica.compatible.LitematicaCompatible;
 import top.ajitech.downmatica.core.ConfigHandler;
+import top.ajitech.downmatica.core.Paged;
+import top.ajitech.downmatica.core.Query;
 import top.ajitech.downmatica.core.SchematicAcquirerManager;
 import top.ajitech.downmatica.util.Stopwatch;
 import top.ajitech.downmatica.util.GuiUtil;
@@ -52,17 +54,23 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 //#if MC >= 260300
 //$$ import java.util.concurrent.CountDownLatch;
 //#endif
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 //#if MC >= 260300
 //$$ import java.util.concurrent.atomic.AtomicReference;
 //#endif
 
 public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.Entry, DownloadGui.WidgetList> {
     public static final DownloadGui INSTANCE = new DownloadGui();
+
+    private ButtonGeneric lastPageButton = null;
+    private ButtonGeneric nextPageButton = null;
+    private int totalPages = 0;
+    private int page = 1;
+    private int pageTextX = 0;
 
     public DownloadGui() {
         super(12, 62);
@@ -78,40 +86,60 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
         int x = getListX();
 
         String downloadButtonDisplay = StringUtils.translate("downmatica.gui.common.button.download.display");
-        int downloadButtonWidth = GuiUtil.getStringWidth(downloadButtonDisplay) + 10 * 2;//10为按钮的左右留白
+        int downloadButtonWidth = GuiUtil.getStringWidth(downloadButtonDisplay) + 10 * 2;
         addButton(new ButtonGeneric(x, y, downloadButtonWidth, 20, downloadButtonDisplay), null).setEnabled(false);
 
         x += downloadButtonWidth + 4;//4表示按钮间的间隔
         String configButtonDisplay = StringUtils.translate("downmatica.gui.common.button.config.display");
         int configButtonWidth = GuiUtil.getStringWidth(configButtonDisplay) + 10 * 2;
-        addButton(
-                new ButtonGeneric(x, y, configButtonWidth, 20, configButtonDisplay),
-                (button, mouseButton) -> ConfigGui.open(getParent())
-        );
+        addButton(new ButtonGeneric(x, y, configButtonWidth, 20, configButtonDisplay), (button, mouseButton) -> ConfigGui.open(getParent()));
 
-        String reloadButtonDisplay = StringUtils.translate("downmatica.gui.download.button.reload.display");
-        int reloadButtonWidth = GuiUtil.getStringWidth(reloadButtonDisplay) + 10 * 2;
-        x = width - getListX() - reloadButtonWidth;
-        WidgetList listWidget = getListWidget();
-        boolean bl = listWidget == null;
-        ButtonGeneric reloadButton = addButton(
-                new ButtonGeneric(x, y, reloadButtonWidth, 20, reloadButtonDisplay),
-                (button, mouseButton) -> {
-                    if (!bl) {
-                        listWidget.reloadEntries();
-                    }
-                }
-        );
-        if (bl || listWidget.entries == null){
-            reloadButton.setEnabled(false);
+        String nextButtonDisplay = StringUtils.translate("downmatica.gui.download.button.next.display");
+        int nextButtonWidth = GuiUtil.getStringWidth(nextButtonDisplay) + 10 * 2;
+        x = width - nextButtonWidth - 12;
+        nextPageButton = addButton(new ButtonGeneric(x, y, nextButtonWidth, 20, nextButtonDisplay), (button, mouseButton) -> setPage(page + 1));
+
+        String lastButtonDisplay = StringUtils.translate("downmatica.gui.download.button.last.display");
+        int lastButtonWidth = GuiUtil.getStringWidth(lastButtonDisplay) + 10 * 2;
+        x = x - 4 - lastButtonWidth;
+        lastPageButton = addButton(new ButtonGeneric(x, y, lastButtonWidth, 20, lastButtonDisplay), (button, mouseButton) -> setPage(page - 1));
+
+        pageTextX = lastPageButton.getX() - 4;
+        updatePageButtons();
+    }
+
+    private void setPage(int page) {
+        if (page < 1) {
+            return;
         }
+        getListWidget().loadPage(page, false);
+        updatePageButtons();
+    }
+
+    private void updatePageButtons() {
+        if (getListWidget().entries == null) {
+            lastPageButton.setEnabled(false);
+            nextPageButton.setEnabled(false);
+            return;
+        }
+        lastPageButton.setEnabled(page > 1);
+        nextPageButton.setEnabled(totalPages < 1 || page < totalPages);
+    }
+
+    @Override
+    //#if MC < 12111
+    public void drawContents(GuiGraphics drawContext, int mouseX, int mouseY, float partialTicks) {
+    //#else
+    //$$ public void drawContents(GuiContext drawContext, int mouseX, int mouseY, float partialTicks) {
+    //#endif
+        super.drawContents(drawContext, mouseX, mouseY, partialTicks);
+        String pageDisplay = StringUtils.translate("downmatica.gui.download.text.page", page, totalPages < 1 ? "?" : totalPages);
+        drawString(drawContext, pageDisplay, pageTextX  - GuiUtil.getStringWidth(pageDisplay), 36, 0xFFFFFFFF);
     }
 
     @Override
     protected WidgetList createListWidget(int listX, int listY) {
-        WidgetList list = new WidgetList(listX, listY, getBrowserWidth(), getBrowserHeight());
-        list.loadEntries();
-        return list;
+        return new WidgetList(listX, listY, getBrowserWidth(), getBrowserHeight());
     }
 
     @Override
@@ -139,49 +167,52 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
     }
 
     public class WidgetList extends WidgetListBase<Schematic, DownloadGui.WidgetList.Entry> {
+        private final AtomicLong requestGeneration = new AtomicLong();
         private int infoHeight;
         private int infoWidth;
         @Nullable
         private Collection<Schematic> entries;
+        @Nullable
+        private String keyword;
 
-        public WidgetList(int x, int y, int width, int height) {
+        private WidgetList(int x, int y, int width, int height) {
             super(x, y, width, height, null);
             final int searchBarHeight = 14;
             browserEntriesOffsetY = searchBarHeight + 2;//2表示搜索栏和实体的间隔
             browserEntryHeight = 22;
-            widgetSearchBar = new WidgetSearchBar(
-                    x + 1 ,//1我也不知道是什么 但是加一个像素会更好看些
-                    y + 4,//4表示上方留空
-                    getSearchBarWidth(),
-                    searchBarHeight,
-                    0,
-                    MaLiLibIcons.SEARCH,
-                    LeftRight.LEFT
-            ){
-                @Override
-                public void setWidth(int width) {
-                    super.setWidth(width);
-                    searchBox.setWidth(width - iconSearch.getWidth() - 7);
-                }
-            };
+            widgetSearchBar = new WidgetSearchBar(x + 1 , y + 4, browserWidth - 1, searchBarHeight, 0, MaLiLibIcons.SEARCH, LeftRight.LEFT);
         }
 
-        public void loadEntries() {
+        private void loadPage(int page, boolean debounce) {
+            entries = null;
+            DownloadGui.this.page = page;
+            refreshEntries();
+            if (lastPageButton != null && nextPageButton != null) {
+                updatePageButtons();
+            }
+            long generation = requestGeneration.addAndGet(1L);
             Thread.ofVirtual().name("SchematicLoader").start(() -> {
-                Collection<Schematic> schematics = SchematicAcquirerManager.INSTANCE.getAllSchematics();
+                if (debounce) {
+                    try {
+                        Thread.sleep(300L);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                    if (generation != requestGeneration.get()) {
+                        return;
+                    }
+                }
+                Paged paged = SchematicAcquirerManager.INSTANCE.getPage(Query.of(page, keyword));
                 Minecraft.getInstance().execute(() -> {
-                    entries = schematics;
+                    if (generation != requestGeneration.get()) {
+                        return;
+                    }
+                    totalPages = paged.getTotalPages();
+                    entries = paged.getEntries();
                     refreshEntries();
-                    DownloadGui.this.initGui();
+                    updatePageButtons();
                 });
             });
-        }
-
-        public void reloadEntries() {
-            entries = null;
-            refreshEntries();
-            DownloadGui.this.initGui();
-            loadEntries();
         }
 
         @Override
@@ -191,13 +222,6 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
             infoHeight = height;
             browserWidth = width - infoWidth - 4;//浏览器和信息之间的间隔
             browserEntryWidth = browserWidth - 2 - 8 - 1 - 1;//2表示左边留空，8表示滚动条的宽度，1表示滚动条和实体间的间隔，1表示右边留空。
-            if (widgetSearchBar != null) {
-                widgetSearchBar.setWidth(getSearchBarWidth());
-            }
-        }
-
-        private int getSearchBarWidth() {
-            return browserWidth - 1;//1我也不知道是什么 但是减一个像素会更好看些
         }
 
         @Override
@@ -317,14 +341,26 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
         }
 
         @Override
-        protected List<String> getEntryStringsForFilter(Schematic entry) {
-            return entry.getSearchStrings();
+        protected void refreshBrowserEntries() {
+            String filterText = getFilterText();
+            // 第一次加载在这里
+            if (!filterText.equals(keyword)) {
+                boolean firstLoad = keyword == null;
+                this.keyword = filterText;
+                loadPage(1, !firstLoad);
+            }
+            super.refreshBrowserEntries();
+        }
+
+        @Override
+        protected void addFilteredContents(Collection<Schematic> entries) {
+            this.listContents.addAll(entries);
         }
 
         public class Entry extends WidgetListEntryBase<Schematic> {
             private final boolean isOdd;
 
-            public Entry(int x, int y, int width, int height, Schematic entry, int listIndex, boolean isOdd) {
+            private Entry(int x, int y, int width, int height, Schematic entry, int listIndex, boolean isOdd) {
                 super(x, y, width, height, entry, listIndex);
                 this.isOdd = isOdd;
                 int verticalMargin = 1;
