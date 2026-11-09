@@ -168,12 +168,17 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
 
     public class WidgetList extends WidgetListBase<Schematic, DownloadGui.WidgetList.Entry> {
         private final AtomicLong requestGeneration = new AtomicLong();
+        private final AtomicLong infoGeneration = new AtomicLong();
         private int infoHeight;
         private int infoWidth;
         @Nullable
         private Collection<Schematic> entries;
         @Nullable
         private String keyword;
+        @Nullable
+        private Schematic infoEntry;
+        @Nullable
+        private Info info;
 
         private WidgetList(int x, int y, int width, int height) {
             super(x, y, width, height, null);
@@ -291,6 +296,30 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
         //#else
         //$$ private void drawInfo(GuiContext drawContext, Schematic entry, int x, int y) {
         //#endif
+            if (entry != infoEntry) {
+                infoEntry = entry;
+                info = null;
+                long generation = infoGeneration.incrementAndGet();
+                Thread.ofVirtual().name("SchematicInfoLoader").start(() -> {
+                    Info snapshot;
+                    try {
+                        snapshot = new Info(entry.getSource(), entry.getAuthor(), entry.getDescription());
+                    } catch (Exception e) {
+                        DownmaticaMod.LOGGER.error("Failed to load schematic info", e);
+                        snapshot = new Info(null, null, null);
+                    }
+                    Info info = snapshot;
+                    Minecraft.getInstance().execute(() -> {
+                        if (generation == infoGeneration.get()) {
+                            this.info = info;
+                        }
+                    });
+                });
+            }
+            if (info == null) {
+                drawLoading(drawContext, x, y);
+                return;
+            }
             x += 4;//4表示左边留空
             y += 4;//4表示上方留空
 
@@ -300,20 +329,23 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
             final int space = 4;
 
             y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.download.info.title"), x, y, 0xC0C0C0C0);
-            String title = entry.getTitle();
+            String title = entry.getTitle();//getTitle约定为无副作用，可以直接在渲染线程取
             y = drawInfoText(drawContext, !StringUtil.hasText(title) ? unknown : title, x, y, 0xFFFFFFFF) + space;
 
             y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.download.info.source"), x, y, 0xC0C0C0C0);
-            String source = entry.getSource();
+            String source = info.source();
             y = drawInfoText(drawContext, source == null ? unknown : source, x, y, 0xFFFFFFFF) + space;
 
             y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.download.info.author"), x, y, 0xC0C0C0C0);
-            String author = entry.getAuthor();
+            String author = info.author();
             y = drawInfoText(drawContext, !StringUtil.hasText(author) ? unknown : author, x, y, 0xFFFFFFFF) + space;
 
             y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.download.info.description"), x, y, 0xC0C0C0C0);
-            String description = entry.getDescription();
+            String description = info.description();
             drawInfoText(drawContext, !StringUtil.hasText(description) ? none : description, x, y, 0xFFFFFFFF);
+        }
+
+        private record Info(String source, String author, String description) {
         }
 
         //#if MC < 12111
