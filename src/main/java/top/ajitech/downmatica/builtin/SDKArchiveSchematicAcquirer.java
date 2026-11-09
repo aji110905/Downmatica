@@ -11,7 +11,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import fi.dy.masa.malilib.util.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
@@ -85,7 +84,7 @@ public class SDKArchiveSchematicAcquirer extends CachedListSchematicAcquirer {
         try {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             Schematic.Builder builder = Schematic.builder()
-                    .source(StringUtils.translate("downmatica.source.sdk_archive"))
+                    .source("SDK Archive")
                     .title(jsonObject.get("title").getAsString())
                     .author(author)
                     .description(jsonObject.get("description").getAsString())

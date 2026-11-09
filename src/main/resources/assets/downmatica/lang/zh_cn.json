@@ -1,5 +1,4 @@
 {
-  "downmatica.source.sdk_archive": "SDK档案馆",
   "downmatica.gui.litematica_main_menu.button.download_schematic.display": "下载原理图",
   "downmatica.gui.common.button.download.display": "下载",
   "downmatica.gui.common.button.config.display": "配置",
