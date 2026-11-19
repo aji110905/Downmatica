@@ -472,11 +472,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                     DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.file_exists");
                                     continue;
                                 }
-                                DownloadGui.this.addMessage(
-                                        Message.MessageType.INFO,
-                                        "downmatica.gui.download.button.download.massage.start",
-                                        title, file
-                                );
+                                DownloadGui.this.addMessage(Message.MessageType.INFO, "downmatica.gui.download.button.download.massage.start", title, file);
                                 Stopwatch stopwatch = new Stopwatch();
                                 try {
                                     HttpRequest.Builder request = HttpRequest.newBuilder().uri(downloadFileInfo.getRemoteFileURI());
@@ -486,19 +482,11 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                     }
                                 } catch (Exception e) {
                                     String message = e.getMessage();
-                                    DownloadGui.this.addMessage(
-                                            Message.MessageType.ERROR,
-                                            "downmatica.gui.download.button.download.massage.error",
-                                            StringUtil.hasText(message) ? message : StringUtils.translate("downmatica.gui.download.text.none")
-                                    );
+                                    DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.error", StringUtil.hasText(message) ? message : StringUtils.translate("downmatica.gui.download.text.none"));
                                     DownmaticaMod.LOGGER.error("Download failed", e);
                                     continue;
                                 }
-                                DownloadGui.this.addMessage(
-                                        Message.MessageType.SUCCESS,
-                                        "downmatica.gui.download.button.download.massage.complete",
-                                        title, TimeUnit.NANOSECONDS.toMillis(stopwatch.getTime())
-                                );
+                                DownloadGui.this.addMessage(Message.MessageType.SUCCESS, "downmatica.gui.download.button.download.massage.complete", "downmatica.gui.download.button.download.massage.complete", title, TimeUnit.NANOSECONDS.toMillis(stopwatch.getTime()));
                             }
                         })
                 );
