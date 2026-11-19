@@ -64,16 +64,15 @@ import java.util.concurrent.atomic.AtomicLong;
 //#endif
 
 public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.Entry, DownloadGui.WidgetList> {
-    public static final DownloadGui INSTANCE = new DownloadGui();
-
     private ButtonGeneric lastPageButton = null;
     private ButtonGeneric nextPageButton = null;
     private int totalPages = 0;
     private int page = 1;
     private int pageTextX = 0;
 
-    public DownloadGui() {
+    public DownloadGui(Screen parent) {
         super(12, 62);
+        setParent(parent);
         useTitleHierarchy = false;
         title = DownmaticaMod.MOD_NAME + " => " + StringUtils.translate("downmatica.gui.download.title");
     }
@@ -92,7 +91,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
         x += downloadButtonWidth + 4;//4表示按钮间的间隔
         String configButtonDisplay = StringUtils.translate("downmatica.gui.common.button.config.display");
         int configButtonWidth = GuiUtil.getStringWidth(configButtonDisplay) + 10 * 2;
-        addButton(new ButtonGeneric(x, y, configButtonWidth, 20, configButtonDisplay), (button, mouseButton) -> ConfigGui.open(getParent()));
+        addButton(new ButtonGeneric(x, y, configButtonWidth, 20, configButtonDisplay), (button, mouseButton) -> GuiBase.openGui(new ConfigGui(getParent())));
 
         String nextButtonDisplay = StringUtils.translate("downmatica.gui.download.button.next.display");
         int nextButtonWidth = GuiUtil.getStringWidth(nextButtonDisplay) + 10 * 2;
@@ -159,11 +158,6 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
         } else {
             mc.execute(() -> super.addMessage(type, translationKey, args));
         }
-    }
-
-    public static void open(Screen parent) {
-        INSTANCE.setParent(parent);
-        GuiBase.openGui(INSTANCE);
     }
 
     public class WidgetList extends WidgetListBase<Schematic, DownloadGui.WidgetList.Entry> {
@@ -424,7 +418,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                 //$$ if (hwnd != 0L) {
                                 //$$     Function.getFunction("user32", "EnableWindow").invokeInt(new Object[]{ Pointer.createConstant(hwnd), 0 });
                                 //$$ }
-                                //$$ try (SDL_DialogFileCallback callback = SDL_DialogFileCallback.create((_, filelist, _) -> {
+                                //$$ SDL_DialogFileCallback callback = SDL_DialogFileCallback.create((_, filelist, _) -> {
                                 //$$     if (hwnd != 0L) {
                                 //$$         Function.getFunction("user32", "EnableWindow").invokeInt(new Object[]{ Pointer.createConstant(hwnd), 1 });
                                 //$$     }
@@ -435,15 +429,18 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                 //$$         rel.set(pathPtr == 0L ? null : MemoryUtil.memUTF8(pathPtr));
                                 //$$     }
                                 //$$     latch.countDown();
-                                //$$ })) {
-                                //$$     SDLDialog.SDL_ShowOpenFolderDialog(callback, windowHandle, 0L, "", false);
-                                //$$     try {
-                                //$$         latch.await();
-                                //$$     } catch (InterruptedException e) {
-                                //$$         Thread.currentThread().interrupt();
-                                //$$         rel.set(null);
+                                //$$ });
+                                //$$ try {
+                                //$$     Minecraft.getInstance().execute(() -> SDLDialog.SDL_ShowOpenFolderDialog(callback, windowHandle, 0L, "", false));
+                                //$$     latch.await();
+                                //$$ } catch (InterruptedException e) {
+                                //$$     Thread.currentThread().interrupt();
+                                //$$     if (hwnd != 0L) {
+                                //$$         Function.getFunction("user32", "EnableWindow").invokeInt(new Object[]{ Pointer.createConstant(hwnd), 1 });
                                 //$$     }
+                                //$$     rel.set(null);
                                 //$$ }
+                                //$$ Minecraft.getInstance().execute(callback::close);
                                 //$$ String selectFolder = rel.get();
                                 //#endif
                                 if (selectFolder == null) {
@@ -475,11 +472,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                     DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.file_exists");
                                     continue;
                                 }
-                                DownloadGui.this.addMessage(
-                                        Message.MessageType.INFO,
-                                        "downmatica.gui.download.button.download.massage.start",
-                                        title, file
-                                );
+                                DownloadGui.this.addMessage(Message.MessageType.INFO, "downmatica.gui.download.button.download.massage.start", title, file);
                                 Stopwatch stopwatch = new Stopwatch();
                                 try {
                                     HttpRequest.Builder request = HttpRequest.newBuilder().uri(downloadFileInfo.getRemoteFileURI());
@@ -489,19 +482,11 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                     }
                                 } catch (Exception e) {
                                     String message = e.getMessage();
-                                    DownloadGui.this.addMessage(
-                                            Message.MessageType.ERROR,
-                                            "downmatica.gui.download.button.download.massage.error",
-                                            StringUtil.hasText(message) ? message : StringUtils.translate("downmatica.gui.download.text.none")
-                                    );
+                                    DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.error", StringUtil.hasText(message) ? message : StringUtils.translate("downmatica.gui.download.text.none"));
                                     DownmaticaMod.LOGGER.error("Download failed", e);
                                     continue;
                                 }
-                                DownloadGui.this.addMessage(
-                                        Message.MessageType.SUCCESS,
-                                        "downmatica.gui.download.button.download.massage.complete",
-                                        title, TimeUnit.NANOSECONDS.toMillis(stopwatch.getTime())
-                                );
+                                DownloadGui.this.addMessage(Message.MessageType.SUCCESS, "downmatica.gui.download.button.download.massage.complete", "downmatica.gui.download.button.download.massage.complete", title, TimeUnit.NANOSECONDS.toMillis(stopwatch.getTime()));
                             }
                         })
                 );

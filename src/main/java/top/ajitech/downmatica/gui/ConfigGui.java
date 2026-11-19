@@ -11,8 +11,6 @@ import top.ajitech.downmatica.core.ConfigHandler;
 import java.util.List;
 
 public class ConfigGui extends GuiConfigsBase {
-    public static final ConfigGui INSTANCE = new ConfigGui(null);
-
     public ConfigGui(Screen parent) {
         super(12, 62, DownmaticaMod.MOD_ID, null, "downmatica.gui.config.title");
         setParent(parent);
@@ -31,7 +29,7 @@ public class ConfigGui extends GuiConfigsBase {
         int downloadButtonWidth = getStringWidth(downloadButtonDisplay) + 10 * 2;//10为按钮的左右留白
         addButton(
                 new ButtonGeneric(x, y, downloadButtonWidth, 20, downloadButtonDisplay),
-                (button, mouseButton) -> DownloadGui.open(getParent())
+                (button, mouseButton) -> GuiBase.openGui(new DownloadGui(getParent()))
         );
 
         x += downloadButtonWidth + 4;//4表示按钮间的间隔
@@ -45,10 +43,5 @@ public class ConfigGui extends GuiConfigsBase {
     @Override
     public List<ConfigOptionWrapper> getConfigs() {
         return ConfigOptionWrapper.createFor(ConfigHandler.INSTANCE.configs);
-    }
-
-    public static void open(Screen parent) {
-        INSTANCE.setParent(parent);
-        GuiBase.openGui(INSTANCE);
     }
 }
