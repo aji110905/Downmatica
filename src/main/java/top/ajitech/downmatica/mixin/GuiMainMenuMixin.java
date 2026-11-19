@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(GuiMainMenu.class)
-public abstract class MixinGuiMainMenu extends GuiBase {
+public abstract class GuiMainMenuMixin extends GuiBase {
     @Shadow
     protected abstract int getButtonWidth();
 
