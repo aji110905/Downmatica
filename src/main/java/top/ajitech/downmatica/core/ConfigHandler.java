@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
 import fi.dy.masa.malilib.config.options.*;
+import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.GuiUtils;
 import net.fabricmc.loader.api.FabricLoader;
@@ -56,11 +57,11 @@ public class ConfigHandler implements IConfigHandler {
         this.configs = ImmutableList.copyOf(configs);
 
         openConfigInterface.getKeybind().setCallback((keyAction, keybind) -> {
-            ConfigGui.open(GuiUtils.getCurrentScreen());
+            GuiBase.openGui(new ConfigGui(GuiUtils.getCurrentScreen()));
             return true;
         });
         openDownloadInterface.getKeybind().setCallback((keyAction, keybind) -> {
-            DownloadGui.open(GuiUtils.getCurrentScreen());
+            GuiBase.openGui(new DownloadGui(GuiUtils.getCurrentScreen()));
             return true;
         });
 

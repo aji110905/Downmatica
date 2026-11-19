@@ -3,6 +3,7 @@ package top.ajitech.downmatica;
 import com.google.gson.Gson;
 import fi.dy.masa.malilib.event.InitializationHandler;
 import fi.dy.masa.malilib.registry.Registry;
+import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.malilib.util.data.ModInfo;
 import net.fabricmc.loader.api.FabricLoader;
 import top.ajitech.downmatica.api.SchematicAcquirer;
@@ -25,7 +26,7 @@ public class DownmaticaMod implements ModInitializer {
     public void onInitialize() {
         InitializationHandler.getInstance().registerInitializationHandler(new top.ajitech.downmatica.core.InitializationHandler());
         Registry.CONFIG_SCREEN.registerConfigScreenFactory(new ModInfo(
-                MOD_ID, MOD_NAME, () -> ConfigGui.INSTANCE
+                MOD_ID, MOD_NAME, () -> new ConfigGui(GuiUtils.getCurrentScreen())
         ));
 
         SchematicAcquirer.register(new SDKArchiveSchematicAcquirer());

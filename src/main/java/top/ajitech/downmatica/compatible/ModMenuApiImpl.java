@@ -7,9 +7,6 @@ import top.ajitech.downmatica.gui.ConfigGui;
 public class ModMenuApiImpl implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return (parent) -> {
-            ConfigGui.INSTANCE.setParent(parent);
-            return ConfigGui.INSTANCE;
-        };
+        return ConfigGui::new;
     }
 }

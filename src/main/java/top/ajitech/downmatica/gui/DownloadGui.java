@@ -64,16 +64,15 @@ import java.util.concurrent.atomic.AtomicLong;
 //#endif
 
 public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.Entry, DownloadGui.WidgetList> {
-    public static final DownloadGui INSTANCE = new DownloadGui();
-
     private ButtonGeneric lastPageButton = null;
     private ButtonGeneric nextPageButton = null;
     private int totalPages = 0;
     private int page = 1;
     private int pageTextX = 0;
 
-    public DownloadGui() {
+    public DownloadGui(Screen parent) {
         super(12, 62);
+        setParent(parent);
         useTitleHierarchy = false;
         title = DownmaticaMod.MOD_NAME + " => " + StringUtils.translate("downmatica.gui.download.title");
     }
@@ -92,7 +91,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
         x += downloadButtonWidth + 4;//4表示按钮间的间隔
         String configButtonDisplay = StringUtils.translate("downmatica.gui.common.button.config.display");
         int configButtonWidth = GuiUtil.getStringWidth(configButtonDisplay) + 10 * 2;
-        addButton(new ButtonGeneric(x, y, configButtonWidth, 20, configButtonDisplay), (button, mouseButton) -> ConfigGui.open(getParent()));
+        addButton(new ButtonGeneric(x, y, configButtonWidth, 20, configButtonDisplay), (button, mouseButton) -> GuiBase.openGui(new ConfigGui(getParent())));
 
         String nextButtonDisplay = StringUtils.translate("downmatica.gui.download.button.next.display");
         int nextButtonWidth = GuiUtil.getStringWidth(nextButtonDisplay) + 10 * 2;
@@ -159,11 +158,6 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
         } else {
             mc.execute(() -> super.addMessage(type, translationKey, args));
         }
-    }
-
-    public static void open(Screen parent) {
-        INSTANCE.setParent(parent);
-        GuiBase.openGui(INSTANCE);
     }
 
     public class WidgetList extends WidgetListBase<Schematic, DownloadGui.WidgetList.Entry> {
