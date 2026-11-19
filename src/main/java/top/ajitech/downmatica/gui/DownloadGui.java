@@ -418,7 +418,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                 //$$ if (hwnd != 0L) {
                                 //$$     Function.getFunction("user32", "EnableWindow").invokeInt(new Object[]{ Pointer.createConstant(hwnd), 0 });
                                 //$$ }
-                                //$$ try (SDL_DialogFileCallback callback = SDL_DialogFileCallback.create((_, filelist, _) -> {
+                                //$$ SDL_DialogFileCallback callback = SDL_DialogFileCallback.create((_, filelist, _) -> {
                                 //$$     if (hwnd != 0L) {
                                 //$$         Function.getFunction("user32", "EnableWindow").invokeInt(new Object[]{ Pointer.createConstant(hwnd), 1 });
                                 //$$     }
@@ -429,15 +429,18 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                 //$$         rel.set(pathPtr == 0L ? null : MemoryUtil.memUTF8(pathPtr));
                                 //$$     }
                                 //$$     latch.countDown();
-                                //$$ })) {
-                                //$$     SDLDialog.SDL_ShowOpenFolderDialog(callback, windowHandle, 0L, "", false);
-                                //$$     try {
-                                //$$         latch.await();
-                                //$$     } catch (InterruptedException e) {
-                                //$$         Thread.currentThread().interrupt();
-                                //$$         rel.set(null);
+                                //$$ });
+                                //$$ try {
+                                //$$     Minecraft.getInstance().execute(() -> SDLDialog.SDL_ShowOpenFolderDialog(callback, windowHandle, 0L, "", false));
+                                //$$     latch.await();
+                                //$$ } catch (InterruptedException e) {
+                                //$$     Thread.currentThread().interrupt();
+                                //$$     if (hwnd != 0L) {
+                                //$$         Function.getFunction("user32", "EnableWindow").invokeInt(new Object[]{ Pointer.createConstant(hwnd), 1 });
                                 //$$     }
+                                //$$     rel.set(null);
                                 //$$ }
+                                //$$ Minecraft.getInstance().execute(callback::close);
                                 //$$ String selectFolder = rel.get();
                                 //#endif
                                 if (selectFolder == null) {
