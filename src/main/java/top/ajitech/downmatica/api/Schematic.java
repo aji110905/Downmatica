@@ -57,7 +57,7 @@ public interface Schematic {
     /**
      * 返回该原理图的下载地址。
      * <p>
-     * 该值为<code>null</code>时，<code>下载</code>按钮将不可点击。
+     * 该集合为空时，<code>下载</code>按钮将不可点击。
      * @return 下载地址
      */
     Collection<SchematicDownloadInfo> getDownloadFileInfos();
