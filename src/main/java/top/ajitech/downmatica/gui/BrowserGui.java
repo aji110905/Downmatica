@@ -326,7 +326,7 @@ public class BrowserGui extends GuiListBase<Schematic, BrowserGui.WidgetList.Ent
             final int space = 4;
 
             y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.browser.info.title"), x, y, 0xC0C0C0C0);
-            String title = entry.getTitle();//getTitle约定为无副作用，可以直接在渲染线程取
+            String title = entry.getTitle();
             y = drawInfoText(drawContext, !StringUtil.hasText(title) ? unknown : title, x, y, 0xFFFFFFFF) + space;
 
             y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.browser.info.source"), x, y, 0xC0C0C0C0);
