@@ -62,18 +62,18 @@ import java.util.concurrent.atomic.AtomicLong;
 //$$ import java.util.concurrent.atomic.AtomicReference;
 //#endif
 
-public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.Entry, DownloadGui.WidgetList> {
+public class BrowserGui extends GuiListBase<Schematic, BrowserGui.WidgetList.Entry, BrowserGui.WidgetList> {
     private ButtonGeneric lastPageButton = null;
     private ButtonGeneric nextPageButton = null;
     private int totalPages = 0;
     private int page = 1;
     private int pageTextX = 0;
 
-    public DownloadGui(Screen parent) {
+    public BrowserGui(Screen parent) {
         super(12, 62);
         setParent(parent);
         useTitleHierarchy = false;
-        title = DownmaticaMod.MOD_NAME + " => " + StringUtils.translate("downmatica.gui.download.title");
+        title = DownmaticaMod.MOD_NAME + " => " + StringUtils.translate("downmatica.gui.browser.title");
     }
 
     @Override
@@ -83,7 +83,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
         int y = 30;
         int x = getListX();
 
-        String downloadButtonDisplay = StringUtils.translate("downmatica.gui.common.button.download.display");
+        String downloadButtonDisplay = StringUtils.translate("downmatica.gui.common.button.browser.display");
         int downloadButtonWidth = GuiUtil.getStringWidth(downloadButtonDisplay) + 10 * 2;
         addButton(new ButtonGeneric(x, y, downloadButtonWidth, 20, downloadButtonDisplay), null).setEnabled(false);
 
@@ -92,12 +92,12 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
         int configButtonWidth = GuiUtil.getStringWidth(configButtonDisplay) + 10 * 2;
         addButton(new ButtonGeneric(x, y, configButtonWidth, 20, configButtonDisplay), (button, mouseButton) -> GuiBase.openGui(new ConfigGui(getParent())));
 
-        String nextButtonDisplay = StringUtils.translate("downmatica.gui.download.button.next.display");
+        String nextButtonDisplay = StringUtils.translate("downmatica.gui.browser.button.next.display");
         int nextButtonWidth = GuiUtil.getStringWidth(nextButtonDisplay) + 10 * 2;
         x = width - nextButtonWidth - 12;
         nextPageButton = addButton(new ButtonGeneric(x, y, nextButtonWidth, 20, nextButtonDisplay), (button, mouseButton) -> setPage(page + 1));
 
-        String lastButtonDisplay = StringUtils.translate("downmatica.gui.download.button.last.display");
+        String lastButtonDisplay = StringUtils.translate("downmatica.gui.browser.button.last.display");
         int lastButtonWidth = GuiUtil.getStringWidth(lastButtonDisplay) + 10 * 2;
         x = x - 4 - lastButtonWidth;
         lastPageButton = addButton(new ButtonGeneric(x, y, lastButtonWidth, 20, lastButtonDisplay), (button, mouseButton) -> setPage(page - 1));
@@ -135,7 +135,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
     //$$ public void drawContents(GuiContext drawContext, int mouseX, int mouseY, float partialTicks) {
     //#endif
         super.drawContents(drawContext, mouseX, mouseY, partialTicks);
-        String pageDisplay = StringUtils.translate("downmatica.gui.download.text.page", page, totalPages < 1 ? "?" : totalPages);
+        String pageDisplay = StringUtils.translate("downmatica.gui.browser.text.page", page, totalPages < 1 ? "?" : totalPages);
         drawString(drawContext, pageDisplay, pageTextX  - GuiUtil.getStringWidth(pageDisplay), 36, 0xFFFFFFFF);
     }
 
@@ -163,7 +163,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
         }
     }
 
-    public class WidgetList extends WidgetListBase<Schematic, DownloadGui.WidgetList.Entry> {
+    public class WidgetList extends WidgetListBase<Schematic, BrowserGui.WidgetList.Entry> {
         private final AtomicLong requestGeneration = new AtomicLong();
         private final AtomicLong infoGeneration = new AtomicLong();
         private int infoHeight;
@@ -187,7 +187,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
 
         private void loadPage(int page, boolean debounce) {
             entries = null;
-            DownloadGui.this.page = page;
+            BrowserGui.this.page = page;
             refreshEntries();
             if (lastPageButton != null && nextPageButton != null) {
                 updatePageButtons();
@@ -282,7 +282,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
         //#else
         //$$ private void drawLoading(GuiContext drawContext, int x, int y) {
         //#endif
-            String string = StringUtils.translate("downmatica.gui.download.text.loading");
+            String string = StringUtils.translate("downmatica.gui.browser.text.loading");
             x += (infoWidth - GuiUtil.getStringWidth(string)) / 2;
             y += (infoHeight - GuiUtil.getFontHeight()) / 2;
             drawString(drawContext, string, x, y, 0xFFFFFFFF);
@@ -320,24 +320,24 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
             x += 4;//4表示左边留空
             y += 4;//4表示上方留空
 
-            String unknown = StringUtils.translate("downmatica.gui.download.text.unknown");
-            String none = StringUtils.translate("downmatica.gui.download.text.none");
+            String unknown = StringUtils.translate("downmatica.gui.browser.text.unknown");
+            String none = StringUtils.translate("downmatica.gui.browser.text.none");
 
             final int space = 4;
 
-            y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.download.info.title"), x, y, 0xC0C0C0C0);
+            y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.browser.info.title"), x, y, 0xC0C0C0C0);
             String title = entry.getTitle();//getTitle约定为无副作用，可以直接在渲染线程取
             y = drawInfoText(drawContext, !StringUtil.hasText(title) ? unknown : title, x, y, 0xFFFFFFFF) + space;
 
-            y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.download.info.source"), x, y, 0xC0C0C0C0);
+            y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.browser.info.source"), x, y, 0xC0C0C0C0);
             String source = info.source();
             y = drawInfoText(drawContext, source == null ? unknown : source, x, y, 0xFFFFFFFF) + space;
 
-            y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.download.info.author"), x, y, 0xC0C0C0C0);
+            y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.browser.info.author"), x, y, 0xC0C0C0C0);
             String author = info.author();
             y = drawInfoText(drawContext, !StringUtil.hasText(author) ? unknown : author, x, y, 0xFFFFFFFF) + space;
 
-            y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.download.info.description"), x, y, 0xC0C0C0C0);
+            y = drawInfoText(drawContext, StringUtils.translate("downmatica.gui.browser.info.description"), x, y, 0xC0C0C0C0);
             String description = info.description();
             drawInfoText(drawContext, !StringUtil.hasText(description) ? none : description, x, y, 0xFFFFFFFF);
         }
@@ -396,7 +396,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                 int buttonHeight = height - verticalMargin * 2;
                 y += verticalMargin;
 
-                String downloadButtonDisplay = StringUtils.translate("downmatica.gui.download.button.download.display");
+                String downloadButtonDisplay = StringUtils.translate("downmatica.gui.browser.button.download.display");
                 int downloadButtonWidth = GuiUtil.getStringWidth(downloadButtonDisplay) + 10 * 2;
                 x += width - downloadButtonWidth - 2;//2表示右边留空
                 ButtonGeneric downloadButton = addButton(
@@ -411,7 +411,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                 //#endif
                             } else {
                                 //#if MC < 260300
-                                String selectFolder = TinyFileDialogs.tinyfd_selectFolderDialog(StringUtils.translate("downmatica.gui.download.button.download.massage.select_folder"), "");
+                                String selectFolder = TinyFileDialogs.tinyfd_selectFolderDialog(StringUtils.translate("downmatica.gui.browser.button.download.massage.select_folder"), "");
                                 //#else
                                 //$$ CountDownLatch latch = new CountDownLatch(1);
                                 //$$ AtomicReference<String> rel = new AtomicReference<>(null);
@@ -446,36 +446,36 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                 //$$ String selectFolder = rel.get();
                                 //#endif
                                 if (selectFolder == null) {
-                                    DownloadGui.this.addMessage(Message.MessageType.INFO, "downmatica.gui.download.button.download.massage.cancel");
+                                    BrowserGui.this.addMessage(Message.MessageType.INFO, "downmatica.gui.browser.button.download.massage.cancel");
                                     return;
                                 }
                                 path = Paths.get(selectFolder);
                             }
                             if (!entry.canDownload()) {
-                                DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.no_file");
+                                BrowserGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.browser.button.download.massage.no_file");
                                 return;
                             }
                             if (!Files.exists(path)) {
                                 try {
                                     Files.createDirectories(path);
                                 } catch (IOException e) {
-                                    DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.create_directory_failed", e.getMessage());
+                                    BrowserGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.browser.button.download.massage.create_directory_failed", e.getMessage());
                                     return;
                                 }
                             }
                             Collection<SchematicDownloadInfo> downloadFileInfos = entry.getDownloadFileInfos();
                             for (SchematicDownloadInfo downloadFileInfo : downloadFileInfos) {
                                 if (!downloadFileInfo.isValid()) {
-                                    DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.invalid_file");
+                                    BrowserGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.browser.button.download.massage.invalid_file");
                                     continue;
                                 }
                                 String localFileName = downloadFileInfo.getLocalFileName();
                                 Path file = path.resolve(localFileName);
                                 if (Files.exists(file) && !ConfigHandler.INSTANCE.downloadOverlayFile.getBooleanValue()) {
-                                    DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.file_exists");
+                                    BrowserGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.browser.button.download.massage.file_exists");
                                     continue;
                                 }
-                                DownloadGui.this.addMessage(Message.MessageType.INFO, "downmatica.gui.download.button.download.massage.start", localFileName, file);
+                                BrowserGui.this.addMessage(Message.MessageType.INFO, "downmatica.gui.browser.button.download.massage.start", localFileName, file);
                                 Stopwatch stopwatch = new Stopwatch();
                                 try {
                                     HttpRequest.Builder request = HttpRequest.newBuilder().uri(downloadFileInfo.getRemoteFileURI());
@@ -485,11 +485,11 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                     }
                                 } catch (Exception e) {
                                     String message = e.getMessage();
-                                    DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.download.massage.error", StringUtil.hasText(message) ? message : StringUtils.translate("downmatica.gui.download.text.none"));
+                                    BrowserGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.browser.button.download.massage.error", StringUtil.hasText(message) ? message : StringUtils.translate("downmatica.gui.browser.text.none"));
                                     DownmaticaMod.LOGGER.error("Download failed", e);
                                     continue;
                                 }
-                                DownloadGui.this.addMessage(Message.MessageType.SUCCESS, "downmatica.gui.download.button.download.massage.complete", localFileName, TimeUnit.NANOSECONDS.toMillis(stopwatch.getTime()));
+                                BrowserGui.this.addMessage(Message.MessageType.SUCCESS, "downmatica.gui.browser.button.download.massage.complete", localFileName, TimeUnit.NANOSECONDS.toMillis(stopwatch.getTime()));
                             }
                         })
                 );
@@ -497,7 +497,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                     downloadButton.setEnabled(false);
                 }
 
-                String detailsButtonDisplay = StringUtils.translate("downmatica.gui.download.button.details.display");
+                String detailsButtonDisplay = StringUtils.translate("downmatica.gui.browser.button.details.display");
                 int detailsButtonWidth = GuiUtil.getStringWidth(detailsButtonDisplay) + 10 * 2;
                 x -= detailsButtonWidth + 2;//2表示按钮之间的间隔
                 Runnable runnable = entry.onDetailButtonClicked();
@@ -505,7 +505,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                         new ButtonGeneric(x, y, detailsButtonWidth, buttonHeight, detailsButtonDisplay),
                         (button, mouseButton) -> {
                             if (runnable == null) {
-                                DownloadGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.download.button.details.massage.open_web_page_failed");
+                                BrowserGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.browser.button.details.massage.open_web_page_failed");
                                 return;
                             }
                             runnable.run();
@@ -524,7 +524,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                 } else {
                     RenderUtils.drawRect(x, y, width, height, isOdd ? 0x20FFFFFF : 0x50FFFFFF);
                 }
-                String text = StringUtils.translate("downmatica.gui.download.text.unknown");
+                String text = StringUtils.translate("downmatica.gui.browser.text.unknown");
                 if (entry != null){
                     String string = entry.getTitle();
                     if (StringUtil.hasText(string)) {
@@ -541,7 +541,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
             //$$     } else {
             //$$         RenderUtils.drawRect(drawContext, x, y, width, height, isOdd ? 0x20FFFFFF : 0x50FFFFFF);
             //$$     }
-            //$$     String text = StringUtils.translate("downmatica.gui.download.text.unknown");
+            //$$     String text = StringUtils.translate("downmatica.gui.browser.text.unknown");
             //$$     if (entry != null){
             //$$         String string = entry.getTitle();
             //$$         if (StringUtil.hasText(string)) {
@@ -558,7 +558,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
             //$$     } else {
             //$$         RenderUtils.drawRect(ctx, x, y, width, height, isOdd ? 0x20FFFFFF : 0x50FFFFFF);
             //$$     }
-            //$$     String text = StringUtils.translate("downmatica.gui.download.text.unknown");
+            //$$     String text = StringUtils.translate("downmatica.gui.browser.text.unknown");
             //$$     if (entry != null){
             //$$         String string = entry.getTitle();
             //$$         if (StringUtil.hasText(string)) {

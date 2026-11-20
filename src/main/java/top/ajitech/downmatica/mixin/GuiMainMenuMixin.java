@@ -1,7 +1,7 @@
 package top.ajitech.downmatica.mixin;
 
 import top.ajitech.downmatica.core.ConfigHandler;
-import top.ajitech.downmatica.gui.DownloadGui;
+import top.ajitech.downmatica.gui.BrowserGui;
 import com.llamalad7.mixinextras.sugar.Local;
 import fi.dy.masa.litematica.gui.GuiMainMenu;
 import fi.dy.masa.malilib.gui.GuiBase;
@@ -32,7 +32,7 @@ public abstract class GuiMainMenuMixin extends GuiBase {
         int y = 30 + (2 + height) * 2;//30为原方法中按钮的顶边界，2为按钮之间的空隙
         addButton(
                 new ButtonGeneric(x, y, width, height, getButtonText(), (IGuiIcon) null),
-                (button, mouseButton) -> GuiBase.openGui(new DownloadGui(this))
+                (button, mouseButton) -> GuiBase.openGui(new BrowserGui(this))
         );
     }
 
