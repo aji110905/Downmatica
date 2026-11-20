@@ -111,12 +111,16 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
         if (page < 1) {
             return;
         }
-        getListWidget().loadPage(page, false);
+        WidgetList listWidget = getListWidget();
+        if (listWidget != null) {
+            listWidget.loadPage(page, false);
+        }
         updatePageButtons();
     }
 
     private void updatePageButtons() {
-        if (getListWidget().entries == null) {
+        WidgetList listWidget = getListWidget();
+        if (listWidget != null && listWidget.entries == null) {
             lastPageButton.setEnabled(false);
             nextPageButton.setEnabled(false);
             return;
