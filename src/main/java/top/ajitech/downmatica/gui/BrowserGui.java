@@ -1,30 +1,11 @@
 package top.ajitech.downmatica.gui;
 
-//#if MC >= 260300
-//$$ import com.sun.jna.Function;
-//$$ import com.sun.jna.Pointer;
-//#endif
-import fi.dy.masa.litematica.data.DataManager;
 import fi.dy.masa.malilib.gui.*;
-//#if MC < 260300
-import org.lwjgl.util.tinyfd.TinyFileDialogs;
-//#else
-//$$ import org.lwjgl.sdl.SDLDialog;
-//$$ import org.lwjgl.sdl.SDL_DialogFileCallback;
-//$$ import org.lwjgl.sdl.SDLProperties;
-//$$ import org.lwjgl.sdl.SDLVideo;
-//$$ import org.lwjgl.system.MemoryUtil;
-//#endif
 import top.ajitech.downmatica.DownmaticaMod;
-import top.ajitech.downmatica.api.HttpClientGetter;
 import top.ajitech.downmatica.api.Schematic;
-import top.ajitech.downmatica.api.SchematicDownloadInfo;
-import top.ajitech.downmatica.compatible.LitematicaCompatible;
-import top.ajitech.downmatica.core.ConfigHandler;
 import top.ajitech.downmatica.core.Paged;
 import top.ajitech.downmatica.core.Query;
 import top.ajitech.downmatica.core.SchematicAcquirerManager;
-import top.ajitech.downmatica.util.Stopwatch;
 import top.ajitech.downmatica.util.GuiUtil;
 import top.ajitech.downmatica.util.StringUtil;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
@@ -42,25 +23,10 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-//#if MC >= 260300
-//$$ import java.util.concurrent.CountDownLatch;
-//#endif
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-//#if MC >= 260300
-//$$ import java.util.concurrent.atomic.AtomicReference;
-//#endif
 
 public class BrowserGui extends GuiListBase<Schematic, BrowserGui.WidgetList.Entry, BrowserGui.WidgetList> {
     private ButtonGeneric lastPageButton = null;
@@ -152,15 +118,6 @@ public class BrowserGui extends GuiListBase<Schematic, BrowserGui.WidgetList.Ent
     @Override
     protected int getBrowserHeight() {
         return height - getListY() - 6;//6表示下方留空
-    }
-
-    @Override
-    public void addMessage(Message.MessageType type, String translationKey, Object... args) {
-        if (mc.isSameThread()) {
-            super.addMessage(type, translationKey, args);
-        } else {
-            mc.execute(() -> super.addMessage(type, translationKey, args));
-        }
     }
 
     public class WidgetList extends WidgetListBase<Schematic, BrowserGui.WidgetList.Entry> {
@@ -401,97 +358,7 @@ public class BrowserGui extends GuiListBase<Schematic, BrowserGui.WidgetList.Ent
                 x += width - downloadButtonWidth - 2;//2表示右边留空
                 ButtonGeneric downloadButton = addButton(
                         new ButtonGeneric(x, y, downloadButtonWidth, buttonHeight, downloadButtonDisplay),
-                        (button, mouseButton) -> Thread.ofVirtual().name("SchematicDownloader").start(() -> {
-                            Path path;
-                            if (ConfigHandler.INSTANCE.downloadToSchematicBaseDirectory.getBooleanValue() && LitematicaCompatible.isLitematicaInstalled()) {
-                                //#if MC < 12105
-                                path = DataManager.getSchematicsBaseDirectory().toPath();
-                                //#else
-                                //$$ path = DataManager.getSchematicsBaseDirectory();
-                                //#endif
-                            } else {
-                                //#if MC < 260300
-                                String selectFolder = TinyFileDialogs.tinyfd_selectFolderDialog(StringUtils.translate("downmatica.gui.browser.button.download.massage.select_folder"), "");
-                                //#else
-                                //$$ CountDownLatch latch = new CountDownLatch(1);
-                                //$$ AtomicReference<String> rel = new AtomicReference<>(null);
-                                //$$ long windowHandle = mc.getWindow().handle();
-                                //$$ long hwnd = SDLProperties.SDL_GetPointerProperty(SDLVideo.SDL_GetWindowProperties(windowHandle), SDLVideo.SDL_PROP_WINDOW_WIN32_HWND_POINTER, 0L);
-                                //$$ if (hwnd != 0L) {
-                                //$$     Function.getFunction("user32", "EnableWindow").invokeInt(new Object[]{ Pointer.createConstant(hwnd), 0 });
-                                //$$ }
-                                //$$ SDL_DialogFileCallback callback = SDL_DialogFileCallback.create((_, filelist, _) -> {
-                                //$$     if (hwnd != 0L) {
-                                //$$         Function.getFunction("user32", "EnableWindow").invokeInt(new Object[]{ Pointer.createConstant(hwnd), 1 });
-                                //$$     }
-                                //$$     if (filelist == 0L) {
-                                //$$         rel.set(null);
-                                //$$     } else {
-                                //$$         long pathPtr = MemoryUtil.memGetAddress(filelist);
-                                //$$         rel.set(pathPtr == 0L ? null : MemoryUtil.memUTF8(pathPtr));
-                                //$$     }
-                                //$$     latch.countDown();
-                                //$$ });
-                                //$$ try {
-                                //$$     mc.execute(() -> SDLDialog.SDL_ShowOpenFolderDialog(callback, windowHandle, 0L, "", false));
-                                //$$     latch.await();
-                                //$$ } catch (InterruptedException e) {
-                                //$$     Thread.currentThread().interrupt();
-                                //$$     if (hwnd != 0L) {
-                                //$$         Function.getFunction("user32", "EnableWindow").invokeInt(new Object[]{ Pointer.createConstant(hwnd), 1 });
-                                //$$     }
-                                //$$     rel.set(null);
-                                //$$ }
-                                //$$ mc.execute(callback::close);
-                                //$$ String selectFolder = rel.get();
-                                //#endif
-                                if (selectFolder == null) {
-                                    BrowserGui.this.addMessage(Message.MessageType.INFO, "downmatica.gui.browser.button.download.massage.cancel");
-                                    return;
-                                }
-                                path = Paths.get(selectFolder);
-                            }
-                            if (!entry.canDownload()) {
-                                BrowserGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.browser.button.download.massage.no_file");
-                                return;
-                            }
-                            if (!Files.exists(path)) {
-                                try {
-                                    Files.createDirectories(path);
-                                } catch (IOException e) {
-                                    BrowserGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.browser.button.download.massage.create_directory_failed", e.getMessage());
-                                    return;
-                                }
-                            }
-                            Collection<SchematicDownloadInfo> downloadFileInfos = entry.getDownloadFileInfos();
-                            for (SchematicDownloadInfo downloadFileInfo : downloadFileInfos) {
-                                if (!downloadFileInfo.isValid()) {
-                                    BrowserGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.browser.button.download.massage.invalid_file");
-                                    continue;
-                                }
-                                String localFileName = downloadFileInfo.getLocalFileName();
-                                Path file = path.resolve(localFileName);
-                                if (Files.exists(file) && !ConfigHandler.INSTANCE.downloadOverlayFile.getBooleanValue()) {
-                                    BrowserGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.browser.button.download.massage.file_exists");
-                                    continue;
-                                }
-                                BrowserGui.this.addMessage(Message.MessageType.INFO, "downmatica.gui.browser.button.download.massage.start", localFileName, file);
-                                Stopwatch stopwatch = new Stopwatch();
-                                try {
-                                    HttpRequest.Builder request = HttpRequest.newBuilder().uri(downloadFileInfo.getRemoteFileURI());
-                                    HttpResponse<InputStream> response = HttpClientGetter.send(request, HttpResponse.BodyHandlers.ofInputStream());
-                                    try (InputStream inputStream = response.body()) {
-                                        Files.copy(inputStream, file, StandardCopyOption.REPLACE_EXISTING);
-                                    }
-                                } catch (Exception e) {
-                                    String message = e.getMessage();
-                                    BrowserGui.this.addMessage(Message.MessageType.ERROR, "downmatica.gui.browser.button.download.massage.error", StringUtil.hasText(message) ? message : StringUtils.translate("downmatica.gui.browser.text.none"));
-                                    DownmaticaMod.LOGGER.error("Download failed", e);
-                                    continue;
-                                }
-                                BrowserGui.this.addMessage(Message.MessageType.SUCCESS, "downmatica.gui.browser.button.download.massage.complete", localFileName, TimeUnit.NANOSECONDS.toMillis(stopwatch.getTime()));
-                            }
-                        })
+                        (button, mouseButton) -> GuiBase.openGui(new DownloadGui(BrowserGui.this, entry.getDownloadFileInfos()))
                 );
                 if (!entry.canDownload()) {
                     downloadButton.setEnabled(false);
