@@ -12,7 +12,7 @@ import fi.dy.masa.malilib.util.GuiUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import top.ajitech.downmatica.DownmaticaMod;
 import top.ajitech.downmatica.gui.ConfigGui;
-import top.ajitech.downmatica.gui.DownloadGui;
+import top.ajitech.downmatica.gui.BrowserGui;
 
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -61,7 +61,7 @@ public class ConfigHandler implements IConfigHandler {
             return true;
         });
         openDownloadInterface.getKeybind().setCallback((keyAction, keybind) -> {
-            GuiBase.openGui(new DownloadGui(GuiUtils.getCurrentScreen()));
+            GuiBase.openGui(new BrowserGui(GuiUtils.getCurrentScreen()));
             return true;
         });
 

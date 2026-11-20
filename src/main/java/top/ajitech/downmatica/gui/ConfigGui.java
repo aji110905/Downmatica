@@ -25,11 +25,11 @@ public class ConfigGui extends GuiConfigsBase {
         int y = 30;
         int x = getListX();
 
-        String downloadButtonDisplay = StringUtils.translate("downmatica.gui.common.button.download.display");
+        String downloadButtonDisplay = StringUtils.translate("downmatica.gui.common.button.browser.display");
         int downloadButtonWidth = getStringWidth(downloadButtonDisplay) + 10 * 2;//10为按钮的左右留白
         addButton(
                 new ButtonGeneric(x, y, downloadButtonWidth, 20, downloadButtonDisplay),
-                (button, mouseButton) -> GuiBase.openGui(new DownloadGui(getParent()))
+                (button, mouseButton) -> GuiBase.openGui(new BrowserGui(getParent()))
         );
 
         x += downloadButtonWidth + 4;//4表示按钮间的间隔
