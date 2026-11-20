@@ -36,7 +36,6 @@ import fi.dy.masa.malilib.gui.widgets.WidgetSearchBar;
 //#endif
 import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.malilib.util.StringUtils;
-import net.minecraft.client.Minecraft;
 //#if MC < 12111
 import net.minecraft.client.gui.GuiGraphics;
 //#endif
@@ -206,7 +205,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                     }
                 }
                 Paged paged = SchematicAcquirerManager.INSTANCE.getPage(Query.of(page, keyword));
-                Minecraft.getInstance().execute(() -> {
+                mc.execute(() -> {
                     if (generation != requestGeneration.get()) {
                         return;
                     }
@@ -307,7 +306,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                         snapshot = new Info(null, null, null);
                     }
                     Info info = snapshot;
-                    Minecraft.getInstance().execute(() -> {
+                    mc.execute(() -> {
                         if (generation == infoGeneration.get()) {
                             this.info = info;
                         }
@@ -416,7 +415,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                 //#else
                                 //$$ CountDownLatch latch = new CountDownLatch(1);
                                 //$$ AtomicReference<String> rel = new AtomicReference<>(null);
-                                //$$ long windowHandle = Minecraft.getInstance().getWindow().handle();
+                                //$$ long windowHandle = mc.getWindow().handle();
                                 //$$ long hwnd = SDLProperties.SDL_GetPointerProperty(SDLVideo.SDL_GetWindowProperties(windowHandle), SDLVideo.SDL_PROP_WINDOW_WIN32_HWND_POINTER, 0L);
                                 //$$ if (hwnd != 0L) {
                                 //$$     Function.getFunction("user32", "EnableWindow").invokeInt(new Object[]{ Pointer.createConstant(hwnd), 0 });
@@ -434,7 +433,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                 //$$     latch.countDown();
                                 //$$ });
                                 //$$ try {
-                                //$$     Minecraft.getInstance().execute(() -> SDLDialog.SDL_ShowOpenFolderDialog(callback, windowHandle, 0L, "", false));
+                                //$$     mc.execute(() -> SDLDialog.SDL_ShowOpenFolderDialog(callback, windowHandle, 0L, "", false));
                                 //$$     latch.await();
                                 //$$ } catch (InterruptedException e) {
                                 //$$     Thread.currentThread().interrupt();
@@ -443,7 +442,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                 //$$     }
                                 //$$     rel.set(null);
                                 //$$ }
-                                //$$ Minecraft.getInstance().execute(callback::close);
+                                //$$ mc.execute(callback::close);
                                 //$$ String selectFolder = rel.get();
                                 //#endif
                                 if (selectFolder == null) {
