@@ -486,7 +486,7 @@ public class DownloadGui extends GuiListBase<Schematic, DownloadGui.WidgetList.E
                                     DownmaticaMod.LOGGER.error("Download failed", e);
                                     continue;
                                 }
-                                DownloadGui.this.addMessage(Message.MessageType.SUCCESS, "downmatica.gui.download.button.download.massage.complete", "downmatica.gui.download.button.download.massage.complete", title, TimeUnit.NANOSECONDS.toMillis(stopwatch.getTime()));
+                                DownloadGui.this.addMessage(Message.MessageType.SUCCESS, "downmatica.gui.download.button.download.massage.complete", title, TimeUnit.NANOSECONDS.toMillis(stopwatch.getTime()));
                             }
                         })
                 );
